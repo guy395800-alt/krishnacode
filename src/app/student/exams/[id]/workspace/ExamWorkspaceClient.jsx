@@ -61,6 +61,7 @@ export default function ExamWorkspaceClient({ initialId }) {
   const [running, setRunning] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [executionResult, setExecutionResult] = useState(null);
+  const [copyPasteAlert, setCopyPasteAlert] = useState(false);
 
   useEffect(() => {
     fetchExamDetails();
@@ -466,7 +467,12 @@ export default function ExamWorkspaceClient({ initialId }) {
           </div>
 
           {/* Monaco Anti-Cheat Protected Editor */}
-          <div className="flex-1 min-h-[380px] rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden shadow-inner no-copy-editor">
+          <div className="relative flex-1 min-h-[380px] rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden shadow-inner no-copy-editor">
+            {copyPasteAlert && (
+              <div className="absolute top-3 right-3 z-30 px-3.5 py-1.5 rounded-xl bg-red-600/95 text-white font-bold text-xs shadow-xl flex items-center gap-1.5 backdrop-blur-sm animate-pulse border border-red-400/30">
+                <ShieldAlert className="h-4 w-4" /> Copy & Paste is disabled (Anti-Cheat Active)
+              </div>
+            )}
             <MonacoEditor
               height="380px"
               language={currentLanguage === 'python' ? 'python' : currentLanguage === 'javascript' ? 'javascript' : currentLanguage === 'java' ? 'java' : 'cpp'}
@@ -474,7 +480,10 @@ export default function ExamWorkspaceClient({ initialId }) {
               value={currentCode}
               onChange={(val) => setCurrentCode(val || '')}
               onMount={(editor, monaco) => {
-                handleDisableCopyPaste(editor, monaco);
+                handleDisableCopyPaste(editor, monaco, () => {
+                  setCopyPasteAlert(true);
+                  setTimeout(() => setCopyPasteAlert(false), 2500);
+                });
               }}
               options={{
                 ...MONACO_NO_COPY_OPTIONS,

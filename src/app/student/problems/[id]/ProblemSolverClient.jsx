@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import ExecutionResultViewer from '../../../../components/ExecutionResultViewer';
+import { handleDisableCopyPaste, MONACO_NO_COPY_OPTIONS } from '../../../../lib/monaco';
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
 
@@ -114,6 +115,7 @@ export default function ProblemSolverClient({ initialId }) {
   const [submitting, setSubmitting] = useState(false);
   const [executionResult, setExecutionResult] = useState(null);
   const [submissionHistory, setSubmissionHistory] = useState([]);
+  const [copyPasteAlert, setCopyPasteAlert] = useState(false);
 
   useEffect(() => {
     if (problemId) {
@@ -399,20 +401,27 @@ export default function ProblemSolverClient({ initialId }) {
           </div>
 
           {/* Monaco Editor Container */}
-          <div className="flex-1 min-h-[420px] rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-950 overflow-hidden shadow-sm">
+          <div className="relative flex-1 min-h-[420px] rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-950 overflow-hidden shadow-sm">
+            {copyPasteAlert && (
+              <div className="absolute top-3 right-3 z-30 px-3.5 py-1.5 rounded-xl bg-red-600/95 text-white font-bold text-xs shadow-xl flex items-center gap-1.5 backdrop-blur-sm animate-pulse border border-red-400/30">
+                <AlertTriangle className="h-4 w-4" /> Copy & Paste is disabled
+              </div>
+            )}
             <MonacoEditor
               height="420px"
               language={language === 'python' ? 'python' : language === 'javascript' ? 'javascript' : language === 'java' ? 'java' : 'cpp'}
               theme="vs-dark"
               value={code}
               onChange={(newVal) => setCode(newVal || '')}
+              onMount={(editor, monaco) => {
+                handleDisableCopyPaste(editor, monaco, () => {
+                  setCopyPasteAlert(true);
+                  setTimeout(() => setCopyPasteAlert(false), 2500);
+                });
+              }}
               options={{
+                ...MONACO_NO_COPY_OPTIONS,
                 fontSize: 14,
-                fontFamily: 'Fira Code, monospace',
-                minimap: { enabled: false },
-                scrollBeyondLastLine: false,
-                automaticLayout: true,
-                tabSize: 4,
               }}
             />
           </div>
