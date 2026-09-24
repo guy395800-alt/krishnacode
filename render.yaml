@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: nexgencode-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./out
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://krishnacodebackend.onrender.com/api/v1
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        value: https://penucrigozfkhpvtbwwb.supabase.co
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        value: sb_publishable_m35xJ9BQwNImr1zSkr6S5A_YPaTr__w
