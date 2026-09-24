@@ -22,6 +22,7 @@ import {
   Check
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import ExecutionResultViewer from '../../../../components/ExecutionResultViewer';
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
 
@@ -167,9 +168,19 @@ export default function ProblemSolverClient({ initialId }) {
       });
       setExecutionResult(resp.data);
     } catch (err) {
+      const errData = err.response?.data;
+      const detailMsg = typeof errData?.detail === 'string' 
+        ? errData.detail 
+        : Array.isArray(errData?.detail) 
+        ? errData.detail.map((d) => d.msg || JSON.stringify(d)).join('\n')
+        : (errData?.error || err.message || 'Execution failed. Check backend compiler.');
+
       setExecutionResult({
-        status: 'Runtime Error',
-        error: err.response?.data?.detail || err.message || 'Execution failed. Check backend compiler.',
+        status: errData?.status || 'Runtime Error',
+        error: detailMsg,
+        stderr: errData?.stderr || (typeof errData?.detail === 'string' ? errData.detail : ''),
+        stdout: errData?.stdout || '',
+        test_case_results: errData?.test_case_results || []
       });
     } finally {
       setRunning(false);
@@ -190,9 +201,19 @@ export default function ProblemSolverClient({ initialId }) {
       setExecutionResult(resp.data);
       fetchProblemSubmissions();
     } catch (err) {
+      const errData = err.response?.data;
+      const detailMsg = typeof errData?.detail === 'string' 
+        ? errData.detail 
+        : Array.isArray(errData?.detail) 
+        ? errData.detail.map((d) => d.msg || JSON.stringify(d)).join('\n')
+        : (errData?.error || err.message || 'Submission failed. Check backend status.');
+
       setExecutionResult({
-        status: 'Submission Failed',
-        error: err.response?.data?.detail || err.message || 'Submission failed. Check backend status.',
+        status: errData?.status || 'Submission Failed',
+        error: detailMsg,
+        stderr: errData?.stderr || (typeof errData?.detail === 'string' ? errData.detail : ''),
+        stdout: errData?.stdout || '',
+        test_case_results: errData?.test_case_results || []
       });
     } finally {
       setSubmitting(false);
@@ -444,69 +465,11 @@ export default function ProblemSolverClient({ initialId }) {
               )}
 
               {activeTab === 'output' && (
-                <div className="space-y-3 font-mono">
-                  {running || submitting ? (
-                    <div className="py-6 text-center text-slate-400 animate-pulse">
-                      Executing sandbox container & evaluating test assertions...
-                    </div>
-                  ) : executionResult ? (
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
-                        <div className="flex items-center gap-2">
-                          {executionResult.status === 'Accepted' ? (
-                            <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
-                              <CheckCircle2 className="h-4 w-4" /> ACCEPTED
-                            </span>
-                          ) : (
-                            <span className="px-3 py-1 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 font-bold flex items-center gap-1.5">
-                              <XCircle className="h-4 w-4" /> {executionResult.status || 'Execution Failed'}
-                            </span>
-                          )}
-                        </div>
-
-                        {executionResult.execution_time_ms !== undefined && (
-                          <span className="text-slate-400 text-xs">
-                            Runtime: {executionResult.execution_time_ms} ms
-                          </span>
-                        )}
-                      </div>
-
-                      {executionResult.passed_test_cases !== undefined && (
-                        <div className="text-slate-300 font-sans font-semibold text-xs">
-                          Test Cases Passed: <span className="text-emerald-400 font-bold">{executionResult.passed_test_cases}</span> / {executionResult.total_test_cases}
-                        </div>
-                      )}
-
-                      {executionResult.stdout && (
-                        <div>
-                          <span className="text-slate-400 text-[11px] block mb-1">Standard Output:</span>
-                          <pre className="p-3 rounded-xl bg-slate-950 text-slate-200 overflow-x-auto whitespace-pre-wrap">
-                            {executionResult.stdout}
-                          </pre>
-                        </div>
-                      )}
-
-                      {executionResult.stderr && (
-                        <div>
-                          <span className="text-red-400 text-[11px] block mb-1">Error Stream:</span>
-                          <pre className="p-3 rounded-xl bg-red-950/40 text-red-300 border border-red-900/50 overflow-x-auto whitespace-pre-wrap">
-                            {executionResult.stderr}
-                          </pre>
-                        </div>
-                      )}
-
-                      {executionResult.error && (
-                        <div className="p-3 rounded-xl bg-red-950/40 text-red-300 border border-red-900/50">
-                          {executionResult.error}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="py-6 text-center text-slate-400 font-sans">
-                      Click "Run Tests" or "Submit Solution" to inspect compiler output and assertion logs.
-                    </div>
-                  )}
-                </div>
+                <ExecutionResultViewer
+                  result={executionResult}
+                  language={language}
+                  isLoading={running || submitting}
+                />
               )}
 
               {activeTab === 'submissions' && (

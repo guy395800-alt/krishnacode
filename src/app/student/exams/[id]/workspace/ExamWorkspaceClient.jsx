@@ -22,6 +22,7 @@ import {
   Check
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import ExecutionResultViewer from '../../../../../components/ExecutionResultViewer';
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
 
@@ -194,10 +195,32 @@ export default function ExamWorkspaceClient({ initialId }) {
         }
       }));
     } catch (err) {
-      setExecutionResult({
-        status: 'Runtime Error',
-        error: err.response?.data?.detail || err.message || 'Execution failed.',
-      });
+      const errData = err.response?.data;
+      const detailMsg = typeof errData?.detail === 'string' 
+        ? errData.detail 
+        : Array.isArray(errData?.detail) 
+        ? errData.detail.map((d) => d.msg || JSON.stringify(d)).join('\n')
+        : (errData?.error || err.message || 'Execution failed.');
+
+      const errObj = {
+        status: errData?.status || 'Runtime Error',
+        error: detailMsg,
+        stderr: errData?.stderr || (typeof errData?.detail === 'string' ? errData.detail : ''),
+        stdout: errData?.stdout || '',
+        test_case_results: errData?.test_case_results || []
+      };
+
+      setExecutionResult(errObj);
+      setAnswers((prev) => ({
+        ...prev,
+        [currentPid]: {
+          ...prev[currentPid],
+          code: currentCode,
+          language: currentLanguage,
+          result: errObj,
+          status: 'attempted'
+        }
+      }));
     } finally {
       setRunning(false);
     }
@@ -226,10 +249,22 @@ export default function ExamWorkspaceClient({ initialId }) {
         }
       }));
     } catch (err) {
-      setExecutionResult({
-        status: 'Submission Failed',
-        error: err.response?.data?.detail || 'Submission failed.',
-      });
+      const errData = err.response?.data;
+      const detailMsg = typeof errData?.detail === 'string' 
+        ? errData.detail 
+        : Array.isArray(errData?.detail) 
+        ? errData.detail.map((d) => d.msg || JSON.stringify(d)).join('\n')
+        : (errData?.error || err.message || 'Submission failed.');
+
+      const errObj = {
+        status: errData?.status || 'Submission Failed',
+        error: detailMsg,
+        stderr: errData?.stderr || (typeof errData?.detail === 'string' ? errData.detail : ''),
+        stdout: errData?.stdout || '',
+        test_case_results: errData?.test_case_results || []
+      };
+
+      setExecutionResult(errObj);
     } finally {
       setSubmitting(false);
     }
@@ -449,44 +484,12 @@ export default function ExamWorkspaceClient({ initialId }) {
           </div>
 
           {/* Console / Test Output Box */}
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm space-y-2 font-mono text-xs">
-            <div className="flex items-center justify-between text-slate-400 font-sans pb-1 border-b border-slate-800">
-              <span className="font-bold">Execution & Test Results</span>
-              {executionResult?.status && (
-                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
-                  executionResult.status === 'Accepted' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'
-                }`}>
-                  {executionResult.status}
-                </span>
-              )}
-            </div>
-
-            {executionResult ? (
-              <div className="space-y-1.5 pt-1">
-                {executionResult.passed_test_cases !== undefined && (
-                  <div className="text-slate-300 font-sans">
-                    Passed: <span className="text-emerald-400 font-bold">{executionResult.passed_test_cases}</span> / {executionResult.total_test_cases} Test Cases
-                  </div>
-                )}
-                {executionResult.stdout && (
-                  <pre className="p-2.5 rounded-xl bg-slate-950 text-slate-300 overflow-x-auto">
-                    {executionResult.stdout}
-                  </pre>
-                )}
-                {executionResult.stderr && (
-                  <pre className="p-2.5 rounded-xl bg-red-950/40 text-red-300 border border-red-900/40 overflow-x-auto">
-                    {executionResult.stderr}
-                  </pre>
-                )}
-                {executionResult.error && (
-                  <div className="text-red-400">{executionResult.error}</div>
-                )}
-              </div>
-            ) : (
-              <div className="text-slate-500 py-2 font-sans">
-                Run test cases or submit solution to view test case pass validation.
-              </div>
-            )}
+          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+            <ExecutionResultViewer
+              result={executionResult}
+              language={currentLanguage}
+              isLoading={running || submitting}
+            />
           </div>
         </div>
       </div>
