@@ -43,7 +43,8 @@ import {
   Rocket,
   CheckCircle,
   Eye,
-  PlayCircle
+  PlayCircle,
+  Mail
 } from 'lucide-react';
 
 const ROTATING_PHRASES = [
@@ -307,13 +308,23 @@ export default function LandingPage() {
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center gap-4 pt-2">
               {user ? (
-                <Link
-                  href={user.role === 'admin' ? '/admin/dashboard' : '/student/dashboard'}
-                  className="group flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-white apple-btn-primary shadow-xl shadow-blue-500/25"
-                >
-                  <span>Go to {user.role === 'admin' ? 'Admin' : 'Student'} Workspace</span>
-                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </Link>
+                <>
+                  <Link
+                    href={user.role === 'admin' ? '/admin/dashboard' : '/student/dashboard'}
+                    className="group flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-white apple-btn-primary shadow-xl shadow-blue-500/25"
+                  >
+                    <span>Go to {user.role === 'admin' ? 'Admin' : 'Student'} Workspace</span>
+                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </Link>
+
+                  <a
+                    href="mailto:kp13226663@gmail.com?subject=Book%20a%20Demo%20-%20NexgenCode%20Platform&body=Hello%20NexgenCode%20Team%2C%0A%0AI%20would%20like%20to%20schedule%20a%20live%20institutional%20demo%20of%20NexgenCode%20for%20our%20college%2Funiversity.%0A%0AInstitution%20Name%3A%0AContact%20Person%3A%0APhone%20Number%3A%0AEstimated%20Students%3A%0APreferred%20Date%20%26%20Time%3A%0A%0AThank%20you!"
+                    className="flex items-center gap-2 px-6 py-4 rounded-2xl font-bold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all backdrop-blur-md shadow-lg shadow-amber-500/10 hover:scale-105"
+                  >
+                    <Mail className="h-4 w-4 text-amber-400" />
+                    <span>Book Demo</span>
+                  </a>
+                </>
               ) : (
                 <>
                   <Link
@@ -324,6 +335,14 @@ export default function LandingPage() {
                     <span>Start Practice Free</span>
                     <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </Link>
+
+                  <a
+                    href="mailto:kp13226663@gmail.com?subject=Book%20a%20Demo%20-%20NexgenCode%20Platform&body=Hello%20NexgenCode%20Team%2C%0A%0AI%20would%20like%20to%20schedule%20a%20live%20institutional%20demo%20of%20NexgenCode%20for%20our%20college%2Funiversity.%0A%0AInstitution%20Name%3A%0AContact%20Person%3A%0APhone%20Number%3A%0AEstimated%20Students%3A%0APreferred%20Date%20%26%20Time%3A%0A%0AThank%20you!"
+                    className="flex items-center gap-2 px-6 py-4 rounded-2xl font-bold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all backdrop-blur-md shadow-lg shadow-amber-500/10 hover:scale-105"
+                  >
+                    <Mail className="h-4 w-4 text-amber-400" />
+                    <span>Book Demo</span>
+                  </a>
 
                   <Link
                     href="/login?role=admin"
@@ -917,11 +936,18 @@ export default function LandingPage() {
             >
               Start Practicing Free
             </Link>
+            <a
+              href="mailto:kp13226663@gmail.com?subject=Book%20a%20Demo%20-%20NexgenCode%20Platform&body=Hello%20NexgenCode%20Team%2C%0A%0AI%20would%20like%20to%20schedule%20a%20live%20institutional%20demo%20of%20NexgenCode%20for%20our%20college%2Funiversity.%0A%0AInstitution%20Name%3A%0AContact%20Person%3A%0APhone%20Number%3A%0AEstimated%20Students%3A%0APreferred%20Date%20%26%20Time%3A%0A%0AThank%20you!"
+              className="px-8 py-4 rounded-2xl font-bold bg-amber-400 text-slate-950 hover:bg-amber-300 shadow-xl shadow-amber-500/30 transition-all hover:scale-105 flex items-center gap-2"
+            >
+              <Mail className="h-5 w-5 text-slate-950" />
+              <span>Book Demo (kp13226663@gmail.com)</span>
+            </a>
             <Link
               href="/login?role=admin"
               className="px-8 py-4 rounded-2xl font-bold bg-blue-950/60 hover:bg-blue-950/80 text-white border border-white/30 backdrop-blur-md transition-all"
             >
-              Launch Admin Demo
+              Admin Portal
             </Link>
           </div>
         </div>

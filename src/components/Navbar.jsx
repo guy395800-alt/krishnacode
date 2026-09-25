@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
-import { Sun, Moon, LogOut, Code2, Sparkles, Trophy, GraduationCap, ShieldCheck, Flame } from 'lucide-react';
+import { Sun, Moon, LogOut, Code2, Sparkles, Trophy, GraduationCap, ShieldCheck, Flame, Mail } from 'lucide-react';
 
 export const Navbar = () => {
   const { user, logout, theme, toggleTheme } = useAuth();
@@ -119,15 +119,23 @@ export const Navbar = () => {
             </div>
           ) : (
             <div className="flex items-center gap-2.5">
+              <a
+                href="mailto:kp13226663@gmail.com?subject=Book%20a%20Demo%20-%20NexgenCode%20Platform&body=Hello%20NexgenCode%20Team%2C%0A%0AI%20would%20like%20to%20schedule%20a%20live%20institutional%20demo%20of%20NexgenCode%20for%20our%20college%2Funiversity.%0A%0AInstitution%20Name%3A%0AContact%20Person%3A%0APhone%20Number%3A%0AEstimated%20Students%3A%0APreferred%20Date%20%26%20Time%3A%0A%0AThank%20you!"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all hover:scale-105 shadow-sm"
+                title="Schedule a live demo (kp13226663@gmail.com)"
+              >
+                <Mail className="h-3.5 w-3.5 text-amber-400" />
+                <span>Book Demo</span>
+              </a>
               <Link
                 href="/login"
-                className="px-4 py-2 text-xs font-bold text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-colors"
+                className="px-3.5 py-1.5 text-xs font-bold text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-colors"
               >
                 Sign In
               </Link>
               <Link
                 href="/login?role=student"
-                className="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-lg shadow-blue-500/25 transition-all hover:scale-105"
+                className="px-4 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-lg shadow-blue-500/25 transition-all hover:scale-105"
               >
                 Get Started
               </Link>
