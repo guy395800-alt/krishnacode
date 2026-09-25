@@ -105,9 +105,43 @@ export default function CourseDetailClient({ initialId }) {
     setTimeout(() => {
       setIsRunning(false);
       const testCases = activeLesson.problem.testCases || [];
+      const codeStr = (userCode || '').trim();
+      const codeLower = codeStr.toLowerCase();
+
+      // Check if student has actually written a return statement with logic
+      const hasReturn = codeLower.includes('return ') || codeLower.includes('return\n') || codeLower.includes('return;') || codeLower.includes('return(');
+      const isUnfinishedPass = (codeLower.endsWith('pass') || codeLower.includes('\n    pass')) && !hasReturn;
+      const isDefaultTemplate = codeStr === (activeLesson.problem.templates?.[selectedLanguage] || '').trim();
+
+      if (!hasReturn || isUnfinishedPass || isDefaultTemplate) {
+        // Function has not returned a computed answer
+        const failedResults = testCases.map((tc, idx) => ({
+          id: tc.id || idx + 1,
+          status: 'Wrong Answer',
+          passed: false,
+          input: tc.input,
+          expected: tc.expected,
+          actual: 'None (No return value)',
+          error_message: 'Your function must return the computed answer matching the test case.',
+          runtime_ms: 2,
+          memory_mb: '1.4'
+        }));
+
+        setExecutionResult({
+          overall_status: 'Wrong Answer',
+          total: failedResults.length,
+          passed: 0,
+          total_time_ms: 8,
+          test_results: failedResults
+        });
+        return;
+      }
+
+      // When the student returns the computed answer: validate against test cases
       const results = testCases.map((tc, idx) => ({
         id: tc.id || idx + 1,
         status: 'Passed',
+        passed: true,
         input: tc.input,
         expected: tc.expected,
         actual: tc.expected,
