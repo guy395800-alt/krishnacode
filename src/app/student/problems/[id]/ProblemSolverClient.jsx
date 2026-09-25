@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { api } from '../../../../lib/api';
+import { triggerConfetti } from '../../../../lib/confetti';
+import { executeCodeLocally, compareOutputs } from '../../../../lib/codeEvaluator';
 import {
   Code2,
   Play,
@@ -230,10 +232,60 @@ export default function ProblemSolverClient({ initialId }) {
     }
   };
 
+export function getProblemTestCases(prob) {
+  if (prob?.test_cases && prob.test_cases.length > 0) {
+    return prob.test_cases;
+  }
+
+  const title = (prob?.title || '').toLowerCase();
+  const desc = (prob?.description || '').toLowerCase();
+
+  if (title.includes('two sum') || (desc.includes('two') && desc.includes('sum'))) {
+    return [
+      { id: 1, input_data: 'nums = [2, 7, 11, 15], target = 9', expected_output: '[0, 1]', is_public: true },
+      { id: 2, input_data: 'nums = [3, 2, 4], target = 6', expected_output: '[1, 2]', is_public: true },
+      { id: 3, input_data: 'nums = [3, 3], target = 6', expected_output: '[0, 1]', is_public: true }
+    ];
+  }
+
+  if (title.includes('palindrome') || desc.includes('palindrome')) {
+    return [
+      { id: 1, input_data: 's = "A man, a plan, a canal: Panama"', expected_output: 'true', is_public: true },
+      { id: 2, input_data: 's = "race a car"', expected_output: 'false', is_public: true },
+      { id: 3, input_data: 's = " "', expected_output: 'true', is_public: true }
+    ];
+  }
+
+  if (title.includes('max') && (title.includes('subarray') || title.includes('array'))) {
+    return [
+      { id: 1, input_data: 'nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]', expected_output: '6', is_public: true },
+      { id: 2, input_data: 'nums = [1]', expected_output: '1', is_public: true },
+      { id: 3, input_data: 'nums = [5, 4, -1, 7, 8]', expected_output: '23', is_public: true }
+    ];
+  }
+
+  if (title.includes('stair') || title.includes('climb')) {
+    return [
+      { id: 1, input_data: 'n = 2', expected_output: '2', is_public: true },
+      { id: 2, input_data: 'n = 3', expected_output: '3', is_public: true },
+      { id: 3, input_data: 'n = 4', expected_output: '5', is_public: true }
+    ];
+  }
+
+  return [
+    { id: 1, input_data: 'nums = [3, 7, 2, 9, 5]', expected_output: '9', is_public: true },
+    { id: 2, input_data: 'nums = [-10, -3, -50, -1]', expected_output: '-1', is_public: true },
+    { id: 3, input_data: 'nums = [42]', expected_output: '42', is_public: true }
+  ];
+}
+
   const handleRunCode = async () => {
     setRunning(true);
     setActiveTab('output');
     setExecutionResult(null);
+
+    const rawCases = getProblemTestCases(problem);
+    const publicCases = rawCases.filter(t => t.is_public !== false);
 
     try {
       const resp = await api.post('/submissions/run', {
@@ -241,57 +293,17 @@ export default function ProblemSolverClient({ initialId }) {
         language,
         code,
       });
-      setExecutionResult(resp.data);
-    } catch (err) {
-      const errData = err.response?.data;
-      const codeStr = (code || '').trim();
-      const codeLower = codeStr.toLowerCase();
-      const hasReturn = codeLower.includes('return ') || codeLower.includes('return\n') || codeLower.includes('return;') || codeLower.includes('return(');
-      const isPassOnly = codeLower.endsWith('pass') && !hasReturn;
 
-      const rawCases = problem?.test_cases?.filter(t => t.is_public) || [
-        { id: 1, input_data: 'nums = [2,7,11,15], target = 9', expected_output: '[0, 1]' },
-        { id: 2, input_data: 'nums = [3,2,4], target = 6', expected_output: '[1, 2]' }
-      ];
-
-      if (!hasReturn || isPassOnly) {
-        setExecutionResult({
-          overall_status: 'Wrong Answer',
-          status: 'Wrong Answer',
-          total_test_cases: rawCases.length,
-          passed_test_cases: 0,
-          execution_time_ms: 10,
-          test_case_results: rawCases.map((tc, idx) => ({
-            test_case_id: tc.id || idx + 1,
-            status: 'Wrong Answer',
-            passed: false,
-            input_data: tc.input_data,
-            expected_output: tc.expected_output,
-            actual_output: 'None (No return value provided)',
-            error_message: 'Your function must return the computed answer matching the test case.',
-            execution_time_ms: 3,
-            memory_kb: 1840
-          }))
-        });
+      if (resp.data) {
+        setExecutionResult(resp.data);
       } else {
-        setExecutionResult({
-          overall_status: 'Accepted',
-          status: 'Accepted',
-          total_test_cases: rawCases.length,
-          passed_test_cases: rawCases.length,
-          execution_time_ms: 12,
-          test_case_results: rawCases.map((tc, idx) => ({
-            test_case_id: tc.id || idx + 1,
-            status: 'Passed',
-            passed: true,
-            input_data: tc.input_data,
-            expected_output: tc.expected_output,
-            actual_output: tc.expected_output,
-            execution_time_ms: Math.floor(Math.random() * 10) + 4,
-            memory_kb: 1850
-          }))
-        });
+        const localResult = executeCodeLocally(code, language, publicCases);
+        setExecutionResult(localResult);
       }
+    } catch {
+      // Offline / Sandbox Fallback: evaluate code accurately with test cases
+      const localResult = executeCodeLocally(code, language, publicCases);
+      setExecutionResult(localResult);
     } finally {
       setRunning(false);
     }
@@ -302,65 +314,41 @@ export default function ProblemSolverClient({ initialId }) {
     setActiveTab('output');
     setExecutionResult(null);
 
+    const rawCases = getProblemTestCases(problem);
+
     try {
       const resp = await api.post('/submissions', {
         problem_id: Number(problemId),
         language,
         code,
       });
+
       setExecutionResult(resp.data);
       fetchProblemSubmissions();
-    } catch (err) {
-      const errData = err.response?.data;
-      const codeStr = (code || '').trim();
-      const codeLower = codeStr.toLowerCase();
-      const hasReturn = codeLower.includes('return ') || codeLower.includes('return\n') || codeLower.includes('return;') || codeLower.includes('return(');
-      const isPassOnly = codeLower.endsWith('pass') && !hasReturn;
-
-      const rawCases = problem?.test_cases || [
-        { id: 1, input_data: 'nums = [2,7,11,15], target = 9', expected_output: '[0, 1]' },
-        { id: 2, input_data: 'nums = [3,2,4], target = 6', expected_output: '[1, 2]' },
-        { id: 3, input_data: 'nums = [3,3], target = 6', expected_output: '[0, 1]' }
-      ];
-
-      if (!hasReturn || isPassOnly) {
-        setExecutionResult({
-          overall_status: 'Wrong Answer',
-          status: 'Wrong Answer',
-          total_test_cases: rawCases.length,
-          passed_test_cases: 0,
-          execution_time_ms: 14,
-          test_case_results: rawCases.map((tc, idx) => ({
-            test_case_id: tc.id || idx + 1,
-            status: 'Wrong Answer',
-            passed: false,
-            input_data: tc.input_data,
-            expected_output: tc.expected_output,
-            actual_output: 'None (No return value provided)',
-            error_message: 'Your function must return the computed answer matching the test case.',
-            execution_time_ms: 4,
-            memory_kb: 1920
-          }))
-        });
-      } else {
-        setExecutionResult({
-          overall_status: 'Accepted',
-          status: 'Accepted',
-          total_test_cases: rawCases.length,
-          passed_test_cases: rawCases.length,
-          execution_time_ms: 18,
-          test_case_results: rawCases.map((tc, idx) => ({
-            test_case_id: tc.id || idx + 1,
-            status: 'Passed',
-            passed: true,
-            input_data: tc.input_data,
-            expected_output: tc.expected_output,
-            actual_output: tc.expected_output,
-            execution_time_ms: Math.floor(Math.random() * 12) + 3,
-            memory_kb: 1950
-          }))
-        });
+      if (resp.data.overall_status === 'Accepted' || resp.data.status === 'Accepted') {
+        triggerConfetti();
       }
+    } catch {
+      // Evaluate all test cases locally
+      const localResult = executeCodeLocally(code, language, rawCases);
+      setExecutionResult(localResult);
+
+      if (localResult.overall_status === 'Accepted') {
+        triggerConfetti();
+      }
+
+      // Append local submission history
+      const newSub = {
+        id: Date.now(),
+        problem_id: Number(problemId),
+        language,
+        status: localResult.overall_status,
+        passed_test_cases: localResult.passed_test_cases,
+        total_test_cases: localResult.total_test_cases,
+        execution_time_ms: localResult.execution_time_ms,
+        created_at: new Date().toISOString()
+      };
+      setSubmissionHistory(prev => [newSub, ...prev]);
     } finally {
       setSubmitting(false);
     }

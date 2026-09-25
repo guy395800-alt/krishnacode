@@ -6,6 +6,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { getCourseById, getEnrolledCourses, enrollInCourse } from '../../../../lib/coursesStore';
 import { triggerConfetti } from '../../../../lib/confetti';
 import { handleDisableCopyPaste, MONACO_NO_COPY_OPTIONS } from '../../../../lib/monaco';
+import { executeCodeLocally } from '../../../../lib/codeEvaluator';
+import ExecutionResultViewer from '../../../../components/ExecutionResultViewer';
 import dynamic from 'next/dynamic';
 import {
   BookOpen,
@@ -105,61 +107,14 @@ export default function CourseDetailClient({ initialId }) {
     setTimeout(() => {
       setIsRunning(false);
       const testCases = activeLesson.problem.testCases || [];
-      const codeStr = (userCode || '').trim();
-      const codeLower = codeStr.toLowerCase();
+      const evaluated = executeCodeLocally(userCode, selectedLanguage, testCases);
+      setExecutionResult(evaluated);
 
-      // Check if student has actually written a return statement with logic
-      const hasReturn = codeLower.includes('return ') || codeLower.includes('return\n') || codeLower.includes('return;') || codeLower.includes('return(');
-      const isUnfinishedPass = (codeLower.endsWith('pass') || codeLower.includes('\n    pass')) && !hasReturn;
-      const isDefaultTemplate = codeStr === (activeLesson.problem.templates?.[selectedLanguage] || '').trim();
-
-      if (!hasReturn || isUnfinishedPass || isDefaultTemplate) {
-        // Function has not returned a computed answer
-        const failedResults = testCases.map((tc, idx) => ({
-          id: tc.id || idx + 1,
-          status: 'Wrong Answer',
-          passed: false,
-          input: tc.input,
-          expected: tc.expected,
-          actual: 'None (No return value)',
-          error_message: 'Your function must return the computed answer matching the test case.',
-          runtime_ms: 2,
-          memory_mb: '1.4'
-        }));
-
-        setExecutionResult({
-          overall_status: 'Wrong Answer',
-          total: failedResults.length,
-          passed: 0,
-          total_time_ms: 8,
-          test_results: failedResults
-        });
-        return;
+      if (evaluated.overall_status === 'Accepted') {
+        triggerConfetti();
+        handleLessonComplete(activeLesson.id);
       }
-
-      // When the student returns the computed answer: validate against test cases
-      const results = testCases.map((tc, idx) => ({
-        id: tc.id || idx + 1,
-        status: 'Passed',
-        passed: true,
-        input: tc.input,
-        expected: tc.expected,
-        actual: tc.expected,
-        runtime_ms: Math.floor(Math.random() * 15) + 4,
-        memory_mb: (Math.random() * 0.8 + 1.8).toFixed(1)
-      }));
-
-      setExecutionResult({
-        overall_status: 'Accepted',
-        total: results.length,
-        passed: results.length,
-        total_time_ms: results.reduce((acc, r) => acc + r.runtime_ms, 0),
-        test_results: results
-      });
-
-      triggerConfetti();
-      handleLessonComplete(activeLesson.id);
-    }, 650);
+    }, 400);
   };
 
   const handleLessonComplete = (lessonId) => {
@@ -426,35 +381,13 @@ export default function CourseDetailClient({ initialId }) {
                 </div>
 
                 {/* Execution Results Viewer */}
-                {executionResult && (
-                  <div className="p-5 rounded-2xl bg-slate-950 border border-emerald-500/40 shadow-xl space-y-4 animate-pulse-glow">
-                    <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                      <span className="flex items-center gap-2 font-black text-sm text-emerald-400 font-mono">
-                        <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                        {executionResult.overall_status} ({executionResult.passed} / {executionResult.total} Test Cases Passed)
-                      </span>
-                      <span className="text-xs font-mono text-slate-400">
-                        ⚡ Total Execution Time: {executionResult.total_time_ms} ms
-                      </span>
-                    </div>
-
-                    <div className="space-y-2">
-                      {executionResult.test_results?.map((res) => (
-                        <div
-                          key={res.id}
-                          className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 font-mono text-xs space-y-1"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-white">Test Case #{res.id}</span>
-                            <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
-                              ✓ {res.status} ({res.runtime_ms} ms)
-                            </span>
-                          </div>
-                          <div className="text-slate-400 text-[11px]"><strong>Arguments:</strong> {res.input}</div>
-                          <div className="text-emerald-400 text-[11px]"><strong>Returned Value:</strong> {res.actual}</div>
-                        </div>
-                      ))}
-                    </div>
+                {(executionResult || isRunning) && (
+                  <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 shadow-xl">
+                    <ExecutionResultViewer
+                      result={executionResult}
+                      language={selectedLanguage}
+                      isLoading={isRunning}
+                    />
                   </div>
                 )}
               </div>

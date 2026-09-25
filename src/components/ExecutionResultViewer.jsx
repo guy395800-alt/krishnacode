@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { parseExecutionError } from '../lib/errorParser';
+import { compareOutputs } from '../lib/codeEvaluator';
 import {
   CheckCircle2,
   XCircle,
@@ -42,18 +43,29 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
     );
   }
 
-  const overallStatus = result.overall_status || result.status || 'Execution Finished';
-  const totalTests = result.total_test_cases ?? (result.test_results?.length || result.test_case_results?.length || 0);
-  const passedTests = result.passed_test_cases ?? (
-    (result.test_results || result.test_case_results || []).filter(t => t.passed || t.status === 'Accepted' || t.status === 'Passed').length
-  );
-  const executionTime = result.total_execution_time_ms ?? result.execution_time_ms;
-
   const testList = Array.isArray(result.test_results)
     ? result.test_results
     : Array.isArray(result.test_case_results)
     ? result.test_case_results
     : [];
+
+  // Helper to verify if a test case is passed
+  const checkTestCasePassed = (tc) => {
+    if (tc.passed !== undefined) return Boolean(tc.passed);
+    if (tc.status === 'Passed' || tc.status === 'Accepted') return true;
+    if (tc.status === 'Wrong Answer' || tc.status === 'Runtime Error' || tc.status === 'SyntaxError') return false;
+    const actual = tc.actual_output ?? tc.actual ?? tc.stdout;
+    const expected = tc.expected_output ?? tc.expected;
+    if (expected !== undefined && actual !== undefined) {
+      return compareOutputs(actual, expected);
+    }
+    return false;
+  };
+
+  const totalTests = result.total_test_cases ?? (result.total ?? testList.length);
+  const passedTests = result.passed_test_cases ?? (result.passed ?? testList.filter(checkTestCasePassed).length);
+  const executionTime = result.total_execution_time_ms ?? result.execution_time_ms ?? result.total_time_ms;
+  const overallStatus = result.overall_status || result.status || (passedTests === totalTests && totalTests > 0 ? 'Accepted' : 'Wrong Answer');
 
   const isAccepted = overallStatus === 'Accepted' || (totalTests > 0 && passedTests === totalTests && overallStatus !== 'Wrong Answer');
   const parsed = parseExecutionError(result, language);
@@ -213,11 +225,11 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
           {/* Test Case Switcher Tabs */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
             {testList.map((tc, idx) => {
-              const isPassed = tc.passed || tc.status === 'Passed' || tc.status === 'Accepted';
+              const isPassed = checkTestCasePassed(tc);
               const isActive = activeCaseIdx === idx;
               return (
                 <button
-                  key={tc.test_case_id || idx}
+                  key={tc.test_case_id || tc.id || idx}
                   onClick={() => setActiveCaseIdx(idx)}
                   className={`flex items-center gap-2 px-3 py-1.5 rounded-xl font-bold text-xs transition-all shrink-0 ${
                     isActive
@@ -239,23 +251,23 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
           {/* Active Test Case Detail Card */}
           {activeTestCase && (
             <div className={`p-4 rounded-xl border text-xs font-mono space-y-3 transition-all ${
-              activeTestCase.passed || activeTestCase.status === 'Passed' || activeTestCase.status === 'Accepted'
+              checkTestCasePassed(activeTestCase)
                 ? 'bg-emerald-950/10 border-emerald-500/30'
                 : 'bg-red-950/20 border-red-500/30'
             }`}>
               <div className="flex items-center justify-between font-sans text-xs pb-1 border-b border-slate-800">
                 <span className="font-bold text-white">
-                  Test Case #{activeCaseIdx + 1} {activeTestCase.status ? `(${activeTestCase.status})` : ''}
+                  Test Case #{activeCaseIdx + 1} {checkTestCasePassed(activeTestCase) ? '(Passed)' : `(${activeTestCase.status || 'Failed'})`}
                 </span>
                 <div className="flex items-center gap-3 text-[11px] text-slate-400">
-                  {activeTestCase.execution_time_ms !== undefined && (
+                  {(activeTestCase.execution_time_ms !== undefined || activeTestCase.runtime_ms !== undefined) && (
                     <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" /> {activeTestCase.execution_time_ms} ms
+                      <Clock className="h-3 w-3" /> {activeTestCase.execution_time_ms ?? activeTestCase.runtime_ms} ms
                     </span>
                   )}
-                  {activeTestCase.memory_kb !== undefined && (
+                  {(activeTestCase.memory_kb !== undefined || activeTestCase.memory_mb !== undefined) && (
                     <span className="flex items-center gap-1">
-                      <Cpu className="h-3 w-3" /> {activeTestCase.memory_kb} KB
+                      <Cpu className="h-3 w-3" /> {activeTestCase.memory_kb ? `${activeTestCase.memory_kb} KB` : `${activeTestCase.memory_mb} MB`}
                     </span>
                   )}
                 </div>
@@ -283,7 +295,7 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
                 <div className="space-y-1">
                   <span className="text-slate-400 block font-sans text-[11px] font-semibold uppercase">Your Output:</span>
                   <pre className={`p-2.5 rounded-lg bg-slate-950 font-bold border overflow-x-auto whitespace-pre-wrap ${
-                    activeTestCase.passed || activeTestCase.status === 'Passed' || activeTestCase.status === 'Accepted'
+                    checkTestCasePassed(activeTestCase)
                       ? 'text-emerald-400 border-emerald-900/40'
                       : 'text-red-400 border-red-900/40'
                   }`}>
