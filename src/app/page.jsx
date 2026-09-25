@@ -328,11 +328,10 @@ export default function LandingPage() {
               ) : (
                 <>
                   <Link
-                    href="/login?role=student"
-                    className="group flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-white apple-btn-primary shadow-xl shadow-blue-500/30"
+                    href="/login"
+                    className="group flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-white apple-btn-primary shadow-xl shadow-blue-500/30 hover:scale-105 transition-all"
                   >
-                    <GraduationCap className="h-5 w-5" />
-                    <span>Start Practice Free</span>
+                    <span>Sign In</span>
                     <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </Link>
 
@@ -343,14 +342,6 @@ export default function LandingPage() {
                     <Mail className="h-4 w-4 text-amber-400" />
                     <span>Book Demo</span>
                   </a>
-
-                  <Link
-                    href="/login?role=admin"
-                    className="flex items-center gap-2.5 px-6 py-4 rounded-2xl font-bold text-slate-300 hover:text-white apple-btn-glass"
-                  >
-                    <ShieldCheck className="h-5 w-5 text-amber-400" />
-                    <span>Admin Portal</span>
-                  </Link>
                 </>
               )}
             </div>
@@ -931,10 +922,10 @@ export default function LandingPage() {
           </p>
           <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
             <Link
-              href="/login?role=student"
+              href="/login"
               className="px-8 py-4 rounded-2xl font-bold bg-white text-blue-700 hover:bg-blue-50 shadow-xl shadow-black/20 transition-all hover:scale-105"
             >
-              Start Practicing Free
+              Sign In
             </Link>
             <a
               href="mailto:kp13226663@gmail.com?subject=Book%20a%20Demo%20-%20NexgenCode%20Platform&body=Hello%20NexgenCode%20Team%2C%0A%0AI%20would%20like%20to%20schedule%20a%20live%20institutional%20demo%20of%20NexgenCode%20for%20our%20college%2Funiversity.%0A%0AInstitution%20Name%3A%0AContact%20Person%3A%0APhone%20Number%3A%0AEstimated%20Students%3A%0APreferred%20Date%20%26%20Time%3A%0A%0AThank%20you!"
@@ -943,12 +934,6 @@ export default function LandingPage() {
               <Mail className="h-5 w-5 text-slate-950" />
               <span>Book Demo (kp13226663@gmail.com)</span>
             </a>
-            <Link
-              href="/login?role=admin"
-              className="px-8 py-4 rounded-2xl font-bold bg-blue-950/60 hover:bg-blue-950/80 text-white border border-white/30 backdrop-blur-md transition-all"
-            >
-              Admin Portal
-            </Link>
           </div>
         </div>
       </section>

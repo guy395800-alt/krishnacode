@@ -2,25 +2,18 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../context/AuthContext';
-import { Code2, Lock, Mail, ShieldAlert, GraduationCap, ShieldCheck, ArrowRight, Sparkles, Key } from 'lucide-react';
+import { Code2, Lock, Mail, ShieldAlert, ArrowRight, Sparkles } from 'lucide-react';
 
 function LoginForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { login, user } = useAuth();
 
-  const [role, setRole] = useState('student');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const roleParam = searchParams.get('role');
-    if (roleParam === 'admin') setRole('admin');
-  }, [searchParams]);
 
   useEffect(() => {
     if (user) {
@@ -49,7 +42,7 @@ function LoginForm() {
         router.push('/student/dashboard');
       }
     } catch (err) {
-      setError(err.message || 'Login failed. Please verify your email and password.');
+      setError(err.message || 'Invalid credentials. Please verify your email and password.');
     } finally {
       setLoading(false);
     }
@@ -69,35 +62,8 @@ function LoginForm() {
           Nexgen<span className="text-blue-400">Code</span>
         </h2>
         <p className="text-xs text-slate-400">
-          Sign in to access your secure coding workspace & assessments
+          Sign in to access your unified coding workspace & assessments
         </p>
-      </div>
-
-      {/* Role Selector Tabs */}
-      <div className="grid grid-cols-2 p-1.5 bg-slate-950/80 rounded-2xl border border-slate-800">
-        <button
-          type="button"
-          onClick={() => { setRole('student'); setError(''); }}
-          className={`flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs transition-all ${
-            role === 'student'
-              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20'
-              : 'text-slate-400 hover:text-white'
-          }`}
-        >
-          <GraduationCap className="h-4 w-4" /> Student Portal
-        </button>
-
-        <button
-          type="button"
-          onClick={() => { setRole('admin'); setError(''); }}
-          className={`flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs transition-all ${
-            role === 'admin'
-              ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-md shadow-amber-500/20'
-              : 'text-slate-400 hover:text-white'
-          }`}
-        >
-          <ShieldCheck className="h-4 w-4" /> Admin Portal
-        </button>
       </div>
 
       {error && (
@@ -107,7 +73,7 @@ function LoginForm() {
         </div>
       )}
 
-      {/* Login Form */}
+      {/* Unified Login Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-xs font-bold uppercase text-slate-400 mb-1.5">
@@ -120,7 +86,7 @@ function LoginForm() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={role === 'admin' ? 'admin@nexgencode.com' : 'student@nexgencode.com'}
+              placeholder="name@college.edu or admin@nexgencode.com"
               className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950/90 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs font-medium transition-all"
             />
           </div>
@@ -151,13 +117,9 @@ function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-3.5 rounded-2xl font-bold text-xs text-white shadow-xl transition-all flex items-center justify-center gap-2 hover:scale-[1.02] disabled:opacity-50 ${
-            role === 'admin'
-              ? 'bg-gradient-to-r from-amber-600 via-orange-600 to-amber-500 hover:from-amber-500 hover:to-orange-500 shadow-amber-500/25'
-              : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 shadow-blue-500/25'
-          }`}
+          className="w-full py-3.5 rounded-2xl font-bold text-xs text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 shadow-xl shadow-blue-500/25 transition-all flex items-center justify-center gap-2 hover:scale-[1.02] disabled:opacity-50"
         >
-          {loading ? 'Authenticating...' : `Sign In to ${role === 'admin' ? 'Admin' : 'Student'} Workspace`}
+          {loading ? 'Signing In...' : 'Sign In'}
           {!loading && <ArrowRight className="h-4 w-4" />}
         </button>
       </form>
