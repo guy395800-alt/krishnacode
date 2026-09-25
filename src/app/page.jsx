@@ -10,7 +10,6 @@ import {
   ArrowRight,
   Zap,
   CheckCircle2,
-  Lock,
   Cpu,
   Trophy,
   Flame,
@@ -26,15 +25,76 @@ import {
   ChevronRight,
   Check,
   Star,
-  Users
+  Lock,
+  Play,
+  CopyCheck,
+  ShieldAlert
 } from 'lucide-react';
+
+const CODE_SNIPPETS = {
+  python: `# Python 3.11 Solution
+def two_sum(nums: list[int], target: int) -> list[int]:
+    seen = {}
+    for i, num in enumerate(nums):
+        diff = target - num
+        if diff in seen:
+            return [seen[diff], i]
+        seen[num] = i
+    return []
+
+# Test execution: two_sum([2, 7, 11, 15], 9) -> [0, 1]`,
+
+  cpp: `// C++17 High Performance Solution
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+
+using namespace std;
+
+vector<int> twoSum(vector<int>& nums, int target) {
+    unordered_map<int, int> seen;
+    for (int i = 0; i < nums.size(); i++) {
+        int diff = target - nums[i];
+        if (seen.count(diff)) return {seen[diff], i};
+        seen[nums[i]] = i;
+    }
+    return {};
+}`,
+
+  java: `// Java 17 OpenJDK Solution
+import java.util.HashMap;
+
+public class Solution {
+    public static int[] twoSum(int[] nums, int target) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int diff = target - nums[i];
+            if (map.containsKey(diff)) return new int[]{map.get(diff), i};
+            map.put(nums[i], i);
+        }
+        return new int[]{};
+    }
+}`,
+
+  javascript: `// Node.js 18 Solution
+function twoSum(nums, target) {
+    const seen = new Map();
+    for (let i = 0; i < nums.length; i++) {
+        const diff = target - nums[i];
+        if (seen.has(diff)) return [seen.get(diff), i];
+        seen.set(nums[i], i);
+    }
+    return [];
+}`
+};
 
 export default function LandingPage() {
   const { user } = useAuth();
   const [activeCategory, setActiveCategory] = useState('All');
-  const [codeTab, setCodeTab] = useState('code');
+  const [selectedLanguage, setSelectedLanguage] = useState('python');
+  const [isTestRun, setIsTestRun] = useState(false);
 
-  const problemCategories = ['All', 'Easy', 'Medium', 'Hard', 'Arrays', 'Strings', 'Trees'];
+  const problemCategories = ['All', 'Easy', 'Medium', 'Hard', 'Arrays', 'Strings', 'Trees', 'DP'];
 
   const sampleProblems = [
     {
@@ -43,8 +103,8 @@ export default function LandingPage() {
       difficulty: 'Easy',
       category: 'Arrays',
       tags: ['Array', 'Hash Table'],
-      solvedCount: 1240,
-      xp: 20,
+      solvedCount: 3420,
+      xp: 25,
       description: 'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.'
     },
     {
@@ -53,19 +113,19 @@ export default function LandingPage() {
       difficulty: 'Medium',
       category: 'Strings',
       tags: ['String', 'Sliding Window'],
-      solvedCount: 890,
-      xp: 35,
-      description: 'Find the length of the longest substring without repeating characters in a given string.'
+      solvedCount: 2150,
+      xp: 40,
+      description: 'Find the length of the longest substring without repeating characters in a given string with O(N) complexity.'
     },
     {
       id: 3,
       title: 'Binary Tree Level Order Traversal',
       difficulty: 'Medium',
       category: 'Trees',
-      tags: ['Tree', 'BFS'],
-      solvedCount: 650,
-      xp: 40,
-      description: 'Given the root of a binary tree, return the level order traversal of its nodes values.'
+      tags: ['Tree', 'BFS', 'Queue'],
+      solvedCount: 1680,
+      xp: 45,
+      description: 'Given the root of a binary tree, return the level order traversal of its nodes values from left to right.'
     },
     {
       id: 4,
@@ -73,8 +133,8 @@ export default function LandingPage() {
       difficulty: 'Easy',
       category: 'Strings',
       tags: ['Stack', 'String'],
-      solvedCount: 1510,
-      xp: 15,
+      solvedCount: 4120,
+      xp: 20,
       description: 'Determine if the input string containing brackets is valid according to open and closing matching order.'
     },
     {
@@ -82,20 +142,20 @@ export default function LandingPage() {
       title: 'Merge K Sorted Lists',
       difficulty: 'Hard',
       category: 'Arrays',
-      tags: ['Heap', 'Linked List'],
-      solvedCount: 320,
-      xp: 60,
-      description: 'You are given an array of k linked-lists, each linked-list is sorted in ascending order. Merge all into one.'
+      tags: ['Heap', 'Linked List', 'Divide & Conquer'],
+      solvedCount: 890,
+      xp: 75,
+      description: 'You are given an array of k linked-lists, each linked-list is sorted in ascending order. Merge all into one sorted list.'
     },
     {
       id: 6,
-      title: 'Maximum Subarray (Kadanes Algorithm)',
+      title: 'Maximum Subarray (Kadane\'s Algorithm)',
       difficulty: 'Medium',
       category: 'Arrays',
       tags: ['Array', 'Dynamic Programming'],
-      solvedCount: 980,
-      xp: 30,
-      description: 'Find the contiguous subarray with the largest sum and return its total sum.'
+      solvedCount: 2890,
+      xp: 35,
+      description: 'Find the contiguous subarray with the largest sum and return its total sum in optimal O(N) runtime.'
     }
   ];
 
@@ -106,267 +166,322 @@ export default function LandingPage() {
   });
 
   return (
-    <div className="flex flex-col space-y-24 py-6 max-w-7xl mx-auto">
-      {/* 1. Hero Section */}
-      <section className="relative pt-6 pb-4">
+    <div className="flex flex-col space-y-28 py-6 max-w-7xl mx-auto px-4 sm:px-6">
+      {/* =========================================================================
+          1. HERO SECTION: Interactive Live Code Playground & Modern Value Proposition
+         ========================================================================= */}
+      <section className="relative pt-6 pb-2">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Hero Left Content */}
           <div className="lg:col-span-7 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-bold tracking-wide uppercase">
-              <Sparkles className="h-4 w-4 text-amber-500" />
-              <span>Student-First Coding Platform</span>
+            {/* Animated Announcement Pill */}
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 border border-blue-500/25 text-blue-400 text-xs font-bold tracking-wide uppercase backdrop-blur-md shadow-lg shadow-blue-500/10">
+              <span className="h-2 w-2 rounded-full bg-blue-400 animate-ping" />
+              <Sparkles className="h-4 w-4 text-amber-400" />
+              <span>Next-Gen Coding & Anti-Cheat Exam Platform</span>
             </div>
 
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
-              Practice. Build. <br />
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500 dark:from-blue-400 dark:via-indigo-400 dark:to-sky-400 bg-clip-text text-transparent">
-                Get Future Ready.
+            {/* 3D Gradient Headline */}
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.1]">
+              Code. Practice. <br />
+              <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-sky-400 bg-clip-text text-transparent">
+                Ace Technical Exams.
               </span>
             </h1>
 
-            <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
-              NexGenCode is designed specifically for students and aspiring developers to master programming concepts, solve curated algorithm challenges, track coding growth, and prepare for top tech interviews.
+            <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl font-normal">
+              KrishnaCode provides a high-performance sandbox compiler, proctored examinations with AI anti-cheat protection, smart syntax error diagnostics, and campus leaderboards.
             </p>
 
+            {/* CTA Action Buttons */}
             <div className="flex flex-wrap items-center gap-4 pt-2">
               {user ? (
                 <Link
                   href={user.role === 'admin' ? '/admin/dashboard' : '/student/dashboard'}
-                  className="flex items-center gap-2.5 px-7 py-4 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-600/30 transition-all hover:scale-105"
+                  className="group flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-xl shadow-blue-500/25 transition-all hover:scale-105"
                 >
-                  Go to {user.role === 'admin' ? 'Admin' : 'Student'} Workspace <ArrowRight className="h-5 w-5" />
+                  <span>Go to {user.role === 'admin' ? 'Admin' : 'Student'} Workspace</span>
+                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Link>
               ) : (
                 <>
                   <Link
                     href="/login?role=student"
-                    className="flex items-center gap-2.5 px-7 py-4 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-600/30 transition-all hover:scale-105"
+                    className="group flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 shadow-xl shadow-blue-500/30 transition-all hover:scale-105"
                   >
-                    <GraduationCap className="h-5 w-5" /> Start Practice Free <ArrowRight className="h-5 w-5" />
+                    <GraduationCap className="h-5 w-5" />
+                    <span>Start Practice Free</span>
+                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </Link>
+
                   <Link
                     href="/login?role=admin"
-                    className="flex items-center gap-2 px-6 py-4 rounded-xl font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-all"
+                    className="flex items-center gap-2.5 px-6 py-4 rounded-2xl font-bold text-slate-300 hover:text-white bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 hover:border-slate-600 transition-all backdrop-blur-md shadow-md"
                   >
-                    <ShieldCheck className="h-5 w-5 text-amber-500" /> Admin Access
+                    <ShieldCheck className="h-5 w-5 text-amber-400" />
+                    <span>Admin Portal</span>
                   </Link>
                 </>
               )}
             </div>
 
-            {/* Quick Micro Badges */}
-            <div className="flex items-center gap-6 pt-4 text-xs font-semibold text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800">
+            {/* Quick Trust Badges */}
+            <div className="flex flex-wrap items-center gap-6 pt-4 text-xs font-semibold text-slate-400 border-t border-slate-800/80">
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" /> 500+ Curated Problems
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" /> 500+ Curated Problems
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" /> Multi-Language Compiler
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" /> 5 Multi-Language Sandboxes
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" /> Instant Test Execution
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" /> Anti-Cheat Proctoring HUD
               </span>
             </div>
           </div>
 
-          {/* Hero Right Code Snippet Mockup */}
+          {/* Hero Right: Interactive Live Code Playground Simulation */}
           <div className="lg:col-span-5">
-            <div className="rounded-2xl border border-slate-800 bg-slate-950 shadow-2xl overflow-hidden font-mono text-xs">
-              {/* Window Header */}
-              <div className="flex items-center justify-between px-4 py-3 bg-slate-900 border-b border-slate-800">
+            <div className="rounded-3xl border border-white/10 bg-slate-950/90 shadow-2xl overflow-hidden font-mono text-xs backdrop-blur-xl">
+              {/* Top Window Bar */}
+              <div className="flex items-center justify-between px-4 py-3 bg-slate-900/90 border-b border-white/10">
                 <div className="flex items-center gap-2">
                   <div className="h-3 w-3 rounded-full bg-red-500/80" />
                   <div className="h-3 w-3 rounded-full bg-amber-500/80" />
                   <div className="h-3 w-3 rounded-full bg-emerald-500/80" />
-                  <span className="ml-2 text-slate-400 font-semibold text-xs">two_sum.py</span>
+                  <span className="ml-2 text-slate-400 font-semibold text-xs font-sans">
+                    TwoSum.{selectedLanguage === 'python' ? 'py' : selectedLanguage === 'cpp' ? 'cpp' : selectedLanguage === 'java' ? 'java' : 'js'}
+                  </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setCodeTab('code')}
-                    className={`px-2.5 py-1 rounded text-[11px] font-sans font-semibold transition-colors ${
-                      codeTab === 'code' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    Code
-                  </button>
-                  <button
-                    onClick={() => setCodeTab('output')}
-                    className={`px-2.5 py-1 rounded text-[11px] font-sans font-semibold transition-colors ${
-                      codeTab === 'output' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    Result (Passed)
-                  </button>
+
+                {/* Language Switcher Tabs */}
+                <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                  {['python', 'cpp', 'java', 'javascript'].map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => {
+                        setSelectedLanguage(lang);
+                        setIsTestRun(false);
+                      }}
+                      className={`px-2 py-0.5 rounded-lg text-[10px] uppercase font-bold transition-all ${
+                        selectedLanguage === lang
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      {lang === 'javascript' ? 'JS' : lang}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              {/* Code Body / Output Body */}
-              {codeTab === 'code' ? (
-                <div className="p-5 text-slate-300 space-y-1.5 leading-relaxed overflow-x-auto">
-                  <div className="text-slate-500"># NexGenCode Python Execution Engine</div>
-                  <div>
-                    <span className="text-purple-400">def</span> <span className="text-blue-400 font-bold">two_sum</span>(nums: <span className="text-amber-300">list</span>[<span className="text-amber-300">int</span>], target: <span className="text-amber-300">int</span>) -&gt; <span className="text-amber-300">list</span>[<span className="text-amber-300">int</span>]:
+              {/* Code Snippet Body */}
+              <div className="p-5 text-slate-300 leading-relaxed overflow-x-auto min-h-[260px] bg-slate-950/70">
+                {!isTestRun ? (
+                  <pre className="text-xs whitespace-pre font-mono">
+                    <code>{CODE_SNIPPETS[selectedLanguage]}</code>
+                  </pre>
+                ) : (
+                  <div className="space-y-3 font-mono">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                      <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-bold text-xs flex items-center gap-1.5">
+                        <CheckCircle2 className="h-4 w-4" /> ALL 5 TEST CASES PASSED
+                      </span>
+                      <span className="text-slate-400 text-[11px]">Runtime: 14ms</span>
+                    </div>
+                    <div className="space-y-1.5 text-slate-300 text-xs">
+                      <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                        <span className="text-slate-500 block text-[10px] font-sans">Case #1 Input: nums=[2,7,11,15], target=9</span>
+                        <span className="text-emerald-400 font-bold">Output: [0, 1] (Match)</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-slate-900 border border-slate-800">
+                        <span className="text-slate-500 block text-[10px] font-sans">Case #2 Input: nums=[3,2,4], target=6</span>
+                        <span className="text-emerald-400 font-bold">Output: [1, 2] (Match)</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between pt-1 text-xs">
+                      <span className="text-amber-400 font-bold flex items-center gap-1">
+                        <Sparkles className="h-3.5 w-3.5" /> +25 XP Earned
+                      </span>
+                      <span className="text-amber-400 font-bold flex items-center gap-1">
+                        <Flame className="h-3.5 w-3.5 fill-amber-400" /> 7-Day Streak
+                      </span>
+                    </div>
                   </div>
-                  <div className="pl-4">
-                    seen = &#123;&#125;
-                  </div>
-                  <div className="pl-4">
-                    <span className="text-purple-400">for</span> i, num <span className="text-purple-400">in</span> <span className="text-blue-400">enumerate</span>(nums):
-                  </div>
-                  <div className="pl-8">
-                    complement = target - num
-                  </div>
-                  <div className="pl-8">
-                    <span className="text-purple-400">if</span> complement <span className="text-purple-400">in</span> seen:
-                  </div>
-                  <div className="pl-12 text-emerald-400 font-semibold">
-                    <span className="text-purple-400">return</span> [seen[complement], i]
-                  </div>
-                  <div className="pl-8">
-                    seen[num] = i
-                  </div>
-                  <div className="pl-4">
-                    <span className="text-purple-400">return</span> []
-                  </div>
-                  <div className="pt-2 text-slate-500"># Execution snippet passed target 9</div>
-                </div>
-              ) : (
-                <div className="p-5 space-y-3 font-mono">
-                  <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                    <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-                      <CheckCircle2 className="h-4 w-4" /> ALL 5 TEST CASES PASSED
-                    </span>
-                    <span className="text-slate-400 text-[11px]">Runtime: 18ms</span>
-                  </div>
-                  <div className="space-y-1 text-slate-300 text-[11px]">
-                    <div><span className="text-slate-500">Test Case 1:</span> nums=[2,7,11,15], target=9 -&gt; <span className="text-emerald-400">[0, 1]</span></div>
-                    <div><span className="text-slate-500">Test Case 2:</span> nums=[3,2,4], target=6 -&gt; <span className="text-emerald-400">[1, 2]</span></div>
-                    <div><span className="text-slate-500">Test Case 3:</span> nums=[3,3], target=6 -&gt; <span className="text-emerald-400">[0, 1]</span></div>
-                  </div>
-                  <div className="pt-2 flex items-center justify-between text-slate-400 text-[11px]">
-                    <span className="text-amber-400 font-bold">+25 XP Earned</span>
-                    <span className="text-sky-400 font-bold">Streak: 7 Days 🔥</span>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
 
-              {/* Code Card Footer */}
-              <div className="px-4 py-2.5 bg-slate-900/90 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
-                <span className="flex items-center gap-1.5 text-slate-300">
-                  <Terminal className="h-3.5 w-3.5 text-blue-400" /> Python 3.11 Compiler
-                </span>
-                <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" /> Sandboxed Ready
-                </span>
+              {/* Action Toolbar */}
+              <div className="px-4 py-3 bg-slate-900/90 border-t border-white/10 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5 text-slate-400 font-sans">
+                  <Terminal className="h-3.5 w-3.5 text-blue-400" />
+                  <span className="text-slate-300 font-medium capitalize">{selectedLanguage} Sandbox</span>
+                </div>
+
+                <button
+                  onClick={() => setIsTestRun(!isTestRun)}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-bold font-sans text-xs transition-all ${
+                    isTestRun
+                      ? 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                      : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                  }`}
+                >
+                  <Play className={`h-3 w-3 ${!isTestRun ? 'fill-white' : ''}`} />
+                  {isTestRun ? 'Reset Code' : 'Run Tests (Simulate)'}
+                </button>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. Trust & Social Proof Section */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+      {/* =========================================================================
+          2. PLATFORM METRICS TILES (High-Contrast Glassmorphic KPI Row)
+         ========================================================================= */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-white/10 shadow-2xl backdrop-blur-xl text-center">
         <div className="space-y-1 p-2">
-          <div className="text-3xl sm:text-4xl font-black text-blue-600 dark:text-blue-400">500+</div>
-          <div className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+          <div className="text-3xl sm:text-5xl font-black bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">
+            500+
+          </div>
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
             Practice Problems
           </div>
         </div>
-        <div className="space-y-1 p-2 border-l border-slate-200 dark:border-slate-800">
-          <div className="text-3xl sm:text-4xl font-black text-indigo-600 dark:text-indigo-400">20+</div>
-          <div className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-            Structured Roadmaps
+
+        <div className="space-y-1 p-2 border-l border-white/10">
+          <div className="text-3xl sm:text-5xl font-black bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
+            100%
+          </div>
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+            Anti-Cheat Protected
           </div>
         </div>
-        <div className="space-y-1 p-2 border-l border-slate-200 dark:border-slate-800">
-          <div className="text-3xl sm:text-4xl font-black text-emerald-600 dark:text-emerald-400">10+</div>
-          <div className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-            CS Core Topics
+
+        <div className="space-y-1 p-2 border-l border-white/10">
+          <div className="text-3xl sm:text-5xl font-black bg-gradient-to-r from-amber-400 to-orange-300 bg-clip-text text-transparent">
+            5
+          </div>
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+            Language Sandboxes
           </div>
         </div>
-        <div className="space-y-1 p-2 border-l border-slate-200 dark:border-slate-800">
-          <div className="text-3xl sm:text-4xl font-black text-amber-500">100%</div>
-          <div className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-            Student Focused
+
+        <div className="space-y-1 p-2 border-l border-white/10">
+          <div className="text-3xl sm:text-5xl font-black bg-gradient-to-r from-purple-400 to-pink-300 bg-clip-text text-transparent">
+            &lt;20ms
+          </div>
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+            Execution Latency
           </div>
         </div>
       </section>
 
-      {/* 3. Why NexGenCode? (4 Feature Cards) */}
+      {/* =========================================================================
+          3. BENTO GRID FEATURE SHOWCASE (Why KrishnaCode)
+         ========================================================================= */}
       <section className="space-y-10">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">
-            Designed for Student Developers
+          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
+            <Sparkles className="h-4 w-4" /> Enterprise-Grade Capabilities
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-black text-white">
+            Engineered for Modern Assessment & Learning
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
-            Everything you need to grow from typing your first line of code to cracking technical interviews.
+          <p className="text-slate-400 text-sm">
+            Everything universities, coding bootcamps, and technical recruiters need in a single unified platform.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-blue-500/50 transition-all hover:-translate-y-1">
-            <div className="h-12 w-12 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-4 font-bold">
-              <Target className="h-6 w-6" />
+          {/* Bento Card 1: Anti-Cheat Suite */}
+          <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl hover:border-blue-500/40 transition-all duration-300 hover:-translate-y-1.5 space-y-4 flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="h-12 w-12 rounded-2xl bg-blue-500/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-bold shadow-lg shadow-blue-500/10">
+                <ShieldAlert className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-bold text-white">AI Anti-Cheat Security</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Full-spectrum protection: clipboard copy/paste blocking, tab-switch loss tracking, right-click disabling, and synchronized countdown submission.
+              </p>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Structured Practice</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              Hand-curated coding problems across difficulty levels with comprehensive test cases and automated grading.
-            </p>
+            <div className="pt-2 text-xs font-mono font-semibold text-blue-400 flex items-center gap-1">
+              <Check className="h-3.5 w-3.5" /> Armed & Verified
+            </div>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-blue-500/50 transition-all hover:-translate-y-1">
-            <div className="h-12 w-12 rounded-xl bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-4 font-bold">
-              <Compass className="h-6 w-6" />
+          {/* Bento Card 2: Diagnostic Error Parser */}
+          <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl hover:border-purple-500/40 transition-all duration-300 hover:-translate-y-1.5 space-y-4 flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="h-12 w-12 rounded-2xl bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center font-bold shadow-lg shadow-purple-500/10">
+                <Zap className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-bold text-white">Smart Error Diagnostics</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Automatically isolates line numbers for SyntaxErrors, IndentationErrors, and compiler crashes with smart fix suggestions.
+              </p>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Guided Roadmaps</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              Step-by-step learning paths taking students from programming basics to advanced algorithm design.
-            </p>
+            <div className="pt-2 text-xs font-mono font-semibold text-purple-400 flex items-center gap-1">
+              <Check className="h-3.5 w-3.5" /> Line & Column Extraction
+            </div>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-blue-500/50 transition-all hover:-translate-y-1">
-            <div className="h-12 w-12 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4 font-bold">
-              <Cpu className="h-6 w-6" />
+          {/* Bento Card 3: Multi-Language Sandbox */}
+          <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl hover:border-emerald-500/40 transition-all duration-300 hover:-translate-y-1.5 space-y-4 flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="h-12 w-12 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold shadow-lg shadow-emerald-500/10">
+                <Cpu className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-bold text-white">Multi-Language Sandbox</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Run Python 3.11, C++17, Java 17, C, and Node.js JavaScript with strict memory safety and time limit benchmarking.
+              </p>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Real-time Compiler</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              Multi-language support for Python, Java, C, C++, JavaScript, and SQL running in secure sandboxes.
-            </p>
+            <div className="pt-2 text-xs font-mono font-semibold text-emerald-400 flex items-center gap-1">
+              <Check className="h-3.5 w-3.5" /> Millisecond Benchmarking
+            </div>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-blue-500/50 transition-all hover:-translate-y-1">
-            <div className="h-12 w-12 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-4 font-bold">
-              <Trophy className="h-6 w-6" />
+          {/* Bento Card 4: Leaderboards & Telemetry */}
+          <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl hover:border-amber-500/40 transition-all duration-300 hover:-translate-y-1.5 space-y-4 flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="h-12 w-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold shadow-lg shadow-amber-500/10">
+                <Trophy className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-bold text-white">Campus Leaderboards</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Gamified XP rankings, 3D podiums, daily problem streaks, and 3-second live streaming submission trackers for admins.
+              </p>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Track & Compete</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              Live campus leaderboards, daily streak tracking, accuracy stats, and timed examination mode.
-            </p>
+            <div className="pt-2 text-xs font-mono font-semibold text-amber-400 flex items-center gap-1">
+              <Check className="h-3.5 w-3.5" /> 3-Sec Live Stream
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 4. Coding Practice Section Preview */}
+      {/* =========================================================================
+          4. PRACTICE PROBLEMS CATALOG PREVIEW (Filterable Explorer)
+         ========================================================================= */}
       <section className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-              <Code2 className="h-4 w-4" /> Practice Catalog Preview
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
+              <Code2 className="h-4 w-4" /> Algorithmic Challenge Bank
             </div>
-            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">
-              Popular Problem Challenges
+            <h2 className="text-3xl sm:text-4xl font-black text-white">
+              Curated Practice Challenges
             </h2>
           </div>
 
-          {/* Interactive Filter Pills */}
+          {/* Category Filter Pills */}
           <div className="flex flex-wrap items-center gap-2">
             {problemCategories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   activeCategory === cat
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25'
+                    : 'bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800 border border-white/5'
                 }`}
               >
                 {cat}
@@ -380,30 +495,30 @@ export default function LandingPage() {
           {filteredProblems.map(problem => (
             <div
               key={problem.id}
-              className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between hover:border-blue-500/40 transition-colors"
+              className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl flex flex-col justify-between hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <span
-                    className={`px-2.5 py-1 rounded-md text-xs font-bold ${
+                    className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
                       problem.difficulty === 'Easy'
-                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                         : problem.difficulty === 'Medium'
-                        ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20'
-                        : 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20'
+                        ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                        : 'bg-red-500/10 text-red-400 border border-red-500/20'
                     }`}
                   >
                     {problem.difficulty}
                   </span>
-                  <span className="text-xs font-bold text-amber-500 flex items-center gap-1">
-                    <Star className="h-3.5 w-3.5 fill-amber-500" /> +{problem.xp} XP
+                  <span className="text-xs font-bold text-amber-400 flex items-center gap-1 font-mono">
+                    <Star className="h-3.5 w-3.5 fill-amber-400" /> +{problem.xp} XP
                   </span>
                 </div>
 
-                <h3 className="text-base font-bold text-slate-900 dark:text-white hover:text-blue-500 transition-colors">
+                <h3 className="text-base font-bold text-white hover:text-blue-400 transition-colors">
                   {problem.title}
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
                   {problem.description}
                 </p>
 
@@ -411,7 +526,7 @@ export default function LandingPage() {
                   {problem.tags.map(tag => (
                     <span
                       key={tag}
-                      className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[11px] font-medium text-slate-600 dark:text-slate-400"
+                      className="px-2 py-0.5 rounded-lg bg-slate-800/80 text-[10px] font-semibold text-slate-400 border border-slate-700/50"
                     >
                       {tag}
                     </span>
@@ -419,13 +534,13 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              <div className="pt-5 mt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-                <span className="text-slate-500 dark:text-slate-400 font-medium">
+              <div className="pt-5 mt-4 border-t border-slate-800 flex items-center justify-between text-xs">
+                <span className="text-slate-500 font-medium">
                   {problem.solvedCount.toLocaleString()} Solved
                 </span>
                 <Link
                   href="/student/problems"
-                  className="inline-flex items-center gap-1 font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                  className="inline-flex items-center gap-1 font-bold text-blue-400 hover:text-blue-300 transition-colors"
                 >
                   Solve Challenge <ChevronRight className="h-4 w-4" />
                 </Link>
@@ -437,139 +552,133 @@ export default function LandingPage() {
         <div className="text-center pt-2">
           <Link
             href="/student/problems"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl font-bold bg-slate-900 text-white hover:bg-slate-800 border border-white/10 hover:border-slate-700 transition-all shadow-lg"
           >
             Explore All 500+ Practice Problems <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
 
-      {/* 5. Learning Roadmaps Section (01-04) */}
+      {/* =========================================================================
+          5. LEARNING ROADMAPS SECTION (01 - 04)
+         ========================================================================= */}
       <section className="space-y-10">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-            <Compass className="h-4 w-4" /> Structured Curriculums
+          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-indigo-400">
+            <Compass className="h-4 w-4" /> Systematic Curriculums
           </div>
-          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">
+          <h2 className="text-3xl sm:text-4xl font-black text-white">
             Structured Learning Roadmaps
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-sm">
-            Follow a proven path designed to build strong problem-solving skills step-by-step.
+          <p className="text-slate-400 text-sm">
+            Step-by-step master tracks designed by software engineers to take you from foundational syntax to advanced graph theory.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Roadmap 01 */}
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
-            <div className="absolute top-0 right-0 px-4 py-2 bg-blue-600 text-white text-xs font-extrabold rounded-bl-xl font-mono">
+          <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl relative overflow-hidden group hover:border-blue-500/40 transition-all duration-300">
+            <div className="absolute top-0 right-0 px-4 py-1.5 bg-blue-600 text-white text-xs font-black rounded-bl-2xl font-mono">
               01
             </div>
             <div className="space-y-4">
-              <div className="h-10 w-10 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
-                <BookOpen className="h-5 w-5" />
+              <div className="h-12 w-12 rounded-2xl bg-blue-500/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-bold shadow-lg shadow-blue-500/10">
+                <BookOpen className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                Programming Fundamentals
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Master core language syntax, control structures, variables, loops, basic recursion, and function design.
+              <h3 className="text-xl font-bold text-white">Programming Fundamentals</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Variables, operators, conditional branching, loops, functions, basic recursion, and pointer memory models.
               </p>
-              <div className="space-y-2 pt-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+              <div className="space-y-2 pt-2 text-xs font-medium text-slate-300">
                 <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" /> Variables, Data Types & Operators
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Control Flow & Nested Logic
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" /> Conditional Statements & Loop Logic
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Functions, Scope & Call Stacks
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" /> Modular Functions & Scope
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Input / Output Stream Parsing
                 </div>
               </div>
             </div>
           </div>
 
           {/* Roadmap 02 */}
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
-            <div className="absolute top-0 right-0 px-4 py-2 bg-indigo-600 text-white text-xs font-extrabold rounded-bl-xl font-mono">
+          <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl relative overflow-hidden group hover:border-indigo-500/40 transition-all duration-300">
+            <div className="absolute top-0 right-0 px-4 py-1.5 bg-indigo-600 text-white text-xs font-black rounded-bl-2xl font-mono">
               02
             </div>
             <div className="space-y-4">
-              <div className="h-10 w-10 rounded-xl bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
-                <Layers className="h-5 w-5" />
+              <div className="h-12 w-12 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center font-bold shadow-lg shadow-indigo-500/10">
+                <Layers className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                Data Structures Mastery
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Understand physical and logical memory representations to build efficient applications.
+              <h3 className="text-xl font-bold text-white">Data Structures Architecture</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Master contiguous vs linked memory: Arrays, Linked Lists, Stacks, Queues, Binary Trees, Heaps, and Hash Maps.
               </p>
-              <div className="space-y-2 pt-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+              <div className="space-y-2 pt-2 text-xs font-medium text-slate-300">
                 <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" /> Arrays, Linked Lists, Stacks & Queues
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Linear Structures & Dynamic Arrays
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" /> Binary Trees, Heaps & BSTs
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Binary Search Trees & Priority Queues
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" /> Hash Maps & Set Implementations
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Hash Tables & Collision Resolution
                 </div>
               </div>
             </div>
           </div>
 
           {/* Roadmap 03 */}
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
-            <div className="absolute top-0 right-0 px-4 py-2 bg-emerald-600 text-white text-xs font-extrabold rounded-bl-xl font-mono">
+          <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl relative overflow-hidden group hover:border-emerald-500/40 transition-all duration-300">
+            <div className="absolute top-0 right-0 px-4 py-1.5 bg-emerald-600 text-white text-xs font-black rounded-bl-2xl font-mono">
               03
             </div>
             <div className="space-y-4">
-              <div className="h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
-                <Zap className="h-5 w-5" />
+              <div className="h-12 w-12 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold shadow-lg shadow-emerald-500/10">
+                <Zap className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                Algorithms & Problem Solving
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Learn classic algorithmic techniques to analyze time and space complexity effectively.
+              <h3 className="text-xl font-bold text-white">Algorithms & Complexity Design</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Asymptotic complexity (Big-O), Divide & Conquer, Binary Search, Dynamic Programming, and Graph Traversals.
               </p>
-              <div className="space-y-2 pt-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+              <div className="space-y-2 pt-2 text-xs font-medium text-slate-300">
                 <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" /> Sorting, Searching & Binary Search
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Binary Search & Sliding Windows
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" /> Dynamic Programming & Backtracking
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Dynamic Programming & Memoization
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" /> Graph Traversals (BFS & DFS)
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Graph Algorithms (BFS, DFS, Dijkstra)
                 </div>
               </div>
             </div>
           </div>
 
           {/* Roadmap 04 */}
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group">
-            <div className="absolute top-0 right-0 px-4 py-2 bg-amber-600 text-white text-xs font-extrabold rounded-bl-xl font-mono">
+          <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl relative overflow-hidden group hover:border-amber-500/40 transition-all duration-300">
+            <div className="absolute top-0 right-0 px-4 py-1.5 bg-amber-600 text-white text-xs font-black rounded-bl-2xl font-mono">
               04
             </div>
             <div className="space-y-4">
-              <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
-                <Award className="h-5 w-5" />
+              <div className="h-12 w-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold shadow-lg shadow-amber-500/10">
+                <Award className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                Coding Interview Prep
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Ace technical interview rounds with curated top questions, mock timed exams, and speed drills.
+              <h3 className="text-xl font-bold text-white">Interview Patterns & Speed Drills</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Targeted technical screening questions, speed mock tests under strict anti-cheat proctoring, and company problem archives.
               </p>
-              <div className="space-y-2 pt-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+              <div className="space-y-2 pt-2 text-xs font-medium text-slate-300">
                 <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" /> Top 100 Most Asked Interview Patterns
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Top 75 LeetCode / FAANG Patterns
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" /> Mock Timed Coding Examinations
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Timed Proctored Mock Examinations
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-emerald-500 shrink-0" /> Company Tagged Problem Sets
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Behavioral & Coding Speed Analysis
                 </div>
               </div>
             </div>
@@ -577,55 +686,57 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 6. Daily Coding Challenge Spotlight */}
-      <section className="p-8 rounded-3xl bg-gradient-to-r from-blue-950 via-slate-900 to-indigo-950 text-white border border-blue-500/30 shadow-2xl relative overflow-hidden">
+      {/* =========================================================================
+          6. DAILY CODING CHALLENGE SPOTLIGHT (Streak & XP Gamification)
+         ========================================================================= */}
+      <section className="p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-blue-950/80 via-slate-900 to-indigo-950/80 border border-blue-500/30 shadow-2xl relative overflow-hidden backdrop-blur-xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-8 space-y-4">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold flex items-center gap-1.5">
-                <Flame className="h-4 w-4 text-amber-400" /> Daily Practice Challenge
+              <span className="px-3.5 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold flex items-center gap-1.5 shadow-sm">
+                <Flame className="h-4 w-4 text-amber-400 fill-amber-400 animate-pulse" /> Daily Challenge Active
               </span>
-              <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 text-xs font-mono">
-                <Clock className="h-3.5 w-3.5 inline mr-1" /> Resets in 08h 24m
+              <span className="px-3.5 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 text-xs font-mono">
+                <Clock className="h-3.5 w-3.5 inline mr-1" /> Resets in 06h 45m
               </span>
             </div>
 
-            <h3 className="text-2xl sm:text-3xl font-extrabold">
-              Problem of the Day: <span className="text-sky-300">Find the Missing Number</span>
+            <h3 className="text-2xl sm:text-4xl font-black text-white">
+              Problem of the Day: <span className="bg-gradient-to-r from-sky-400 to-blue-300 bg-clip-text text-transparent">Find the Missing Number</span>
             </h3>
 
             <p className="text-sm text-slate-300 max-w-xl leading-relaxed">
-              Given an array <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-300">nums</code> containing <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-300">n</code> distinct numbers in the range <code className="bg-slate-800 px-1.5 py-0.5 rounded text-amber-300">[0, n]</code>, return the only number in the range that is missing from the array.
+              Given an array <code className="bg-slate-800 px-2 py-0.5 rounded text-amber-300 font-mono font-bold">nums</code> containing <code className="bg-slate-800 px-2 py-0.5 rounded text-amber-300 font-mono font-bold">n</code> distinct numbers in the range <code className="bg-slate-800 px-2 py-0.5 rounded text-amber-300 font-mono font-bold">[0, n]</code>, return the only number missing from the array in O(N) time and O(1) space.
             </p>
 
             <div className="flex flex-wrap items-center gap-6 pt-2 text-xs">
               <div>
-                <span className="text-slate-400 block">Difficulty</span>
+                <span className="text-slate-400 block text-[11px]">Difficulty</span>
                 <span className="text-amber-400 font-bold">Medium</span>
               </div>
               <div>
-                <span className="text-slate-400 block">Reward</span>
+                <span className="text-slate-400 block text-[11px]">Reward</span>
                 <span className="text-emerald-400 font-bold">+50 XP & Streak Bonus</span>
               </div>
               <div>
-                <span className="text-slate-400 block">Submissions Today</span>
-                <span className="text-white font-bold">428 Students</span>
+                <span className="text-slate-400 block text-[11px]">Submissions Today</span>
+                <span className="text-white font-bold font-mono">540+ Students</span>
               </div>
             </div>
           </div>
 
           <div className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center space-y-4">
-            <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-700/60 text-center w-full max-w-xs space-y-2">
-              <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Your Active Streak</div>
-              <div className="text-3xl font-black text-amber-400 flex items-center justify-center gap-2">
+            <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-700/60 text-center w-full max-w-xs space-y-2 shadow-xl">
+              <div className="text-xs text-slate-400 uppercase tracking-wider font-bold">Your Coding Streak</div>
+              <div className="text-4xl font-black text-amber-400 flex items-center justify-center gap-2">
                 <Flame className="h-8 w-8 text-amber-500 fill-amber-500 animate-pulse" /> 7 Days
               </div>
-              <div className="text-[11px] text-slate-400">Solve today to keep your streak alive!</div>
+              <div className="text-[11px] text-slate-400">Solve today to level up your developer rank!</div>
             </div>
 
             <Link
               href="/student/problems"
-              className="w-full max-w-xs py-3.5 px-6 rounded-xl font-bold text-center bg-blue-600 hover:bg-blue-500 text-white shadow-lg transition-all"
+              className="w-full max-w-xs py-3.5 px-6 rounded-2xl font-bold text-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-xl shadow-blue-500/30 transition-all hover:scale-105"
             >
               Solve Today's Challenge Now
             </Link>
@@ -633,247 +744,70 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 7. Student Dashboard Preview Section */}
+      {/* =========================================================================
+          7. SUPPORTED LANGUAGES GRID
+         ========================================================================= */}
       <section className="space-y-8">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-            <BarChart3 className="h-4 w-4" /> Live Student Workspace
+          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
+            <Terminal className="h-4 w-4" /> Multi-Language Sandbox Engine
           </div>
-          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">
-            Track Progress & Coding Performance
+          <h2 className="text-3xl sm:text-4xl font-black text-white">
+            Compiled & Interpreted Languages
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-sm">
-            Intuitive analytics keep you motivated with problem resolution counters, accuracy percentages, and XP levels.
+          <p className="text-slate-400 text-sm">
+            Execute code seamlessly in your language of choice with standardized I/O streams and instant assertion testing.
           </p>
         </div>
 
-        {/* Dashboard Mockup Card */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl text-white space-y-6">
-          {/* Header Stats Pills */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/50 space-y-1">
-              <span className="text-xs text-slate-400 font-semibold uppercase">Problems Solved</span>
-              <div className="text-2xl font-black text-white">128 / 500</div>
-              <div className="text-[11px] text-emerald-400 font-medium">+14 this week</div>
-            </div>
-
-            <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/50 space-y-1">
-              <span className="text-xs text-slate-400 font-semibold uppercase">Coding Streak</span>
-              <div className="text-2xl font-black text-amber-400 flex items-center gap-1.5">
-                <Flame className="h-5 w-5 fill-amber-400" /> 12 Days
-              </div>
-              <div className="text-[11px] text-amber-300 font-medium">Personal Best!</div>
-            </div>
-
-            <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/50 space-y-1">
-              <span className="text-xs text-slate-400 font-semibold uppercase">Accuracy Rate</span>
-              <div className="text-2xl font-black text-sky-400">82.4%</div>
-              <div className="text-[11px] text-sky-300 font-medium">High submission precision</div>
-            </div>
-
-            <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/50 space-y-1">
-              <span className="text-xs text-slate-400 font-semibold uppercase">Total XP Points</span>
-              <div className="text-2xl font-black text-indigo-400">2,450 XP</div>
-              <div className="text-[11px] text-indigo-300 font-medium">Level 6 Developer</div>
-            </div>
-          </div>
-
-          {/* Activity Bar Chart Mockup & Continue Learning Card */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-2">
-            {/* Weekly Activity Bar Chart */}
-            <div className="lg:col-span-7 p-5 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-4">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-300">Weekly Coding Activity</span>
-                <span className="text-slate-500 font-mono">Mon - Sun</span>
-              </div>
-              <div className="flex items-end justify-between h-32 pt-4 px-2">
-                {[
-                  { day: 'Mon', count: 4, height: 'h-16' },
-                  { day: 'Tue', count: 7, height: 'h-24' },
-                  { day: 'Wed', count: 3, height: 'h-12' },
-                  { day: 'Thu', count: 9, height: 'h-28' },
-                  { day: 'Fri', count: 6, height: 'h-20' },
-                  { day: 'Sat', count: 12, height: 'h-32' },
-                  { day: 'Sun', count: 8, height: 'h-24' }
-                ].map(item => (
-                  <div key={item.day} className="flex flex-col items-center gap-2">
-                    <div className={`w-8 rounded-t-lg bg-gradient-to-t from-blue-600 to-indigo-500 ${item.height} transition-all`} />
-                    <span className="text-[11px] text-slate-400 font-mono">{item.day}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Continue Learning Progress Card */}
-            <div className="lg:col-span-5 p-5 rounded-2xl bg-slate-950/60 border border-slate-800 flex flex-col justify-between space-y-4">
-              <div className="space-y-2">
-                <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">In Progress Roadmap</span>
-                <h4 className="text-base font-bold text-white">Data Structures & Algorithms</h4>
-                <p className="text-xs text-slate-400">13 of 20 Modules Completed (65%)</p>
-                <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                  <div className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full w-[65%]" />
-                </div>
-              </div>
-              <div className="pt-2">
-                <Link
-                  href="/student/dashboard"
-                  className="w-full block py-2.5 rounded-xl text-center text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white transition-colors"
-                >
-                  Resume Learning Path
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 8. Supported Languages Grid */}
-      <section className="space-y-8">
-        <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-            <Terminal className="h-4 w-4" /> Multi-Language Sandboxing
-          </div>
-          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">
-            Supported Programming Languages
-          </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-sm">
-            Write, test, and execute code in your preferred programming language with low-latency compiler execution.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {[
-            { name: 'Python', version: 'Python 3.11', icon: '🐍', color: 'text-amber-500' },
-            { name: 'Java', version: 'Java 17 OpenJDK', icon: '☕', color: 'text-orange-500' },
-            { name: 'C', version: 'GCC 11 (C17)', icon: '⚡', color: 'text-blue-500' },
-            { name: 'C++', version: 'GCC 11 (C++17)', icon: '🚀', color: 'text-sky-500' },
-            { name: 'JavaScript', version: 'Node.js 18', icon: '💛', color: 'text-yellow-400' },
-            { name: 'SQL', version: 'PostgreSQL / SQLite', icon: '🗄️', color: 'text-purple-400' }
+            { name: 'Python', version: 'Python 3.11', icon: '🐍', tag: 'Fast Execution' },
+            { name: 'C++', version: 'GCC 11 (C++17)', icon: '🚀', tag: 'Ultra-Fast O(1)' },
+            { name: 'Java', version: 'Java 17 OpenJDK', icon: '☕', tag: 'Enterprise Grade' },
+            { name: 'C', version: 'GCC 11 (C17)', icon: '⚡', tag: 'Low-Level Speed' },
+            { name: 'JavaScript', version: 'Node.js 18', icon: '💛', tag: 'Async Engine' },
           ].map(lang => (
             <div
               key={lang.name}
-              className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center space-y-2 hover:border-blue-500/50 transition-colors"
+              className="p-5 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl text-center space-y-2 hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300"
             >
-              <div className="text-3xl">{lang.icon}</div>
-              <div className="font-bold text-slate-900 dark:text-white text-sm">{lang.name}</div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">{lang.version}</div>
+              <div className="text-4xl">{lang.icon}</div>
+              <div className="font-bold text-white text-base">{lang.name}</div>
+              <div className="text-xs text-slate-400 font-mono">{lang.version}</div>
+              <span className="inline-block px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-[10px] font-semibold border border-blue-500/20">
+                {lang.tag}
+              </span>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 9. Challenges & Competitions Section */}
-      <section className="space-y-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-500">
-              <Trophy className="h-4 w-4" /> Live Competitions
-            </div>
-            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">
-              Campus Coding Challenges
-            </h2>
-          </div>
-          <Link
-            href="/student/exams"
-            className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1"
-          >
-            View All Scheduled Competitions <ChevronRight className="h-4 w-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold border border-blue-500/20">
-                Upcoming
-              </span>
-              <span className="text-xs text-slate-400 font-mono">Sat, 6:00 PM</span>
-            </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-              Weekly Campus Coding Contest #14
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400">
-              4 algorithmic challenges in 120 minutes. Top 10 participants earn profile badges and placement credits.
-            </p>
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">150+ Registered</span>
-              <Link href="/login" className="font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                Register Free
-              </Link>
-            </div>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-500/20">
-                Active Now
-              </span>
-              <span className="text-xs text-slate-400 font-mono">3 Days Remaining</span>
-            </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-              Beginner Algorithmic Sprint
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400">
-              Perfect for 1st & 2nd year students testing foundational array and string logic under low pressure.
-            </p>
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">320 Participants</span>
-              <Link href="/student/problems" className="font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
-                Enter Challenge
-              </Link>
-            </div>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="px-2.5 py-1 rounded-full bg-slate-500/10 text-slate-500 text-xs font-bold border border-slate-500/20">
-                Completed
-              </span>
-              <span className="text-xs text-slate-400 font-mono">Last Weekend</span>
-            </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-              Data Structures Speed Run
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400">
-              High speed challenge focused on trees, graphs, and dynamic programming optimization.
-            </p>
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">Winner: Rahul Sharma</span>
-              <Link href="/student/leaderboard" className="font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                View Results
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 10. Call to Action Banner */}
-      <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-blue-900/80 via-indigo-950/90 to-slate-950 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 border border-blue-500/30 backdrop-blur-xl">
-        <div className="space-y-4 text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-500/30">
-            <Sparkles className="h-4 w-4 text-blue-400" /> Start Practicing Today
-          </div>
-          <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-            Ready to Master Problem Solving?
-          </h3>
-          <p className="text-sm sm:text-base text-slate-300 max-w-xl leading-relaxed">
-            Join students and aspiring software developers building consistency, mastering data structures, and excelling in technical interviews.
+      {/* =========================================================================
+          8. FINAL CALL TO ACTION (Get Started Today)
+         ========================================================================= */}
+      <section className="p-10 sm:p-14 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white shadow-2xl relative overflow-hidden text-center space-y-6">
+        <div className="max-w-2xl mx-auto space-y-4">
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight">
+            Ready to Accelerate Your Coding Journey?
+          </h2>
+          <p className="text-blue-100 text-sm sm:text-base leading-relaxed">
+            Join thousands of developers and university students practicing algorithms, taking proctored exams, and preparing for top-tier software engineering careers.
           </p>
-        </div>
-
-        <div className="shrink-0 flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-          <Link
-            href="/login"
-            className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-500 transition-all text-center shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2"
-          >
-            Get Started <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link
-            href="/login"
-            className="w-full sm:w-auto px-8 py-4 rounded-xl font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition-all text-center"
-          >
-            Sign In
-          </Link>
+          <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/login?role=student"
+              className="px-8 py-4 rounded-2xl font-bold bg-white text-blue-700 hover:bg-blue-50 shadow-xl shadow-black/20 transition-all hover:scale-105"
+            >
+              Get Started for Free
+            </Link>
+            <Link
+              href="/login?role=admin"
+              className="px-8 py-4 rounded-2xl font-bold bg-blue-900/50 hover:bg-blue-900/70 text-white border border-white/30 backdrop-blur-md transition-all"
+            >
+              Request Admin Access
+            </Link>
+          </div>
         </div>
       </section>
     </div>
