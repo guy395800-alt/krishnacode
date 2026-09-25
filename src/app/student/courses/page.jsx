@@ -185,8 +185,10 @@ export default function StudentCoursesPage() {
                         <span>{course.duration}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-                        <span>{course.rating} ({course.reviewsCount})</span>
+                        <Code2 className="h-3.5 w-3.5 text-amber-400" />
+                        <span>
+                          {course.modules?.reduce((acc, m) => acc + (m.lessons?.filter(l => l.type === 'problem')?.length || 0), 0) || 0} Coding Challenges
+                        </span>
                       </div>
                     </div>
 

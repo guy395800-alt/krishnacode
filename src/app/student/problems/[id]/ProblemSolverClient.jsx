@@ -29,19 +29,13 @@ const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false 
 
 const STARTER_TEMPLATES = {
   python: `# Python 3.11 Solution
-def solution():
-    # Read input from STDIN and print output to STDOUT
-    import sys
-    input_data = sys.stdin.read().split()
-    if not input_data:
-        return
-    # Write your algorithmic solution here
-    print(" ".join(input_data))
-
-if __name__ == '__main__':
-    solution()
+# Implement your solution and RETURN the answer (No input() needed)
+def solve(*args):
+    # Write your algorithmic solution here and return the computed answer
+    pass
 `,
   cpp: `// C++17 Solution
+// Implement your solution and return the answer
 #include <iostream>
 #include <vector>
 #include <string>
@@ -49,52 +43,36 @@ if __name__ == '__main__':
 
 using namespace std;
 
-int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-
-    // Read input from STDIN
-    // Write your algorithmic solution here
-
+auto solve(auto... args) {
+    // Write your algorithmic solution here and return the answer
     return 0;
 }
 `,
   c: `// C (GCC 11) Solution
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-int main() {
-    // Read input from STDIN
-    // Write your algorithmic solution here
-
+int solve() {
+    // Return computed answer
     return 0;
 }
 `,
   java: `// Java 17 OpenJDK Solution
 import java.util.*;
-import java.io.*;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        // Read input from STDIN
-        // Write your algorithmic solution here
+public class Solution {
+    public Object solve(Object... args) {
+        // Implement your logic and return the answer
+        return null;
     }
 }
 `,
   javascript: `// Node.js 18 JavaScript Solution
-const fs = require('fs');
-
-function main() {
-    const input = fs.readFileSync(0, 'utf-8').trim();
-    if (!input) return;
-    
-    // Write your algorithmic solution here
-    console.log(input);
+// Implement your solution and RETURN the answer
+function solve(...args) {
+    // Write your algorithmic solution here and return result
+    return null;
 }
-
-main();
 `
 };
 
@@ -398,6 +376,14 @@ export default function ProblemSolverClient({ initialId }) {
             >
               <RotateCcw className="h-3.5 w-3.5" /> Reset Template
             </button>
+          </div>
+
+          {/* Function Return Mode Info Banner */}
+          <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs flex items-center gap-2.5">
+            <Sparkles className="h-4 w-4 text-amber-400 shrink-0" />
+            <span>
+              <strong>Function-Return Mode:</strong> Implement your logic and <strong>RETURN</strong> the computed answer directly. No need to read standard input (<code>input()</code> / <code>cin</code>).
+            </span>
           </div>
 
           {/* Monaco Editor Container */}
