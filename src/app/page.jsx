@@ -392,15 +392,15 @@ export default function LandingPage() {
                 <>
                   <Link
                     href="/login"
-                    className="group flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-white apple-btn-primary shadow-xl shadow-blue-500/30 hover:scale-105 transition-all"
+                    className="group inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl font-bold text-sm text-white apple-btn-primary shadow-xl shadow-blue-500/30 hover:scale-105 transition-all shrink-0"
                   >
                     <span>Sign In</span>
-                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="h-4.5 w-4.5 transition-transform group-hover:translate-x-1" />
                   </Link>
 
                   <a
                     href="mailto:kp13226663@gmail.com?subject=Book%20a%20Demo%20-%20NexgenCode%20Platform&body=Hello%20NexgenCode%20Team%2C%0A%0AI%20would%20like%20to%20schedule%20a%20live%20institutional%20demo%20of%20NexgenCode%20for%20our%20college%2Funiversity.%0A%0AInstitution%20Name%3A%0AContact%20Person%3A%0APhone%20Number%3A%0AEstimated%20Students%3A%0APreferred%20Date%20%26%20Time%3A%0A%0AThank%20you!"
-                    className="flex items-center gap-2 px-6 py-4 rounded-2xl font-bold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all backdrop-blur-md shadow-lg shadow-amber-500/10 hover:scale-105"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl font-bold text-sm text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all backdrop-blur-md shadow-lg shadow-amber-500/10 hover:scale-105 shrink-0"
                   >
                     <Mail className="h-4 w-4 text-amber-400" />
                     <span>Book Demo</span>

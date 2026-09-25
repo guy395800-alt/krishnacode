@@ -152,8 +152,9 @@ export const Navbar = () => {
 
               <Link
                 href="/login"
-                className="h-9 px-5 inline-flex items-center justify-center text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] shrink-0 whitespace-nowrap"
+                className="h-9 px-4 sm:px-5 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-md shadow-blue-500/30 transition-all hover:scale-[1.02] shrink-0 whitespace-nowrap"
               >
+                <LogIn className="h-3.5 w-3.5" />
                 <span>Sign In</span>
               </Link>
             </div>
