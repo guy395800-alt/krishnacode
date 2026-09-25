@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
+import { getCourses } from '../lib/coursesStore';
+import { triggerConfetti } from '../lib/confetti';
 import {
   Code2,
   ShieldCheck,
@@ -39,7 +41,9 @@ import {
   Briefcase,
   GitBranch,
   Rocket,
-  CheckCircle
+  CheckCircle,
+  Eye,
+  PlayCircle
 } from 'lucide-react';
 
 const ROTATING_PHRASES = [
@@ -143,10 +147,10 @@ const CAREER_TRACKS = [
     id: 'dsa',
     name: 'Data Structures & Algorithms',
     icon: GitBranch,
-    badge: 'Core Foundation',
+    badge: 'Core Placement Track',
     color: 'from-blue-500 to-indigo-500',
-    description: 'Master arrays, trees, dynamic programming, graphs, and Big-O analysis demanded by FAANG & Tier-1 tech firms.',
-    modules: ['Arrays & Sliding Window', 'Linked Lists & Two Pointers', 'Binary Trees & Graphs', 'Dynamic Programming & Memoization', 'Bit Manipulation & Greedy'],
+    description: 'Master arrays, binary trees, dynamic programming, graphs, and Big-O analysis demanded by FAANG & Tier-1 tech recruitment drives.',
+    modules: ['Arrays & Sliding Window', 'Linked Lists & Two Pointers', 'Binary Trees & Graphs', 'Dynamic Programming & Memoization', 'Bit Manipulation & Greedy Algorithms'],
     problems: '280+ Problems',
     avgPackage: '12-45 LPA Target'
   },
@@ -154,10 +158,10 @@ const CAREER_TRACKS = [
     id: 'fullstack',
     name: 'Full-Stack Web & Cloud',
     icon: Laptop,
-    badge: 'Industry High Demand',
+    badge: 'High Industry Demand',
     color: 'from-purple-500 to-pink-500',
-    description: 'Build enterprise-grade REST APIs, relational databases, Next.js client architectures, and CI/CD pipelines.',
-    modules: ['Modern JavaScript & TypeScript', 'Next.js 14 Server Components', 'PostgreSQL & Database Design', 'FastAPI & Python Microservices', 'Docker & Cloud Deployment'],
+    description: 'Build enterprise-grade REST APIs, relational databases, Next.js client architectures, and automated Docker CI/CD deployment pipelines.',
+    modules: ['Modern JavaScript & TypeScript', 'Next.js 14 Server Components', 'PostgreSQL & Relational Modelling', 'FastAPI & Python Microservices', 'Docker & Cloud Deployment'],
     problems: '150+ Full Projects',
     avgPackage: '10-35 LPA Target'
   },
@@ -168,7 +172,7 @@ const CAREER_TRACKS = [
     badge: 'Next-Gen Frontier',
     color: 'from-emerald-500 to-teal-500',
     description: 'Deep dive into Python data pipelines, vectorized operations, SQL window functions, and LLM application frameworks.',
-    modules: ['Advanced Python & NumPy', 'SQL Analytics & Window Functions', 'Data Pipelines & ETL Design', 'Vector Databases & Embeddings', 'AI Agent Architectures'],
+    modules: ['Advanced Python & NumPy', 'SQL Analytics & Window Functions', 'Data Pipelines & ETL Design', 'Vector Databases & Embeddings', 'Autonomous AI Agents'],
     problems: '120+ Datasets & Tasks',
     avgPackage: '14-40 LPA Target'
   },
@@ -192,12 +196,15 @@ export default function LandingPage() {
   const [simulatedOutput, setSimulatedOutput] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
   const [selectedTrack, setSelectedTrack] = useState('dsa');
+  const [featuredCourses, setFeaturedCourses] = useState([]);
 
   // Dynamic Rotating Hero Text State ("Text Going")
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
+    setFeaturedCourses(getCourses().slice(0, 3));
+
     const interval = setInterval(() => {
       setIsFading(true);
       setTimeout(() => {
@@ -214,6 +221,7 @@ export default function LandingPage() {
     setTimeout(() => {
       setIsRunning(false);
       setSimulatedOutput(true);
+      triggerConfetti(); // Celebratory fireworks!
     }, 550);
   };
 
@@ -227,12 +235,16 @@ export default function LandingPage() {
       a: 'Yes! Admins can create semester-wise labs with week-wise unlocked tracks (W1 to W12), configure custom problem sets with public example test cases and hidden evaluation cases, and track student code submission streams in real-time.'
     },
     {
+      q: 'How does the Courses upload feature work for faculty and students?',
+      a: 'Faculty and administrators can upload comprehensive academic courses with syllabus modules, video lectures, and embedded problem sets. Once published, students immediately see and enroll in these courses within their student workspace.'
+    },
+    {
       q: 'What programming languages and compilers are supported?',
       a: 'The platform provides isolated, high-speed execution sandboxes for Python 3.11, C++17 (GCC 11), C17, Java 17 (OpenJDK), Node.js 18 (JavaScript), and PostgreSQL/SQLite database engines.'
     },
     {
       q: 'How does the automated compiler diagnostic parser work?',
-      a: 'When student code fails or triggers an error, our intelligent diagnostic parser analyzes the compiler stderr and tracebacks to pinpoint the exact line & column, explains the error type (SyntaxError, IndentationError, TLE, Wrong Answer), and provides actionable fix hints without giving away the full answer.'
+      a: 'When student code fails or triggers an error, our intelligent diagnostic parser analyzes compiler stderr and tracebacks to pinpoint the exact line & column, explains the error type (SyntaxError, IndentationError, TLE, Wrong Answer), and provides actionable fix hints.'
     },
     {
       q: 'Can assessment results and student marks be exported for college records?',
@@ -254,7 +266,7 @@ export default function LandingPage() {
             {/* Top Product Tag Pill */}
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-purple-500/15 border border-blue-500/30 text-blue-400 text-xs font-bold tracking-wide uppercase backdrop-blur-md shadow-lg shadow-blue-500/10 animate-pulse-glow">
               <Sparkles className="h-4 w-4 text-amber-400" />
-              <span>Next-Gen College Coding & Proctoring Ecosystem</span>
+              <span>⚡ Next-Gen College Coding & Proctoring Ecosystem</span>
             </div>
 
             {/* Subtitle Triad: Learn • Practice • Master • Get Placed */}
@@ -289,7 +301,7 @@ export default function LandingPage() {
 
             {/* Description */}
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl font-normal">
-              The all-in-one college platform: curated tech roadmaps, semester-wise labs with week-wise unlocks, placement-style examinations with AI anti-cheat security, and real-time live admin dashboards.
+              Curated tech roadmaps, 12-week semester labs, AI-backed proctored exams, and real-time live admin streams for modern universities.
             </p>
 
             {/* CTA Buttons */}
@@ -324,19 +336,25 @@ export default function LandingPage() {
               )}
             </div>
 
-            {/* Social Proof Quick Counters */}
+            {/* Trust Badges Grid Animated Counters */}
             <div className="flex flex-wrap gap-x-10 gap-y-4 pt-6 border-t border-white/10 text-left">
               <div>
-                <div className="font-mono font-black text-2xl sm:text-3xl text-white">50+</div>
+                <div className="font-mono font-black text-2xl sm:text-3xl text-white flex items-center gap-1">
+                  50+ <span className="text-sm text-blue-400 font-sans font-normal">Colleges</span>
+                </div>
                 <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Colleges Onboard</div>
               </div>
               <div>
-                <div className="font-mono font-black text-2xl sm:text-3xl text-white">25,000+</div>
+                <div className="font-mono font-black text-2xl sm:text-3xl text-white flex items-center gap-1">
+                  25,000+ <span className="text-sm text-emerald-400 font-sans font-normal">Coders</span>
+                </div>
                 <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Active Students</div>
               </div>
               <div>
-                <div className="font-mono font-black text-2xl sm:text-3xl text-white">6+</div>
-                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Compilers + SQL</div>
+                <div className="font-mono font-black text-2xl sm:text-3xl text-white flex items-center gap-1">
+                  6+ <span className="text-sm text-purple-400 font-sans font-normal">Engines</span>
+                </div>
+                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Compilers & SQL</div>
               </div>
             </div>
           </div>
@@ -392,13 +410,13 @@ export default function LandingPage() {
 
               {/* Simulated Output Banner (when user clicks Run) */}
               {simulatedOutput && (
-                <div className="p-3.5 bg-emerald-950/50 border-t border-emerald-500/40 text-emerald-300 font-mono text-xs flex items-center justify-between">
+                <div className="p-3.5 bg-emerald-950/50 border-t border-emerald-500/40 text-emerald-300 font-mono text-xs flex items-center justify-between animate-pulse">
                   <span className="flex items-center gap-1.5 font-bold">
                     <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                     {CODE_EXAMPLES[activeLang].output}
                   </span>
                   <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                    Accepted
+                    Passed 🎉
                   </span>
                 </div>
               )}
@@ -416,7 +434,7 @@ export default function LandingPage() {
                   className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl font-bold font-sans text-xs bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-md shadow-amber-500/20 transition-all hover:scale-105"
                 >
                   <Play className={`h-3 w-3 ${isRunning ? 'animate-spin' : 'fill-slate-950'}`} />
-                  {isRunning ? 'Compiling...' : 'Run Code'}
+                  {isRunning ? 'Compiling...' : 'Run Code (Test Cases)'}
                 </button>
               </div>
             </div>
@@ -439,7 +457,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          2. ANIMATED MARQUEE TICKER (Continuous High-Tech Banner)
+          2. ANIMATED MARQUEE TICKER (Continuous High-Tech Ribbon)
          ========================================================================= */}
       <div className="w-full bg-gradient-to-r from-blue-900/30 via-indigo-900/40 to-purple-900/30 border-y border-white/10 py-3.5 overflow-hidden backdrop-blur-md">
         <div className="flex items-center gap-8 text-xs font-mono font-bold tracking-wider text-slate-300 uppercase whitespace-nowrap animate-marquee">
@@ -447,22 +465,101 @@ export default function LandingPage() {
           <span className="text-blue-500">•</span>
           <span className="flex items-center gap-2">🛡️ Strict Clipboard & Anti-Cheat Shield</span>
           <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">💻 6+ Languages + SQL Live Sandboxes</span>
+          <span className="flex items-center gap-2">🎓 Faculty-Curated Academic Courses</span>
+          <span className="text-blue-500">•</span>
+          <span className="flex items-center gap-2">💻 6+ Compilers & SQL Live Sandboxes</span>
           <span className="text-blue-500">•</span>
           <span className="flex items-center gap-2">📅 Semester-Wise 12-Week Unlocked Labs</span>
           <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">🎯 Instant Diagnostic & Syntax Error Hints</span>
+          <span className="flex items-center gap-2">🎯 Instant Big-O & Diagnostic Parsing</span>
           <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">📊 Real-Time Admin Code Stream</span>
+          <span className="flex items-center gap-2">📊 Real-Time College Admin Stream</span>
           <span className="text-blue-500">•</span>
           <span className="flex items-center gap-2">🏆 Campus Rankings & Streak Flame</span>
         </div>
       </div>
 
       {/* =========================================================================
-          3. HOW EVERY STUDENT SPARKS (4-Step Learning Journey Loop)
+          3. FEATURED COURSES & CURRICULUM SECTION
          ========================================================================= */}
-      <section className="space-y-12" id="journey">
+      <section className="space-y-8" id="courses">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-400">
+              <BookOpen className="h-4 w-4" /> Curriculum & Skill Tracks
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+              Featured Academic <span className="animate-text-flow">Courses</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400 max-w-xl">
+              Faculty-uploaded courses with structured module lessons, interactive coding assignments, and placement interview drills.
+            </p>
+          </div>
+
+          <Link
+            href="/student/courses"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-xs apple-btn-glass text-slate-200 hover:text-white shrink-0"
+          >
+            <span>Browse All Courses ({featuredCourses.length})</span>
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {featuredCourses.map((c) => (
+            <div
+              key={c.id}
+              className="rounded-3xl apple-card-interactive border border-white/10 shadow-xl overflow-hidden flex flex-col justify-between group"
+            >
+              <div>
+                <div className="relative h-40 w-full overflow-hidden bg-slate-950">
+                  <img
+                    src={c.thumbnail}
+                    alt={c.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-slate-900/90 border border-white/10 text-cyan-300">
+                    {c.category}
+                  </span>
+                </div>
+
+                <div className="p-6 space-y-3">
+                  <h3 className="text-base font-black text-white line-clamp-2 tracking-tight group-hover:text-blue-400 transition-colors">
+                    {c.title}
+                  </h3>
+                  <p className="text-xs text-slate-400 line-clamp-2 font-normal leading-relaxed">
+                    {c.description}
+                  </p>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-white/5 text-[11px] font-mono text-slate-400">
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-3.5 w-3.5 text-blue-400" /> {c.duration}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" /> {c.rating}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 pt-0">
+                <Link
+                  href={`/student/courses/${c.id}`}
+                  className="w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 bg-slate-900 border border-slate-700 text-slate-200 hover:text-white hover:bg-slate-800 transition-all"
+                >
+                  <PlayCircle className="h-4 w-4 text-cyan-400" /> View Curriculum
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* =========================================================================
+          4. THE LEARNING LOOP (4-Step Learning Journey Loop)
+         ========================================================================= */}
+      <section className="space-y-12" id="loop">
         <div className="max-w-2xl mx-auto text-center space-y-3">
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
             <Compass className="h-4 w-4" /> The Learning Loop
@@ -535,7 +632,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          4. CAREER TRACKS & SYLLABUS ROADMAPS (AlgoSpark Inspired)
+          5. CAREER TRACKS & SYLLABUS ROADMAPS
          ========================================================================= */}
       <section className="space-y-8" id="tracks">
         <div className="max-w-2xl mx-auto text-center space-y-3">
@@ -635,7 +732,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          5. SEMESTER-WISE LABS (12-Week Structured Curriculum Timeline)
+          6. SEMESTER-WISE LABS (12-Week Structured Curriculum Timeline)
          ========================================================================= */}
       <section className="p-8 sm:p-12 rounded-3xl apple-card border border-white/10 shadow-2xl space-y-8 backdrop-blur-xl" id="labs">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -701,7 +798,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          6. PROCTORED EXAMINATIONS & ANTI-CHEAT SUITE
+          7. PROCTORED EXAMINATIONS & ANTI-CHEAT SUITE
          ========================================================================= */}
       <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/50 to-slate-900 border border-white/10 shadow-2xl space-y-8 backdrop-blur-xl apple-card" id="exams">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
@@ -765,9 +862,9 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          7. INTERACTIVE FAQ ACCORDION SECTION
+          8. INTERACTIVE FAQ ACCORDION SECTION
          ========================================================================= */}
-      <section className="max-w-4xl mx-auto space-y-8 w-full">
+      <section className="max-w-4xl mx-auto space-y-8 w-full" id="faq">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
             <HelpCircle className="h-4 w-4" /> Frequently Asked Questions
@@ -803,7 +900,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          8. FINAL CALL TO ACTION BANNER (Get Started / Book Demo)
+          9. HIGH-CONVERSION CALL TO ACTION BANNER
          ========================================================================= */}
       <section className="p-10 sm:p-14 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white shadow-2xl relative overflow-hidden text-center space-y-6">
         <div className="max-w-2xl mx-auto space-y-4">

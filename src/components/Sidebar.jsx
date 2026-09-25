@@ -21,7 +21,8 @@ import {
   CheckSquare,
   Flame,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  BookOpen
 } from 'lucide-react';
 
 export const Sidebar = () => {
@@ -32,6 +33,7 @@ export const Sidebar = () => {
 
   const studentLinks = [
     { label: 'Dashboard', href: '/student/dashboard', icon: LayoutDashboard },
+    { label: 'Courses & Tracks', href: '/student/courses', icon: BookOpen },
     { label: 'Practice Problems', href: '/student/problems', icon: Code2 },
     { label: 'Examinations', href: '/student/exams', icon: GraduationCap },
     { label: 'Submissions', href: '/student/submissions', icon: History },
@@ -42,6 +44,7 @@ export const Sidebar = () => {
 
   const adminLinks = [
     { label: 'Overview Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+    { label: 'Course Management', href: '/admin/courses', icon: BookOpen },
     { label: 'Student Directory', href: '/admin/students', icon: Users },
     { label: 'Problem Catalog', href: '/admin/problems', icon: Code2 },
     { label: 'Test Case Suites', href: '/admin/test-cases', icon: CheckSquare },

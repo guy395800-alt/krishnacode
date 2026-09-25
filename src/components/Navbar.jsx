@@ -30,24 +30,42 @@ export const Navbar = () => {
           </Link>
 
           {/* Quick Nav Links */}
-          <nav className="hidden md:flex items-center gap-1 text-xs font-semibold text-slate-300">
+          <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-300">
+            <Link
+              href="/student/courses"
+              className="px-3 py-1.5 rounded-xl hover:bg-slate-800/80 hover:text-white transition-colors"
+            >
+              Courses
+            </Link>
             <Link
               href="/student/problems"
-              className="px-3.5 py-1.5 rounded-xl hover:bg-slate-800/80 hover:text-white transition-colors"
+              className="px-3 py-1.5 rounded-xl hover:bg-slate-800/80 hover:text-white transition-colors"
             >
               Problems
             </Link>
             <Link
-              href="/student/exams"
-              className="px-3.5 py-1.5 rounded-xl hover:bg-slate-800/80 hover:text-white transition-colors"
+              href="/#labs"
+              className="px-3 py-1.5 rounded-xl hover:bg-slate-800/80 hover:text-white transition-colors"
             >
-              Exams
+              Semester Labs
+            </Link>
+            <Link
+              href="/#exams"
+              className="px-3 py-1.5 rounded-xl hover:bg-slate-800/80 hover:text-white transition-colors"
+            >
+              Proctoring Shield
             </Link>
             <Link
               href="/student/leaderboard"
-              className="px-3.5 py-1.5 rounded-xl hover:bg-slate-800/80 hover:text-white transition-colors flex items-center gap-1"
+              className="px-3 py-1.5 rounded-xl hover:bg-slate-800/80 hover:text-white transition-colors flex items-center gap-1"
             >
               <Trophy className="h-3.5 w-3.5 text-amber-400" /> Leaderboard
+            </Link>
+            <Link
+              href="/#faq"
+              className="px-3 py-1.5 rounded-xl hover:bg-slate-800/80 hover:text-white transition-colors"
+            >
+              FAQ
             </Link>
           </nav>
         </div>
