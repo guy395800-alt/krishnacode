@@ -172,6 +172,53 @@ function ${fnName}(${paramsJs}) {
   return templates[language] || templates.python;
 }
 
+export function getProblemTestCases(prob) {
+  if (prob?.test_cases && prob.test_cases.length > 0) {
+    return prob.test_cases;
+  }
+
+  const title = (prob?.title || '').toLowerCase();
+  const desc = (prob?.description || '').toLowerCase();
+
+  if (title.includes('two sum') || (desc.includes('two') && desc.includes('sum'))) {
+    return [
+      { id: 1, input_data: 'nums = [2, 7, 11, 15], target = 9', expected_output: '[0, 1]', is_public: true },
+      { id: 2, input_data: 'nums = [3, 2, 4], target = 6', expected_output: '[1, 2]', is_public: true },
+      { id: 3, input_data: 'nums = [3, 3], target = 6', expected_output: '[0, 1]', is_public: true }
+    ];
+  }
+
+  if (title.includes('palindrome') || desc.includes('palindrome')) {
+    return [
+      { id: 1, input_data: 's = "A man, a plan, a canal: Panama"', expected_output: 'true', is_public: true },
+      { id: 2, input_data: 's = "race a car"', expected_output: 'false', is_public: true },
+      { id: 3, input_data: 's = " "', expected_output: 'true', is_public: true }
+    ];
+  }
+
+  if (title.includes('max') && (title.includes('subarray') || title.includes('array'))) {
+    return [
+      { id: 1, input_data: 'nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]', expected_output: '6', is_public: true },
+      { id: 2, input_data: 'nums = [1]', expected_output: '1', is_public: true },
+      { id: 3, input_data: 'nums = [5, 4, -1, 7, 8]', expected_output: '23', is_public: true }
+    ];
+  }
+
+  if (title.includes('stair') || title.includes('climb')) {
+    return [
+      { id: 1, input_data: 'n = 2', expected_output: '2', is_public: true },
+      { id: 2, input_data: 'n = 3', expected_output: '3', is_public: true },
+      { id: 3, input_data: 'n = 4', expected_output: '5', is_public: true }
+    ];
+  }
+
+  return [
+    { id: 1, input_data: 'nums = [3, 7, 2, 9, 5]', expected_output: '9', is_public: true },
+    { id: 2, input_data: 'nums = [-10, -3, -50, -1]', expected_output: '-1', is_public: true },
+    { id: 3, input_data: 'nums = [42]', expected_output: '42', is_public: true }
+  ];
+}
+
 export default function ProblemSolverClient({ initialId }) {
   const params = useParams();
   const router = useRouter();
@@ -231,53 +278,6 @@ export default function ProblemSolverClient({ initialId }) {
       setCode(generateNamedFunctionTemplate(language, problem));
     }
   };
-
-export function getProblemTestCases(prob) {
-  if (prob?.test_cases && prob.test_cases.length > 0) {
-    return prob.test_cases;
-  }
-
-  const title = (prob?.title || '').toLowerCase();
-  const desc = (prob?.description || '').toLowerCase();
-
-  if (title.includes('two sum') || (desc.includes('two') && desc.includes('sum'))) {
-    return [
-      { id: 1, input_data: 'nums = [2, 7, 11, 15], target = 9', expected_output: '[0, 1]', is_public: true },
-      { id: 2, input_data: 'nums = [3, 2, 4], target = 6', expected_output: '[1, 2]', is_public: true },
-      { id: 3, input_data: 'nums = [3, 3], target = 6', expected_output: '[0, 1]', is_public: true }
-    ];
-  }
-
-  if (title.includes('palindrome') || desc.includes('palindrome')) {
-    return [
-      { id: 1, input_data: 's = "A man, a plan, a canal: Panama"', expected_output: 'true', is_public: true },
-      { id: 2, input_data: 's = "race a car"', expected_output: 'false', is_public: true },
-      { id: 3, input_data: 's = " "', expected_output: 'true', is_public: true }
-    ];
-  }
-
-  if (title.includes('max') && (title.includes('subarray') || title.includes('array'))) {
-    return [
-      { id: 1, input_data: 'nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]', expected_output: '6', is_public: true },
-      { id: 2, input_data: 'nums = [1]', expected_output: '1', is_public: true },
-      { id: 3, input_data: 'nums = [5, 4, -1, 7, 8]', expected_output: '23', is_public: true }
-    ];
-  }
-
-  if (title.includes('stair') || title.includes('climb')) {
-    return [
-      { id: 1, input_data: 'n = 2', expected_output: '2', is_public: true },
-      { id: 2, input_data: 'n = 3', expected_output: '3', is_public: true },
-      { id: 3, input_data: 'n = 4', expected_output: '5', is_public: true }
-    ];
-  }
-
-  return [
-    { id: 1, input_data: 'nums = [3, 7, 2, 9, 5]', expected_output: '9', is_public: true },
-    { id: 2, input_data: 'nums = [-10, -3, -50, -1]', expected_output: '-1', is_public: true },
-    { id: 3, input_data: 'nums = [42]', expected_output: '42', is_public: true }
-  ];
-}
 
   const handleRunCode = async () => {
     setRunning(true);
