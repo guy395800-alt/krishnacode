@@ -11,10 +11,11 @@ import { usePathname } from 'next/navigation';
 function MainLayout({ children }) {
   const pathname = usePathname();
   const { user } = useAuth();
+  const isLandingPage = pathname === '/';
 
   // Hide sidebar on landing page, login page, and active exam interface for clean distraction-free view
   const hideSidebar =
-    pathname === '/' ||
+    isLandingPage ||
     pathname?.startsWith('/login') ||
     pathname?.startsWith('/forgot-password') ||
     pathname?.startsWith('/reset-password') ||
@@ -28,7 +29,7 @@ function MainLayout({ children }) {
       <Navbar />
       <div className="flex flex-1">
         {!hideSidebar && user && <Sidebar />}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+        <main className={`flex-1 w-full ${isLandingPage ? '' : 'p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto'}`}>
           {children}
         </main>
       </div>

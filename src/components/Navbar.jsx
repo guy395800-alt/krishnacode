@@ -27,7 +27,7 @@ export const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 backdrop-blur-2xl transition-all">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-8 max-w-7xl mx-auto">
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
         {/* Brand Logo & Interactive Glow Icon */}
         <div className="flex items-center gap-7">
           <Link href="/" className="flex items-center gap-3 group">

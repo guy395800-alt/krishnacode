@@ -293,7 +293,7 @@ export default function LandingPage() {
   const currentPhrase = ROTATING_PHRASES[phraseIndex];
 
   return (
-    <div className="flex flex-col space-y-28 py-6 max-w-7xl mx-auto px-4 sm:px-6 relative">
+    <div className="flex flex-col space-y-20 sm:space-y-28 py-6 sm:py-10 w-full relative">
       {/* =========================================================================
           0. FLOATING REAL-TIME ACTIVITY PULSE TOAST
          ========================================================================= */}
@@ -321,10 +321,10 @@ export default function LandingPage() {
       )}
 
       {/* =========================================================================
-          1. HERO SECTION (Apple SF Pro Typography + Dynamic Cycling Text)
+          1. HERO SECTION (Aligned pixel-for-pixel with Navbar)
          ========================================================================= */}
-      <section className="relative pt-6 pb-4" id="top">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative pt-2 sm:pt-4" id="top">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           {/* Hero Left Content */}
           <div className="lg:col-span-7 space-y-6 text-left">
             {/* Top Product Tag Pill with Shimmering Glow */}
@@ -334,7 +334,7 @@ export default function LandingPage() {
             </div>
 
             {/* Subtitle Triad: Learn • Practice • Master • Placement */}
-            <div className="flex items-center gap-4 text-xs font-mono font-bold tracking-[0.14em] uppercase text-slate-400">
+            <div className="flex flex-wrap items-center gap-4 text-xs font-mono font-bold tracking-[0.14em] uppercase text-slate-400">
               <span className="flex items-center gap-1.5">
                 <i className="w-2.5 h-2.5 rounded-full bg-cyan-400 block shadow-sm shadow-cyan-400" /> Learn
               </span>
@@ -350,8 +350,8 @@ export default function LandingPage() {
             </div>
 
             {/* Main Punchy Headline with Dynamic Rotating Text */}
-            <div className="min-h-[140px] sm:min-h-[160px] lg:min-h-[180px] flex flex-col justify-center">
-              <h1 className="text-4xl sm:text-6xl lg:text-[66px] font-black tracking-tight text-white leading-[1.08]">
+            <div className="min-h-[130px] sm:min-h-[150px] lg:min-h-[160px] flex flex-col justify-center">
+              <h1 className="text-4xl sm:text-6xl lg:text-[64px] font-black tracking-tight text-white leading-[1.08]">
                 Where students learn to code — and <br className="hidden sm:inline" />
                 <span
                   className={`inline-block transition-all duration-300 transform ${
@@ -410,7 +410,7 @@ export default function LandingPage() {
             </div>
 
             {/* Trust Badges Grid Animated Counters */}
-            <div className="flex flex-wrap gap-x-10 gap-y-4 pt-6 border-t border-white/10 text-left">
+            <div className="grid grid-cols-3 gap-6 pt-6 border-t border-white/10 text-left">
               <div>
                 <div className="font-mono font-black text-2xl sm:text-3xl text-white flex items-center gap-1">
                   50+ <span className="text-sm text-blue-400 font-sans font-normal">Colleges</span>
@@ -530,7 +530,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          2. CONTINUOUS MARQUEE RIBBON
+          2. CONTINUOUS MARQUEE RIBBON (Full Viewport Width)
          ========================================================================= */}
       <div className="w-full bg-gradient-to-r from-blue-950/40 via-indigo-950/50 to-purple-950/40 border-y border-white/10 py-3.5 overflow-hidden backdrop-blur-md">
         <div className="flex items-center gap-8 text-xs font-mono font-bold tracking-wider text-slate-300 uppercase whitespace-nowrap animate-marquee">
@@ -553,9 +553,9 @@ export default function LandingPage() {
       </div>
 
       {/* =========================================================================
-          3. ASYMMETRIC NEXT-GEN BENTO GRID SHOWCASE ("The Attention Magnet")
+          3. ASYMMETRIC NEXT-GEN BENTO GRID SHOWCASE
          ========================================================================= */}
-      <section className="space-y-12" id="features">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-12" id="features">
         <div className="max-w-2xl mx-auto text-center space-y-3">
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-400">
             <Cpu className="h-4 w-4" /> Next-Gen Architecture
@@ -715,7 +715,7 @@ export default function LandingPage() {
       {/* =========================================================================
           4. FEATURED COURSES & CURRICULUM SECTION
          ========================================================================= */}
-      <section className="space-y-8" id="courses">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-8" id="courses">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-400">
@@ -792,7 +792,7 @@ export default function LandingPage() {
       {/* =========================================================================
           5. THE 4-STEP LEARNING LOOP ("How Every Student Sparks")
          ========================================================================= */}
-      <section className="space-y-12" id="loop">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-12" id="loop">
         <div className="max-w-2xl mx-auto text-center space-y-3">
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
             <Compass className="h-4 w-4" /> The Learning Loop
@@ -867,7 +867,7 @@ export default function LandingPage() {
       {/* =========================================================================
           6. CAREER TRACKS & SYLLABUS ROADMAPS
          ========================================================================= */}
-      <section className="space-y-8" id="tracks">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-8" id="tracks">
         <div className="max-w-2xl mx-auto text-center space-y-3">
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-400">
             <Target className="h-4 w-4" /> Career Specializations
@@ -967,127 +967,131 @@ export default function LandingPage() {
       {/* =========================================================================
           7. SEMESTER-WISE LABS (12-Week Structured Curriculum Timeline)
          ========================================================================= */}
-      <section className="p-8 sm:p-12 rounded-3xl apple-card border border-white/10 shadow-2xl space-y-8 backdrop-blur-xl" id="labs">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
-              <Layers className="h-4 w-4" /> Curriculum Progress Track
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-              Semester-Wise Labs with Week-Wise Unlocks
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-xl">
-              A cohort that learns together. Complete Week 1 exercises to unlock Week 2. Every submission logs execution time, memory, and code snapshots.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="px-3.5 py-1.5 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 font-mono text-xs font-bold">
-              Semester 4: Data Structures & Algorithms
-            </span>
-          </div>
-        </div>
-
-        {/* 12-Week Milestone Timeline */}
-        <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-12 gap-3 pt-4">
-          {[
-            { w: 'W1', title: 'Arrays & Pointers', status: 'completed' },
-            { w: 'W2', title: 'Linked Lists', status: 'completed' },
-            { w: 'W3', title: 'Stacks & Queues', status: 'completed' },
-            { w: 'W4', title: 'Recursion & Backtracking', status: 'completed' },
-            { w: 'W5', title: 'Binary Trees', status: 'completed' },
-            { w: 'W6', title: 'BST & Heaps', status: 'completed' },
-            { w: 'W7', title: 'Graph BFS & DFS', status: 'active' },
-            { w: 'W8', title: 'Dynamic Programming', status: 'locked' },
-            { w: 'W9', title: 'Greedy Algorithms', status: 'locked' },
-            { w: 'W10', title: 'Hash Maps & Tries', status: 'locked' },
-            { w: 'W11', title: 'Bit Manipulation', status: 'locked' },
-            { w: 'W12', title: 'Capstone Project', status: 'locked' },
-          ].map((item) => (
-            <div
-              key={item.w}
-              className={`p-3 rounded-2xl border text-center space-y-1.5 transition-all ${
-                item.status === 'completed'
-                  ? 'bg-emerald-950/30 border-emerald-500/40 text-emerald-400 shadow-md shadow-emerald-500/5'
-                  : item.status === 'active'
-                  ? 'bg-amber-950/40 border-amber-500/60 text-amber-300 shadow-xl shadow-amber-500/10 animate-pulse'
-                  : 'bg-slate-950/60 border-slate-800 text-slate-500 opacity-60'
-              }`}
-            >
-              <div className="font-mono font-black text-xs">{item.w}</div>
-              <div className="flex justify-center">
-                {item.status === 'completed' ? (
-                  <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                ) : item.status === 'active' ? (
-                  <Sparkles className="h-4 w-4 text-amber-400" />
-                ) : (
-                  <Lock className="h-4 w-4 text-slate-600" />
-                )}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full" id="labs">
+        <div className="p-8 sm:p-12 rounded-3xl apple-card border border-white/10 shadow-2xl space-y-8 backdrop-blur-xl">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
+                <Layers className="h-4 w-4" /> Curriculum Progress Track
               </div>
-              <div className="text-[10px] font-medium line-clamp-1 text-slate-300">{item.title}</div>
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                Semester-Wise Labs with Week-Wise Unlocks
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-400 max-w-xl">
+                A cohort that learns together. Complete Week 1 exercises to unlock Week 2. Every submission logs execution time, memory, and code snapshots.
+              </p>
             </div>
-          ))}
+
+            <div className="flex items-center gap-3">
+              <span className="px-3.5 py-1.5 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 font-mono text-xs font-bold">
+                Semester 4: Data Structures & Algorithms
+              </span>
+            </div>
+          </div>
+
+          {/* 12-Week Milestone Timeline */}
+          <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-12 gap-3 pt-4">
+            {[
+              { w: 'W1', title: 'Arrays & Pointers', status: 'completed' },
+              { w: 'W2', title: 'Linked Lists', status: 'completed' },
+              { w: 'W3', title: 'Stacks & Queues', status: 'completed' },
+              { w: 'W4', title: 'Recursion & Backtracking', status: 'completed' },
+              { w: 'W5', title: 'Binary Trees', status: 'completed' },
+              { w: 'W6', title: 'BST & Heaps', status: 'completed' },
+              { w: 'W7', title: 'Graph BFS & DFS', status: 'active' },
+              { w: 'W8', title: 'Dynamic Programming', status: 'locked' },
+              { w: 'W9', title: 'Greedy Algorithms', status: 'locked' },
+              { w: 'W10', title: 'Hash Maps & Tries', status: 'locked' },
+              { w: 'W11', title: 'Bit Manipulation', status: 'locked' },
+              { w: 'W12', title: 'Capstone Project', status: 'locked' },
+            ].map((item) => (
+              <div
+                key={item.w}
+                className={`p-3 rounded-2xl border text-center space-y-1.5 transition-all ${
+                  item.status === 'completed'
+                    ? 'bg-emerald-950/30 border-emerald-500/40 text-emerald-400 shadow-md shadow-emerald-500/5'
+                    : item.status === 'active'
+                    ? 'bg-amber-950/40 border-amber-500/60 text-amber-300 shadow-xl shadow-amber-500/10 animate-pulse'
+                    : 'bg-slate-950/60 border-slate-800 text-slate-500 opacity-60'
+                }`}
+              >
+                <div className="font-mono font-black text-xs">{item.w}</div>
+                <div className="flex justify-center">
+                  {item.status === 'completed' ? (
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                  ) : item.status === 'active' ? (
+                    <Sparkles className="h-4 w-4 text-amber-400" />
+                  ) : (
+                    <Lock className="h-4 w-4 text-slate-600" />
+                  )}
+                </div>
+                <div className="text-[10px] font-medium line-clamp-1 text-slate-300">{item.title}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* =========================================================================
           8. PROCTORED EXAMINATIONS & ANTI-CHEAT SUITE
          ========================================================================= */}
-      <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/50 to-slate-900 border border-white/10 shadow-2xl space-y-8 backdrop-blur-xl apple-card" id="exams">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-6 space-y-5">
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">
-              <ShieldCheck className="h-4 w-4" /> Proctoring & Integrity Guard
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-              Placement-Style Exams Built for Academic Integrity
-            </h2>
-            <p className="text-sm text-slate-300 leading-relaxed font-normal">
-              Conduct high-stakes semester exams and hiring assessments with a battle-tested anti-cheat engine that eliminates unauthorized assistance.
-            </p>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full" id="exams">
+        <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/50 to-slate-900 border border-white/10 shadow-2xl space-y-8 backdrop-blur-xl apple-card">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-6 space-y-5">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">
+                <ShieldCheck className="h-4 w-4" /> Proctoring & Integrity Guard
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                Placement-Style Exams Built for Academic Integrity
+              </h2>
+              <p className="text-sm text-slate-300 leading-relaxed font-normal">
+                Conduct high-stakes semester exams and hiring assessments with a battle-tested anti-cheat engine that eliminates unauthorized assistance.
+              </p>
 
-            <div className="space-y-3 text-xs font-medium text-slate-300">
-              <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
-                <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span><strong>Clipboard Security:</strong> Strict Monaco and DOM-level blocking of Copy, Paste, Cut, and Context-Menu.</span>
+              <div className="space-y-3 text-xs font-medium text-slate-300">
+                <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" />
+                  <span><strong>Clipboard Security:</strong> Strict Monaco and DOM-level blocking of Copy, Paste, Cut, and Context-Menu.</span>
+                </div>
+                <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" />
+                  <span><strong>Tab Visibility Tracking:</strong> Records window blur & tab switching events in live audit logs.</span>
+                </div>
+                <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
+                  <Check className="h-4 w-4 text-emerald-400 shrink-0" />
+                  <span><strong>Synchronized Timer:</strong> Automatic exam submission on zero-countdown with zero data loss.</span>
+                </div>
               </div>
-              <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
-                <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span><strong>Tab Visibility Tracking:</strong> Records window blur & tab switching events in live audit logs.</span>
-              </div>
-              <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
-                <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span><strong>Synchronized Timer:</strong> Automatic exam submission on zero-countdown with zero data loss.</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-6 p-6 rounded-3xl bg-slate-950 border border-red-500/30 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800 text-xs">
-              <span className="font-bold text-white flex items-center gap-2">
-                <ShieldAlert className="h-4 w-4 text-red-400 animate-bounce" /> Live Anti-Cheat Monitor
-              </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-400 font-mono font-bold text-[10px] border border-red-500/30">
-                ARMED & ACTIVE
-              </span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2.5 text-xs">
-              <div className="flex justify-between text-slate-400">
-                <span>Copy / Paste Shortcut Attempt:</span>
-                <span className="text-red-400 font-bold font-mono">BLOCKED ❌</span>
+            <div className="lg:col-span-6 p-6 rounded-3xl bg-slate-950 border border-red-500/30 shadow-2xl space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-800 text-xs">
+                <span className="font-bold text-white flex items-center gap-2">
+                  <ShieldAlert className="h-4 w-4 text-red-400 animate-bounce" /> Live Anti-Cheat Monitor
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-400 font-mono font-bold text-[10px] border border-red-500/30">
+                  ARMED & ACTIVE
+                </span>
               </div>
-              <div className="flex justify-between text-slate-400">
-                <span>Right-Click Context Menu:</span>
-                <span className="text-red-400 font-bold font-mono">DISABLED ❌</span>
-              </div>
-              <div className="flex justify-between text-slate-400">
-                <span>Tab Focus Loss Count:</span>
-                <span className="text-emerald-400 font-bold font-mono">0 Incidents (Clean) ✅</span>
-              </div>
-              <div className="flex justify-between text-slate-400">
-                <span>Time Remaining:</span>
-                <span className="text-white font-black font-mono">42:15</span>
+
+              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2.5 text-xs">
+                <div className="flex justify-between text-slate-400">
+                  <span>Copy / Paste Shortcut Attempt:</span>
+                  <span className="text-red-400 font-bold font-mono">BLOCKED ❌</span>
+                </div>
+                <div className="flex justify-between text-slate-400">
+                  <span>Right-Click Context Menu:</span>
+                  <span className="text-red-400 font-bold font-mono">DISABLED ❌</span>
+                </div>
+                <div className="flex justify-between text-slate-400">
+                  <span>Tab Focus Loss Count:</span>
+                  <span className="text-emerald-400 font-bold font-mono">0 Incidents (Clean) ✅</span>
+                </div>
+                <div className="flex justify-between text-slate-400">
+                  <span>Time Remaining:</span>
+                  <span className="text-white font-black font-mono">42:15</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1097,7 +1101,7 @@ export default function LandingPage() {
       {/* =========================================================================
           9. INTERACTIVE FAQ ACCORDION SECTION WITH CATEGORY TABS
          ========================================================================= */}
-      <section className="max-w-4xl mx-auto space-y-8 w-full" id="faq">
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 w-full space-y-8" id="faq">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
             <HelpCircle className="h-4 w-4" /> Frequently Asked Questions
@@ -1158,28 +1162,30 @@ export default function LandingPage() {
       {/* =========================================================================
           10. HIGH-CONVERSION CALL TO ACTION BANNER
          ========================================================================= */}
-      <section className="p-10 sm:p-14 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white shadow-2xl relative overflow-hidden text-center space-y-6">
-        <div className="max-w-2xl mx-auto space-y-4">
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight">
-            Ready to Empower Your Campus Coders?
-          </h2>
-          <p className="text-blue-100 text-sm sm:text-base leading-relaxed">
-            Join thousands of engineering students mastering algorithms, taking proctored exams, and unlocking career-defining tech placements.
-          </p>
-          <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href="/login"
-              className="px-8 py-4 rounded-2xl font-bold bg-white text-blue-700 hover:bg-blue-50 shadow-xl shadow-black/20 transition-all hover:scale-105"
-            >
-              Sign In
-            </Link>
-            <a
-              href="mailto:kp13226663@gmail.com?subject=Book%20a%20Demo%20-%20NexgenCode%20Platform&body=Hello%20NexgenCode%20Team%2C%0A%0AI%20would%20like%20to%20schedule%20a%20live%20institutional%20demo%20of%20NexgenCode%20for%20our%20college%2Funiversity.%0A%0AInstitution%20Name%3A%0AContact%20Person%3A%0APhone%20Number%3A%0AEstimated%20Students%3A%0APreferred%20Date%20%26%20Time%3A%0A%0AThank%20you!"
-              className="px-8 py-4 rounded-2xl font-bold bg-amber-400 text-slate-950 hover:bg-amber-300 shadow-xl shadow-amber-500/30 transition-all hover:scale-105 flex items-center gap-2"
-            >
-              <Mail className="h-5 w-5 text-slate-950" />
-              <span>Book Demo (kp13226663@gmail.com)</span>
-            </a>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="p-10 sm:p-14 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white shadow-2xl relative overflow-hidden text-center space-y-6">
+          <div className="max-w-2xl mx-auto space-y-4">
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight">
+              Ready to Empower Your Campus Coders?
+            </h2>
+            <p className="text-blue-100 text-sm sm:text-base leading-relaxed">
+              Join thousands of engineering students mastering algorithms, taking proctored exams, and unlocking career-defining tech placements.
+            </p>
+            <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
+              <Link
+                href="/login"
+                className="px-8 py-4 rounded-2xl font-bold bg-white text-blue-700 hover:bg-blue-50 shadow-xl shadow-black/20 transition-all hover:scale-105"
+              >
+                Sign In
+              </Link>
+              <a
+                href="mailto:kp13226663@gmail.com?subject=Book%20a%20Demo%20-%20NexgenCode%20Platform&body=Hello%20NexgenCode%20Team%2C%0A%0AI%20would%20like%20to%20schedule%20a%20live%20institutional%20demo%20of%20NexgenCode%20for%20our%20college%2Funiversity.%0A%0AInstitution%20Name%3A%0AContact%20Person%3A%0APhone%20Number%3A%0AEstimated%20Students%3A%0APreferred%20Date%20%26%20Time%3A%0A%0AThank%20you!"
+                className="px-8 py-4 rounded-2xl font-bold bg-amber-400 text-slate-950 hover:bg-amber-300 shadow-xl shadow-amber-500/30 transition-all hover:scale-105 flex items-center gap-2"
+              >
+                <Mail className="h-5 w-5 text-slate-950" />
+                <span>Book Demo (kp13226663@gmail.com)</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
