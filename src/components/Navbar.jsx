@@ -18,7 +18,8 @@ import {
   X,
   Layers,
   BookOpen,
-  ChevronRight
+  ChevronRight,
+  LogIn
 } from 'lucide-react';
 
 export const Navbar = () => {
@@ -87,10 +88,10 @@ export const Navbar = () => {
           </nav>
         </div>
 
-        {/* Right Section: Sandbox Beacon, Theme Toggle, Book Demo & User/Auth Actions */}
-        <div className="flex items-center gap-3">
+        {/* Right Section: Perfectly Height-Aligned Action Controls */}
+        <div className="flex items-center gap-2.5 sm:gap-3">
           {/* Live Engine Status Badge */}
-          <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[11px] font-mono font-semibold">
+          <div className="hidden xl:flex items-center gap-2 h-9 px-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[11px] font-mono font-semibold">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>Sandbox Live • 99.99%</span>
           </div>
@@ -98,14 +99,14 @@ export const Navbar = () => {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2 text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all border border-transparent hover:border-slate-700/50"
+            className="h-9 w-9 flex items-center justify-center text-slate-400 hover:text-white bg-slate-900/80 hover:bg-slate-800 rounded-xl transition-all border border-slate-800 hover:border-slate-700 shrink-0"
             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
           >
             {theme === 'dark' ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-300" />}
           </button>
 
           {user ? (
-            <div className="flex items-center gap-3 pl-3 border-l border-slate-800">
+            <div className="flex items-center gap-2.5 sm:gap-3 pl-2.5 border-l border-slate-800">
               <div className="hidden sm:flex flex-col text-right">
                 <span className="text-xs font-bold text-white leading-tight">
                   {user.full_name}
@@ -124,7 +125,7 @@ export const Navbar = () => {
               {/* Avatar Pill */}
               <Link
                 href={user.role === 'admin' ? '/admin/dashboard' : '/student/dashboard'}
-                className="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 border border-blue-400/40 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-500/20 hover:scale-105 transition-transform"
+                className="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 border border-blue-400/40 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-500/20 hover:scale-105 transition-transform shrink-0"
                 title="Go to workspace"
               >
                 {user.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
@@ -132,25 +133,26 @@ export const Navbar = () => {
 
               <button
                 onClick={logout}
-                className="p-2 text-red-400 hover:text-red-300 hover:bg-red-950/40 rounded-xl transition-colors border border-transparent hover:border-red-900/50"
+                className="h-9 w-9 flex items-center justify-center text-red-400 hover:text-red-300 bg-red-950/30 hover:bg-red-950/60 rounded-xl transition-colors border border-red-500/20 shrink-0"
                 title="Sign Out"
               >
                 <LogOut className="h-4 w-4" />
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2 sm:gap-2.5">
               <a
                 href="mailto:kp13226663@gmail.com?subject=Book%20a%20Demo%20-%20NexgenCode%20Platform&body=Hello%20NexgenCode%20Team%2C%0A%0AI%20would%20like%20to%20schedule%20a%20live%20institutional%20demo%20of%20NexgenCode%20for%20our%20college%2Funiversity.%0A%0AInstitution%20Name%3A%0AContact%20Person%3A%0APhone%20Number%3A%0AEstimated%20Students%3A%0APreferred%20Date%20%26%20Time%3A%0A%0AThank%20you!"
-                className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all hover:scale-105 shadow-sm"
+                className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl text-xs font-bold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all hover:scale-[1.02] shadow-sm shrink-0"
                 title="Schedule an Institutional Demo"
               >
                 <Mail className="h-3.5 w-3.5 text-amber-400" />
                 <span>Book Demo</span>
               </a>
+
               <Link
                 href="/login"
-                className="px-4 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-lg shadow-blue-500/30 transition-all hover:scale-105 flex items-center gap-1.5"
+                className="h-9 px-4.5 inline-flex items-center justify-center text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] shrink-0"
               >
                 <span>Sign In</span>
               </Link>
@@ -160,7 +162,8 @@ export const Navbar = () => {
           {/* Mobile Menu Toggle Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-slate-400 hover:text-white lg:hidden rounded-xl bg-slate-900 border border-slate-800"
+            className="h-9 w-9 flex items-center justify-center text-slate-400 hover:text-white lg:hidden rounded-xl bg-slate-900/80 border border-slate-800 shrink-0"
+            aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -224,6 +227,17 @@ export const Navbar = () => {
           </nav>
 
           <div className="pt-2 border-t border-slate-800 flex flex-col gap-2.5">
+            {!user && (
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full py-3 rounded-xl text-center text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-500/25 flex items-center justify-center gap-2"
+              >
+                <LogIn className="h-4 w-4" />
+                <span>Sign In</span>
+              </Link>
+            )}
+
             <a
               href="mailto:kp13226663@gmail.com?subject=Book%20a%20Demo%20-%20NexgenCode%20Platform&body=Hello%20NexgenCode%20Team%2C%0A%0AI%20would%20like%20to%20schedule%20a%20live%20institutional%20demo%20of%20NexgenCode%20for%20our%20college%2Funiversity.%0A%0AInstitution%20Name%3A%0AContact%20Person%3A%0APhone%20Number%3A%0AEstimated%20Students%3A%0APreferred%20Date%20%26%20Time%3A%0A%0AThank%20you!"
               className="w-full py-3 rounded-xl text-center text-xs font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30 flex items-center justify-center gap-2"
