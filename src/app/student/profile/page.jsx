@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { api } from '../../../lib/api';
-import { User, Mail, GraduationCap, Lock, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { User, Mail, GraduationCap, Lock, CheckCircle2, ShieldAlert, ShieldCheck } from 'lucide-react';
 
 export default function StudentProfilePage() {
   const { user } = useAuth();
@@ -55,106 +55,116 @@ export default function StudentProfilePage() {
   };
 
   if (loading) {
-    return <div className="p-12 text-center text-slate-400">Loading student profile...</div>;
+    return (
+      <div className="p-16 text-center text-slate-400 apple-card rounded-3xl">
+        <div className="animate-pulse">Loading student profile...</div>
+      </div>
+    );
   }
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-3xl font-black text-slate-900 dark:text-white">
-          Student Profile
-        </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Personal account details, academic information, and security settings
-        </p>
+      {/* Header Banner */}
+      <div className="p-8 rounded-3xl apple-card border border-white/10 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+        <div className="space-y-2 relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold tracking-wider uppercase">
+            <User className="h-4 w-4" /> Student Credentials & Privacy
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            Account Profile & Security
+          </h1>
+          <p className="text-sm text-slate-300 max-w-2xl font-normal">
+            Personal identity credentials, registered college department, and account security.
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Academic Details Card */}
-        <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-          <div className="h-16 w-16 bg-blue-100 dark:bg-blue-950 text-blue-600 rounded-2xl flex items-center justify-center font-bold text-2xl mx-auto">
-            {profile?.full_name?.charAt(0)}
+        <div className="p-7 rounded-3xl apple-card border border-white/10 shadow-xl space-y-5">
+          <div className="h-16 w-16 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-2xl flex items-center justify-center font-bold text-2xl mx-auto shadow-lg shadow-blue-500/20">
+            {profile?.full_name?.charAt(0) || 'S'}
           </div>
           <div className="text-center space-y-1">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white">{profile?.full_name}</h3>
-            <span className="text-xs font-mono text-slate-500">{profile?.email}</span>
+            <h3 className="text-xl font-black text-white tracking-tight">{profile?.full_name}</h3>
+            <span className="text-xs font-mono text-slate-400 block">{profile?.email}</span>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs">
-            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
-              <span className="text-slate-400">Reg Number</span>
-              <span className="font-mono font-bold text-slate-900 dark:text-white">{profile?.registration_number}</span>
+          <div className="pt-4 border-t border-white/10 space-y-2.5 text-xs font-mono">
+            <div className="flex justify-between py-1.5 border-b border-white/5">
+              <span className="text-slate-400">Reg No:</span>
+              <span className="font-bold text-white">{profile?.registration_number}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
-              <span className="text-slate-400">Roll Number</span>
-              <span className="font-mono font-bold text-slate-900 dark:text-white">{profile?.roll_number}</span>
+            <div className="flex justify-between py-1.5 border-b border-white/5">
+              <span className="text-slate-400">Roll No:</span>
+              <span className="font-bold text-white">{profile?.roll_number}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
-              <span className="text-slate-400">Department</span>
-              <span className="font-bold text-slate-900 dark:text-white">{profile?.department}</span>
+            <div className="flex justify-between py-1.5 border-b border-white/5">
+              <span className="text-slate-400">Dept:</span>
+              <span className="font-bold text-blue-400">{profile?.department}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
-              <span className="text-slate-400">Batch & Section</span>
-              <span className="font-bold text-slate-900 dark:text-white">{profile?.batch} ({profile?.section})</span>
+            <div className="flex justify-between py-1.5">
+              <span className="text-slate-400">Batch / Sec:</span>
+              <span className="font-bold text-white">{profile?.batch} ({profile?.section})</span>
             </div>
           </div>
         </div>
 
         {/* Password Security Form */}
-        <div className="md:col-span-2 p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <Lock className="h-5 w-5 text-blue-500" /> Security & Password
+        <div className="md:col-span-2 p-7 rounded-3xl apple-card border border-white/10 shadow-xl space-y-6">
+          <h3 className="text-xl font-black text-white flex items-center gap-2 tracking-tight">
+            <Lock className="h-5 w-5 text-blue-400" /> Security & Password
           </h3>
 
           {msg.text && (
-            <div className={`p-3.5 rounded-xl text-xs font-bold flex items-center gap-2 ${
-              msg.type === 'success' ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-red-50 text-red-600 border border-red-200'
+            <div className={`p-4 rounded-2xl text-xs font-mono font-bold flex items-center gap-2 ${
+              msg.type === 'success' ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/40' : 'bg-red-950/60 text-red-300 border border-red-500/40'
             }`}>
-              {msg.type === 'success' ? <CheckCircle2 className="h-4 w-4" /> : <ShieldAlert className="h-4 w-4" />}
+              {msg.type === 'success' ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <ShieldAlert className="h-4 w-4 text-red-400" />}
               <span>{msg.text}</span>
             </div>
           )}
 
-          <form onSubmit={handlePasswordChange} className="space-y-4 text-xs font-semibold">
+          <form onSubmit={handlePasswordChange} className="space-y-4 text-xs font-medium">
             <div>
-              <label className="block text-slate-500 uppercase mb-1">Current Password</label>
+              <label className="block text-slate-400 font-mono uppercase mb-1.5">Current Password</label>
               <input
                 type="password"
                 required
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none"
+                className="w-full px-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-all font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-slate-500 uppercase mb-1">New Password</label>
+              <label className="block text-slate-400 font-mono uppercase mb-1.5">New Password</label>
               <input
                 type="password"
                 required
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none"
+                className="w-full px-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-all font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-slate-500 uppercase mb-1">Confirm New Password</label>
+              <label className="block text-slate-400 font-mono uppercase mb-1.5">Confirm New Password</label>
               <input
                 type="password"
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none"
+                className="w-full px-4 py-3 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-white placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-all font-mono"
               />
             </div>
 
             <button
               type="submit"
-              className="py-2.5 px-6 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md transition-all"
+              className="py-3 px-8 rounded-2xl font-bold text-white apple-btn-primary shadow-lg shadow-blue-500/25 transition-all"
             >
               Update Security Password
             </button>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -35,8 +35,20 @@ import {
   Users,
   Activity,
   HelpCircle,
-  Laptop
+  Laptop,
+  Briefcase,
+  GitBranch,
+  Rocket,
+  CheckCircle
 } from 'lucide-react';
+
+const ROTATING_PHRASES = [
+  { text: 'spark real careers.', gradient: 'from-blue-400 via-indigo-300 to-sky-400' },
+  { text: 'crack dream placements.', gradient: 'from-emerald-400 via-teal-300 to-cyan-400' },
+  { text: 'master complex algorithms.', gradient: 'from-purple-400 via-pink-300 to-indigo-400' },
+  { text: 'ace proctored college exams.', gradient: 'from-amber-400 via-orange-300 to-yellow-400' },
+  { text: 'build future-ready software.', gradient: 'from-rose-400 via-pink-400 to-purple-400' }
+];
 
 const CODE_EXAMPLES = {
   python: {
@@ -53,11 +65,11 @@ def two_sum(nums: list[int], target: int) -> list[int]:
     return []
 
 # Test execution: two_sum([2, 7, 11, 15], 9) -> [0, 1]`,
-    output: '6 / 6 Test Cases Passed · O(n) Runtime · 12 ms'
+    output: '6 / 6 Test Cases Passed · O(n) Runtime · 12 ms · 2.1 MB'
   },
   cpp: {
     filename: 'two_sum.cpp',
-    lang: 'C++17 (GCC)',
+    lang: 'C++17 (GCC 11)',
     code: `// C++17 High-Performance Solution
 #include <iostream>
 #include <vector>
@@ -74,7 +86,7 @@ vector<int> twoSum(vector<int>& nums, int target) {
     }
     return {};
 }`,
-    output: '6 / 6 Test Cases Passed · O(n) Runtime · 4 ms'
+    output: '6 / 6 Test Cases Passed · O(n) Runtime · 4 ms · 1.8 MB'
   },
   sql: {
     filename: 'top_students.sql',
@@ -88,11 +100,11 @@ FROM college_assessments
 GROUP BY department, student_name
 ORDER BY highest_score DESC
 LIMIT 5;`,
-    output: 'Query Executed · 5 Rows Returned · 8 ms'
+    output: 'Query Executed · 5 Rows Returned · 8 ms · Memory 1.2 MB'
   },
   java: {
     filename: 'TwoSum.java',
-    lang: 'JAVA 17',
+    lang: 'JAVA 17 (OPENJDK)',
     code: `// Java 17 OpenJDK Solution
 import java.util.HashMap;
 
@@ -107,11 +119,11 @@ public class TwoSum {
         return new int[]{};
     }
 }`,
-    output: '6 / 6 Test Cases Passed · O(n) Runtime · 22 ms'
+    output: '6 / 6 Test Cases Passed · O(n) Runtime · 22 ms · 3.4 MB'
   },
   javascript: {
     filename: 'twoSum.js',
-    lang: 'NODE.JS 18',
+    lang: 'NODE.JS 18 LTS',
     code: `// Node.js 18 Solution
 function twoSum(nums, target) {
     const map = new Map();
@@ -122,9 +134,56 @@ function twoSum(nums, target) {
     }
     return [];
 }`,
-    output: '6 / 6 Test Cases Passed · O(n) Runtime · 16 ms'
+    output: '6 / 6 Test Cases Passed · O(n) Runtime · 16 ms · 2.6 MB'
   }
 };
+
+const CAREER_TRACKS = [
+  {
+    id: 'dsa',
+    name: 'Data Structures & Algorithms',
+    icon: GitBranch,
+    badge: 'Core Foundation',
+    color: 'from-blue-500 to-indigo-500',
+    description: 'Master arrays, trees, dynamic programming, graphs, and Big-O analysis demanded by FAANG & Tier-1 tech firms.',
+    modules: ['Arrays & Sliding Window', 'Linked Lists & Two Pointers', 'Binary Trees & Graphs', 'Dynamic Programming & Memoization', 'Bit Manipulation & Greedy'],
+    problems: '280+ Problems',
+    avgPackage: '12-45 LPA Target'
+  },
+  {
+    id: 'fullstack',
+    name: 'Full-Stack Web & Cloud',
+    icon: Laptop,
+    badge: 'Industry High Demand',
+    color: 'from-purple-500 to-pink-500',
+    description: 'Build enterprise-grade REST APIs, relational databases, Next.js client architectures, and CI/CD pipelines.',
+    modules: ['Modern JavaScript & TypeScript', 'Next.js 14 Server Components', 'PostgreSQL & Database Design', 'FastAPI & Python Microservices', 'Docker & Cloud Deployment'],
+    problems: '150+ Full Projects',
+    avgPackage: '10-35 LPA Target'
+  },
+  {
+    id: 'ai_data',
+    name: 'AI & Data Engineering',
+    icon: Cpu,
+    badge: 'Next-Gen Frontier',
+    color: 'from-emerald-500 to-teal-500',
+    description: 'Deep dive into Python data pipelines, vectorized operations, SQL window functions, and LLM application frameworks.',
+    modules: ['Advanced Python & NumPy', 'SQL Analytics & Window Functions', 'Data Pipelines & ETL Design', 'Vector Databases & Embeddings', 'AI Agent Architectures'],
+    problems: '120+ Datasets & Tasks',
+    avgPackage: '14-40 LPA Target'
+  },
+  {
+    id: 'systems',
+    name: 'Systems & Core CS',
+    icon: Terminal,
+    badge: 'Academic Excellence',
+    color: 'from-amber-500 to-orange-500',
+    description: 'Understand operating system fundamentals, memory allocation, multi-threading, concurrency, and low-level C/C++.',
+    modules: ['C/C++ Memory Management', 'Pointers & System Calls', 'Processes & Concurrency', 'Networking & TCP/IP Sockets', 'Compiler Design Fundamentals'],
+    problems: '90+ System Challenges',
+    avgPackage: '12-38 LPA Target'
+  }
+];
 
 export default function LandingPage() {
   const { user } = useAuth();
@@ -132,43 +191,61 @@ export default function LandingPage() {
   const [isRunning, setIsRunning] = useState(false);
   const [simulatedOutput, setSimulatedOutput] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [selectedTrack, setSelectedTrack] = useState('dsa');
+
+  // Dynamic Rotating Hero Text State ("Text Going")
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [isFading, setIsFading] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsFading(true);
+      setTimeout(() => {
+        setPhraseIndex((prev) => (prev + 1) % ROTATING_PHRASES.length);
+        setIsFading(false);
+      }, 400);
+    }, 3200);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleRunCode = () => {
     setIsRunning(true);
     setTimeout(() => {
       setIsRunning(false);
       setSimulatedOutput(true);
-    }, 600);
+    }, 550);
   };
 
   const faqs = [
     {
       q: 'How does the Anti-Cheat Proctoring engine protect exam integrity?',
-      a: 'KrishnaCode uses a multi-layered security suite: it blocks keyboard shortcuts for copy/paste/cut (Ctrl+C, Ctrl+V, Shift+Insert), disables right-click context menus, prevents question text highlighting, monitors browser tab-switches and focus loss with automated audit logs, and enforces server-side synchronized countdowns.'
+      a: 'KrishnaCode uses an institutional-grade security shield: it intercepts and disables keyboard shortcuts for copy/paste/cut (Ctrl+C, Ctrl+V, Shift+Insert, Command+V), locks out right-click context menus, prevents text highlighting, monitors browser tab-switches and focus loss with automated audit logs, and enforces server-side synchronized countdown timers.'
     },
     {
       q: 'Can our college configure custom semester labs and syllabus tracks?',
       a: 'Yes! Admins can create semester-wise labs with week-wise unlocked tracks (W1 to W12), configure custom problem sets with public example test cases and hidden evaluation cases, and track student code submission streams in real-time.'
     },
     {
-      q: 'What programming languages are supported?',
-      a: 'The platform provides isolated, high-speed execution environments for Python 3.11, C++17 (GCC 11), C17, Java 17 (OpenJDK), Node.js 18 (JavaScript), and SQL databases.'
+      q: 'What programming languages and compilers are supported?',
+      a: 'The platform provides isolated, high-speed execution sandboxes for Python 3.11, C++17 (GCC 11), C17, Java 17 (OpenJDK), Node.js 18 (JavaScript), and PostgreSQL/SQLite database engines.'
     },
     {
       q: 'How does the automated compiler diagnostic parser work?',
-      a: 'When code fails or produces an error, our intelligent diagnostic parser analyzes the compiler stderr and tracebacks to pinpoint the exact line & column, explains the error type (SyntaxError, IndentationError, TLE, Wrong Answer), and provides actionable fix hints.'
+      a: 'When student code fails or triggers an error, our intelligent diagnostic parser analyzes the compiler stderr and tracebacks to pinpoint the exact line & column, explains the error type (SyntaxError, IndentationError, TLE, Wrong Answer), and provides actionable fix hints without giving away the full answer.'
     },
     {
-      q: 'Can assessment results and student marks be exported?',
-      a: 'Yes. Admins can export complete CSV/Excel score reports, submission code snapshots, pass percentages, execution times, and anti-cheat audit logs with one click.'
+      q: 'Can assessment results and student marks be exported for college records?',
+      a: 'Yes. Admins can export complete CSV/Excel score reports, submission code snapshots, pass percentages, execution times, and anti-cheat audit logs with a single click.'
     }
   ];
+
+  const currentPhrase = ROTATING_PHRASES[phraseIndex];
 
   return (
     <div className="flex flex-col space-y-28 py-6 max-w-7xl mx-auto px-4 sm:px-6">
       {/* =========================================================================
-          1. HERO SECTION (AlgoSpark Inspired + Next-Gen Aesthetics)
+          1. HERO SECTION (Apple SF Pro Typography + Dynamic Cycling Text)
          ========================================================================= */}
       <section className="relative pt-6 pb-4" id="top">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -177,33 +254,42 @@ export default function LandingPage() {
             {/* Top Product Tag Pill */}
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-purple-500/15 border border-blue-500/30 text-blue-400 text-xs font-bold tracking-wide uppercase backdrop-blur-md shadow-lg shadow-blue-500/10 animate-pulse-glow">
               <Sparkles className="h-4 w-4 text-amber-400" />
-              <span>AI-Powered Learning & Assessment Platform for Colleges</span>
+              <span>Next-Gen College Coding & Proctoring Ecosystem</span>
             </div>
 
-            {/* Subtitle Triad: Learn • Think • Innovate */}
-            <div className="flex items-center gap-5 text-xs font-mono font-bold tracking-[0.14em] uppercase text-slate-400">
-              <span className="flex items-center gap-2">
+            {/* Subtitle Triad: Learn • Practice • Master • Get Placed */}
+            <div className="flex items-center gap-4 text-xs font-mono font-bold tracking-[0.14em] uppercase text-slate-400">
+              <span className="flex items-center gap-1.5">
                 <i className="w-2.5 h-2.5 rounded-full bg-cyan-400 block shadow-sm shadow-cyan-400" /> Learn
               </span>
-              <span className="flex items-center gap-2">
-                <i className="w-2.5 h-2.5 rounded-full bg-purple-400 block shadow-sm shadow-purple-400" /> Think
+              <span className="flex items-center gap-1.5">
+                <i className="w-2.5 h-2.5 rounded-full bg-indigo-400 block shadow-sm shadow-indigo-400" /> Practice
               </span>
-              <span className="flex items-center gap-2">
-                <i className="w-2.5 h-2.5 rounded-full bg-amber-400 block shadow-sm shadow-amber-400" /> Innovate
+              <span className="flex items-center gap-1.5">
+                <i className="w-2.5 h-2.5 rounded-full bg-purple-400 block shadow-sm shadow-purple-400" /> Master
+              </span>
+              <span className="flex items-center gap-1.5">
+                <i className="w-2.5 h-2.5 rounded-full bg-amber-400 block shadow-sm shadow-amber-400" /> Placement
               </span>
             </div>
 
-            {/* Main Punchy Headline */}
-            <h1 className="text-4xl sm:text-6xl lg:text-[68px] font-black tracking-tight text-white leading-[1.05]">
-              Where students learn to code — and <br className="hidden sm:inline" />
-              <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-sky-400 bg-clip-text text-transparent italic font-serif">
-                spark
-              </span> real careers.
-            </h1>
+            {/* Main Punchy Headline with Dynamic Rotating Text */}
+            <div className="min-h-[140px] sm:min-h-[160px] lg:min-h-[180px] flex flex-col justify-center">
+              <h1 className="text-4xl sm:text-6xl lg:text-[66px] font-black tracking-tight text-white leading-[1.08]">
+                Where students learn to code — and <br className="hidden sm:inline" />
+                <span
+                  className={`inline-block transition-all duration-300 transform ${
+                    isFading ? 'opacity-0 -translate-y-3 scale-95' : 'opacity-100 translate-y-0 scale-100'
+                  } bg-gradient-to-r ${currentPhrase.gradient} bg-clip-text text-transparent italic font-serif`}
+                >
+                  {currentPhrase.text}
+                </span>
+              </h1>
+            </div>
 
             {/* Description */}
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl font-normal">
-              The full college ecosystem: tech courses, semester-wise labs with week-wise unlocks, placement-style examinations with AI anti-cheat security, and a 3-second live admin dashboard.
+              The all-in-one college platform: curated tech roadmaps, semester-wise labs with week-wise unlocks, placement-style examinations with AI anti-cheat security, and real-time live admin dashboards.
             </p>
 
             {/* CTA Buttons */}
@@ -211,7 +297,7 @@ export default function LandingPage() {
               {user ? (
                 <Link
                   href={user.role === 'admin' ? '/admin/dashboard' : '/student/dashboard'}
-                  className="group flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-xl shadow-blue-500/25 transition-all hover:scale-105"
+                  className="group flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-white apple-btn-primary shadow-xl shadow-blue-500/25"
                 >
                   <span>Go to {user.role === 'admin' ? 'Admin' : 'Student'} Workspace</span>
                   <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -220,7 +306,7 @@ export default function LandingPage() {
                 <>
                   <Link
                     href="/login?role=student"
-                    className="group flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 shadow-xl shadow-blue-500/30 transition-all hover:scale-105"
+                    className="group flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-white apple-btn-primary shadow-xl shadow-blue-500/30"
                   >
                     <GraduationCap className="h-5 w-5" />
                     <span>Start Practice Free</span>
@@ -229,7 +315,7 @@ export default function LandingPage() {
 
                   <Link
                     href="/login?role=admin"
-                    className="flex items-center gap-2.5 px-6 py-4 rounded-2xl font-bold text-slate-300 hover:text-white bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 hover:border-slate-600 transition-all backdrop-blur-md shadow-md"
+                    className="flex items-center gap-2.5 px-6 py-4 rounded-2xl font-bold text-slate-300 hover:text-white apple-btn-glass"
                   >
                     <ShieldCheck className="h-5 w-5 text-amber-400" />
                     <span>Admin Portal</span>
@@ -239,7 +325,7 @@ export default function LandingPage() {
             </div>
 
             {/* Social Proof Quick Counters */}
-            <div className="flex flex-wrap gap-x-10 gap-y-4 pt-6 border-t border-slate-800/80 text-left">
+            <div className="flex flex-wrap gap-x-10 gap-y-4 pt-6 border-t border-white/10 text-left">
               <div>
                 <div className="font-mono font-black text-2xl sm:text-3xl text-white">50+</div>
                 <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Colleges Onboard</div>
@@ -250,21 +336,21 @@ export default function LandingPage() {
               </div>
               <div>
                 <div className="font-mono font-black text-2xl sm:text-3xl text-white">6+</div>
-                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Languages + SQL</div>
+                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Compilers + SQL</div>
               </div>
             </div>
           </div>
 
           {/* Hero Right: Live Interactive Multi-Language Code Arena */}
           <div className="lg:col-span-5 relative">
-            {/* Top Floating Badge 1: XP & Rank Climb */}
+            {/* Top Floating Badge: XP & Rank Climb */}
             <div className="absolute -top-5 right-2 z-20 px-4 py-2 rounded-2xl bg-slate-900/90 border border-amber-500/40 text-white font-bold text-xs shadow-2xl flex items-center gap-2 backdrop-blur-xl animate-float-slow">
               <Sparkles className="h-4 w-4 text-amber-400 fill-amber-400" />
               <span>+120 XP · Rank #14 ➔ #9 🏆</span>
             </div>
 
             {/* Interactive Code Container */}
-            <div className="rounded-3xl border border-white/10 bg-slate-950/90 shadow-2xl overflow-hidden font-mono text-xs backdrop-blur-2xl">
+            <div className="rounded-3xl border border-white/10 bg-slate-950/90 shadow-2xl overflow-hidden font-mono text-xs backdrop-blur-2xl apple-card">
               {/* Window Header */}
               <div className="flex items-center justify-between px-4 py-3 bg-slate-900/90 border-b border-white/10">
                 <div className="flex items-center gap-2">
@@ -306,12 +392,12 @@ export default function LandingPage() {
 
               {/* Simulated Output Banner (when user clicks Run) */}
               {simulatedOutput && (
-                <div className="p-3.5 bg-emerald-950/40 border-t border-emerald-500/30 text-emerald-300 font-mono text-xs flex items-center justify-between">
+                <div className="p-3.5 bg-emerald-950/50 border-t border-emerald-500/40 text-emerald-300 font-mono text-xs flex items-center justify-between">
                   <span className="flex items-center gap-1.5 font-bold">
                     <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                     {CODE_EXAMPLES[activeLang].output}
                   </span>
-                  <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider bg-emerald-500/20 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30">
                     Accepted
                   </span>
                 </div>
@@ -335,7 +421,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Bottom Floating Badge 2: Active Student Presence Stack */}
+            {/* Bottom Floating Badge: Active Student Presence Stack */}
             <div className="absolute -bottom-5 -left-3 sm:-left-6 z-20 px-4 py-2.5 rounded-2xl bg-slate-900/90 border border-white/10 text-white font-bold text-xs shadow-2xl flex items-center gap-3 backdrop-blur-xl animate-float-reverse">
               <div className="flex -space-x-2">
                 <span className="w-7 h-7 rounded-full border border-white/20 bg-blue-600 flex items-center justify-center text-[10px] font-bold">A</span>
@@ -345,7 +431,7 @@ export default function LandingPage() {
               </div>
               <div className="flex items-center gap-1.5 text-xs text-slate-200">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                <span><strong>1,420+</strong> students coding now</span>
+                <span><strong>1,420+</strong> students coding live</span>
               </div>
             </div>
           </div>
@@ -357,17 +443,17 @@ export default function LandingPage() {
          ========================================================================= */}
       <div className="w-full bg-gradient-to-r from-blue-900/30 via-indigo-900/40 to-purple-900/30 border-y border-white/10 py-3.5 overflow-hidden backdrop-blur-md">
         <div className="flex items-center gap-8 text-xs font-mono font-bold tracking-wider text-slate-300 uppercase whitespace-nowrap animate-marquee">
-          <span className="flex items-center gap-2">⚡ AI-Graded Examinations</span>
+          <span className="flex items-center gap-2">⚡ Proctored Placement Exams</span>
           <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">🛡️ AI Anti-Cheat Proctoring HUD</span>
+          <span className="flex items-center gap-2">🛡️ Strict Clipboard & Anti-Cheat Shield</span>
           <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">💻 6+ Languages + SQL Playground</span>
+          <span className="flex items-center gap-2">💻 6+ Languages + SQL Live Sandboxes</span>
           <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">📅 Semester-Wise 12-Week Labs</span>
+          <span className="flex items-center gap-2">📅 Semester-Wise 12-Week Unlocked Labs</span>
           <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">🎯 Instant Big-O & Diagnostic Parsing</span>
+          <span className="flex items-center gap-2">🎯 Instant Diagnostic & Syntax Error Hints</span>
           <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">📊 Real-Time College Admin Stream</span>
+          <span className="flex items-center gap-2">📊 Real-Time Admin Code Stream</span>
           <span className="text-blue-500">•</span>
           <span className="flex items-center gap-2">🏆 Campus Rankings & Streak Flame</span>
         </div>
@@ -381,8 +467,8 @@ export default function LandingPage() {
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
             <Compass className="h-4 w-4" /> The Learning Loop
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-white">
-            How Every Student <span className="italic font-serif text-amber-400">sparks.</span>
+          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+            How Every Student <span className="animate-text-gold italic font-serif">sparks.</span>
           </h2>
           <p className="text-slate-400 text-sm sm:text-base">
             Not passive video watching — a continuous hands-on loop students run every day on every topic until the concept clicks.
@@ -391,7 +477,7 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Step 01 */}
-          <div className="p-7 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl space-y-4 relative overflow-hidden group hover:border-blue-500/40 hover:-translate-y-2 transition-all duration-300">
+          <div className="p-7 rounded-3xl apple-card-interactive space-y-4 relative overflow-hidden group">
             <div className="text-4xl font-black font-mono text-blue-500/30 group-hover:text-blue-400 transition-colors">
               01
             </div>
@@ -405,7 +491,7 @@ export default function LandingPage() {
           </div>
 
           {/* Step 02 */}
-          <div className="p-7 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl space-y-4 relative overflow-hidden group hover:border-indigo-500/40 hover:-translate-y-2 transition-all duration-300">
+          <div className="p-7 rounded-3xl apple-card-interactive space-y-4 relative overflow-hidden group">
             <div className="text-4xl font-black font-mono text-indigo-500/30 group-hover:text-indigo-400 transition-colors">
               02
             </div>
@@ -419,7 +505,7 @@ export default function LandingPage() {
           </div>
 
           {/* Step 03 */}
-          <div className="p-7 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl space-y-4 relative overflow-hidden group hover:border-purple-500/40 hover:-translate-y-2 transition-all duration-300">
+          <div className="p-7 rounded-3xl apple-card-interactive space-y-4 relative overflow-hidden group">
             <div className="text-4xl font-black font-mono text-purple-500/30 group-hover:text-purple-400 transition-colors">
               03
             </div>
@@ -428,12 +514,12 @@ export default function LandingPage() {
             </div>
             <h3 className="text-xl font-bold text-white">Instant Diagnostics</h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Automated compiler parsing isolates line numbers, explains syntax/indentation errors, and displays Big-O complexity insight.
+              Automated compiler parsing isolates line numbers, explains syntax/indentation errors, and displays Big-O complexity insights.
             </p>
           </div>
 
           {/* Step 04 */}
-          <div className="p-7 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl space-y-4 relative overflow-hidden group hover:border-amber-500/40 hover:-translate-y-2 transition-all duration-300">
+          <div className="p-7 rounded-3xl apple-card-interactive space-y-4 relative overflow-hidden group">
             <div className="text-4xl font-black font-mono text-amber-500/30 group-hover:text-amber-400 transition-colors">
               04
             </div>
@@ -449,15 +535,115 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          4. SEMESTER-WISE LABS (12-Week Structured Curriculum Timeline)
+          4. CAREER TRACKS & SYLLABUS ROADMAPS (AlgoSpark Inspired)
          ========================================================================= */}
-      <section className="p-8 sm:p-12 rounded-3xl bg-slate-900/60 border border-white/10 shadow-2xl space-y-8 backdrop-blur-xl" id="labs">
+      <section className="space-y-8" id="tracks">
+        <div className="max-w-2xl mx-auto text-center space-y-3">
+          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-400">
+            <Target className="h-4 w-4" /> Career Specializations
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+            Curated <span className="animate-text-flow">Industry Tracks</span>
+          </h2>
+          <p className="text-slate-400 text-sm sm:text-base">
+            Structured step-by-step pathways designed around real corporate hiring standards and technical interview patterns.
+          </p>
+        </div>
+
+        {/* Track Selector Navigation */}
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {CAREER_TRACKS.map((track) => {
+            const Icon = track.icon;
+            const isSelected = selectedTrack === track.id;
+            return (
+              <button
+                key={track.id}
+                onClick={() => setSelectedTrack(track.id)}
+                className={`flex items-center gap-2.5 px-5 py-3 rounded-2xl text-xs font-bold transition-all ${
+                  isSelected
+                    ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/30 border border-blue-400/40 scale-105'
+                    : 'apple-card text-slate-400 hover:text-white hover:border-slate-700'
+                }`}
+              >
+                <Icon className={`h-4 w-4 ${isSelected ? 'text-white' : 'text-blue-400'}`} />
+                <span>{track.name}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Selected Track Detailed Display Card */}
+        {(() => {
+          const currentTrack = CAREER_TRACKS.find((t) => t.id === selectedTrack);
+          if (!currentTrack) return null;
+          const TrackIcon = currentTrack.icon;
+
+          return (
+            <div className="p-8 sm:p-10 rounded-3xl apple-card border border-white/10 shadow-2xl space-y-8 backdrop-blur-2xl">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-white/10">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-3 rounded-2xl bg-gradient-to-tr ${currentTrack.color} text-white shadow-lg`}>
+                      <TrackIcon className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20">
+                        {currentTrack.badge}
+                      </span>
+                      <h3 className="text-2xl sm:text-3xl font-black text-white mt-1">
+                        {currentTrack.name}
+                      </h3>
+                    </div>
+                  </div>
+                  <p className="text-sm text-slate-300 max-w-2xl font-normal leading-relaxed">
+                    {currentTrack.description}
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap lg:flex-col gap-3 shrink-0">
+                  <div className="px-4 py-2.5 rounded-2xl bg-slate-900/90 border border-white/10 text-xs font-mono font-bold text-slate-200">
+                    🔥 {currentTrack.problems}
+                  </div>
+                  <div className="px-4 py-2.5 rounded-2xl bg-emerald-950/60 border border-emerald-500/30 text-xs font-mono font-bold text-emerald-400">
+                    💼 {currentTrack.avgPackage}
+                  </div>
+                </div>
+              </div>
+
+              {/* Syllabus Module Pills */}
+              <div className="space-y-3">
+                <div className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">
+                  Included Milestones & Lab Modules:
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {currentTrack.modules.map((mod, idx) => (
+                    <div
+                      key={idx}
+                      className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 flex items-center gap-3 hover:border-blue-500/30 transition-all"
+                    >
+                      <div className="h-7 w-7 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center text-xs font-mono font-bold shrink-0">
+                        0{idx + 1}
+                      </div>
+                      <span className="text-xs font-semibold text-slate-200">{mod}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+      </section>
+
+      {/* =========================================================================
+          5. SEMESTER-WISE LABS (12-Week Structured Curriculum Timeline)
+         ========================================================================= */}
+      <section className="p-8 sm:p-12 rounded-3xl apple-card border border-white/10 shadow-2xl space-y-8 backdrop-blur-xl" id="labs">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
               <Layers className="h-4 w-4" /> Curriculum Progress Track
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white">
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
               Semester-Wise Labs with Week-Wise Unlocks
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 max-w-xl">
@@ -515,15 +701,15 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          5. PROCTORED EXAMINATIONS & ANTI-CHEAT SUITE
+          6. PROCTORED EXAMINATIONS & ANTI-CHEAT SUITE
          ========================================================================= */}
-      <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/50 to-slate-900 border border-white/10 shadow-2xl space-y-8 backdrop-blur-xl" id="exams">
+      <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/50 to-slate-900 border border-white/10 shadow-2xl space-y-8 backdrop-blur-xl apple-card" id="exams">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-6 space-y-5">
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">
               <ShieldCheck className="h-4 w-4" /> Proctoring & Integrity Guard
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white">
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
               Placement-Style Exams Built for Academic Integrity
             </h2>
             <p className="text-sm text-slate-300 leading-relaxed font-normal">
@@ -531,15 +717,15 @@ export default function LandingPage() {
             </p>
 
             <div className="space-y-3 text-xs font-medium text-slate-300">
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+              <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
                 <Check className="h-4 w-4 text-emerald-400 shrink-0" />
                 <span><strong>Clipboard Security:</strong> Strict Monaco and DOM-level blocking of Copy, Paste, Cut, and Context-Menu.</span>
               </div>
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+              <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
                 <Check className="h-4 w-4 text-emerald-400 shrink-0" />
                 <span><strong>Tab Visibility Tracking:</strong> Records window blur & tab switching events in live audit logs.</span>
               </div>
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+              <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
                 <Check className="h-4 w-4 text-emerald-400 shrink-0" />
                 <span><strong>Synchronized Timer:</strong> Automatic exam submission on zero-countdown with zero data loss.</span>
               </div>
@@ -551,12 +737,12 @@ export default function LandingPage() {
               <span className="font-bold text-white flex items-center gap-2">
                 <ShieldAlert className="h-4 w-4 text-red-400 animate-bounce" /> Live Anti-Cheat Monitor
               </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-400 font-mono font-bold text-[10px]">
+              <span className="px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-400 font-mono font-bold text-[10px] border border-red-500/30">
                 ARMED & ACTIVE
               </span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2 text-xs">
+            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2.5 text-xs">
               <div className="flex justify-between text-slate-400">
                 <span>Copy / Paste Shortcut Attempt:</span>
                 <span className="text-red-400 font-bold font-mono">BLOCKED ❌</span>
@@ -567,7 +753,7 @@ export default function LandingPage() {
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Tab Focus Loss Count:</span>
-                <span className="text-amber-400 font-bold font-mono">0 Incidents (Clean) ✅</span>
+                <span className="text-emerald-400 font-bold font-mono">0 Incidents (Clean) ✅</span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Time Remaining:</span>
@@ -579,14 +765,14 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          6. INTERACTIVE FAQ ACCORDION SECTION
+          7. INTERACTIVE FAQ ACCORDION SECTION
          ========================================================================= */}
       <section className="max-w-4xl mx-auto space-y-8 w-full">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">
             <HelpCircle className="h-4 w-4" /> Frequently Asked Questions
           </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-white">
+          <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
             Everything You Need to Know
           </h2>
         </div>
@@ -595,7 +781,7 @@ export default function LandingPage() {
           {faqs.map((faq, idx) => (
             <div
               key={idx}
-              className="p-5 rounded-2xl bg-slate-900/60 border border-white/10 shadow-lg cursor-pointer transition-all hover:border-blue-500/30"
+              className="p-5 rounded-2xl apple-card cursor-pointer transition-all hover:border-blue-500/40"
               onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
             >
               <div className="flex items-center justify-between text-sm font-bold text-white">
@@ -617,7 +803,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          7. FINAL CALL TO ACTION BANNER (Get Started / Book Demo)
+          8. FINAL CALL TO ACTION BANNER (Get Started / Book Demo)
          ========================================================================= */}
       <section className="p-10 sm:p-14 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white shadow-2xl relative overflow-hidden text-center space-y-6">
         <div className="max-w-2xl mx-auto space-y-4">

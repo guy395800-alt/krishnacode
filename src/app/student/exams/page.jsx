@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { api } from '../../../lib/api';
-import { GraduationCap, Clock, Calendar, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { GraduationCap, Clock, Calendar, ArrowRight, ShieldCheck, CheckCircle2, Sparkles, Award } from 'lucide-react';
 
 export default function StudentExamsPage() {
   const router = useRouter();
@@ -27,78 +27,86 @@ export default function StudentExamsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-black text-slate-900 dark:text-white">
-          Coding Examinations
-        </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Enrolled coding examinations, active tests, and completed evaluations
-        </p>
+    <div className="space-y-8">
+      {/* Top Banner Header */}
+      <div className="p-8 rounded-3xl apple-card border border-white/10 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+        <div className="space-y-2 relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono font-bold tracking-wider uppercase">
+            <ShieldCheck className="h-4 w-4" /> Proctored Academic Evaluations
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            Coding Examinations & Labs
+          </h1>
+          <p className="text-sm text-slate-300 max-w-2xl font-normal">
+            Enrolled semester assessments, placement mock tests, and real-time AI-proctored code arenas.
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {loading ? (
-          <div className="col-span-2 p-12 text-center text-slate-400">Loading exams...</div>
+          <div className="col-span-2 p-12 text-center text-slate-400 apple-card rounded-3xl">
+            <div className="animate-pulse">Loading assigned examinations...</div>
+          </div>
         ) : exams.length > 0 ? (
           exams.map((exam) => (
             <div
               key={exam.id}
-              className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4 hover:border-blue-500/50 transition-all"
+              className="p-7 rounded-3xl apple-card-interactive border border-white/10 shadow-xl flex flex-col justify-between space-y-6"
             >
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                  <span className={`px-3.5 py-1 rounded-full text-xs font-mono font-bold ${
                     exam.status === 'Active'
-                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400 animate-pulse'
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 animate-pulse'
                       : exam.status === 'Scheduled'
-                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400'
-                      : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                      ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                      : 'bg-slate-800/60 text-slate-400 border border-slate-700/60'
                   }`}>
-                    {exam.status}
+                    {exam.status === 'Active' ? '🟢 LIVE NOW' : exam.status}
                   </span>
-                  <span className="text-xs font-mono font-semibold text-slate-500">
-                    Total Marks: {exam.total_marks}
+                  <span className="text-xs font-mono font-bold text-slate-400 bg-slate-900/80 px-3 py-1 rounded-xl border border-white/5">
+                    {exam.total_marks} Marks
                   </span>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                <h3 className="text-xl font-black text-white tracking-tight">
                   {exam.name}
                 </h3>
-                <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
+                <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed font-normal">
                   {exam.description}
                 </p>
 
-                <div className="grid grid-cols-2 gap-2 pt-2 text-xs font-medium text-slate-500">
-                  <div className="flex items-center gap-1.5">
-                    <Clock className="h-4 w-4 text-blue-500" />
-                    <span>Duration: {exam.duration_minutes} min</span>
+                <div className="grid grid-cols-2 gap-3 pt-2 text-xs font-mono text-slate-300">
+                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
+                    <Clock className="h-4 w-4 text-blue-400" />
+                    <span>{exam.duration_minutes} Minutes</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="h-4 w-4 text-indigo-500" />
-                    <span>Start: {new Date(exam.start_time).toLocaleDateString()}</span>
+                  <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
+                    <Calendar className="h-4 w-4 text-indigo-400" />
+                    <span>{new Date(exam.start_time).toLocaleDateString()}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="pt-4 border-t border-white/10">
                 <Link
                   href={`/student/exams/${exam.id}/workspace`}
-                  className={`w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
+                  className={`w-full py-3.5 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
                     exam.status === 'Active'
-                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-500/20'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                      ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-lg shadow-emerald-500/25 hover:scale-[1.02]'
+                      : 'apple-btn-glass text-slate-200'
                   }`}
                 >
-                  {exam.status === 'Active' ? 'Enter Exam Interface' : 'View Instructions'}
+                  {exam.status === 'Active' ? 'Enter Live Exam Interface' : 'View Exam Overview'}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </div>
           ))
         ) : (
-          <div className="col-span-2 p-12 text-center text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
-            No coding exams currently assigned to your batch.
+          <div className="col-span-2 p-12 text-center text-slate-400 apple-card rounded-3xl border border-white/10">
+            No coding examinations currently assigned to your batch.
           </div>
         )}
       </div>
