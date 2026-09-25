@@ -530,47 +530,25 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          2. DUAL CONTINUOUS MARQUEE RIBBONS
+          2. CONTINUOUS MARQUEE RIBBON
          ========================================================================= */}
-      <div className="space-y-3">
-        {/* Ribbon 1: Core Platform Capabilities */}
-        <div className="w-full bg-gradient-to-r from-blue-950/40 via-indigo-950/50 to-purple-950/40 border-y border-white/10 py-3 overflow-hidden backdrop-blur-md">
-          <div className="flex items-center gap-8 text-xs font-mono font-bold tracking-wider text-slate-300 uppercase whitespace-nowrap animate-marquee">
-            <span className="flex items-center gap-2">⚡ Proctored Placement Exams</span>
-            <span className="text-blue-500">•</span>
-            <span className="flex items-center gap-2">🛡️ Strict Clipboard & Anti-Cheat Shield</span>
-            <span className="text-blue-500">•</span>
-            <span className="flex items-center gap-2">🎓 Faculty-Curated Academic Courses</span>
-            <span className="text-blue-500">•</span>
-            <span className="flex items-center gap-2">💻 6+ Compilers & SQL Live Sandboxes</span>
-            <span className="text-blue-500">•</span>
-            <span className="flex items-center gap-2">📅 Semester-Wise 12-Week Unlocked Labs</span>
-            <span className="text-blue-500">•</span>
-            <span className="flex items-center gap-2">🎯 Instant Big-O & Diagnostic Parsing</span>
-            <span className="text-blue-500">•</span>
-            <span className="flex items-center gap-2">📊 Real-Time College Admin Stream</span>
-            <span className="text-blue-500">•</span>
-            <span className="flex items-center gap-2">🏆 Campus Rankings & Streak Flame</span>
-          </div>
-        </div>
-
-        {/* Ribbon 2: Tier-1 Tech Recruitment Target Alignment (Reverse Direction) */}
-        <div className="w-full bg-gradient-to-r from-slate-950/40 via-blue-950/30 to-slate-950/40 border-b border-white/5 py-2.5 overflow-hidden backdrop-blur-sm">
-          <div className="flex items-center gap-8 text-[11px] font-mono font-semibold tracking-widest text-slate-400 uppercase whitespace-nowrap animate-marquee-reverse">
-            <span className="flex items-center gap-1.5 text-blue-300">🏢 Google Placement SDE-1</span>
-            <span className="text-slate-700">/</span>
-            <span className="flex items-center gap-1.5 text-indigo-300">🏢 Microsoft Azure Core</span>
-            <span className="text-slate-700">/</span>
-            <span className="flex items-center gap-1.5 text-amber-300">🏢 Amazon AWS Systems</span>
-            <span className="text-slate-700">/</span>
-            <span className="flex items-center gap-1.5 text-emerald-300">🏢 Atlassian Full-Stack</span>
-            <span className="text-slate-700">/</span>
-            <span className="flex items-center gap-1.5 text-purple-300">🏢 Adobe Creative Cloud</span>
-            <span className="text-slate-700">/</span>
-            <span className="flex items-center gap-1.5 text-cyan-300">🏢 Uber Distributed Systems</span>
-            <span className="text-slate-700">/</span>
-            <span className="flex items-center gap-1.5 text-rose-300">🏢 Flipkart High-Scale Commerce</span>
-          </div>
+      <div className="w-full bg-gradient-to-r from-blue-950/40 via-indigo-950/50 to-purple-950/40 border-y border-white/10 py-3.5 overflow-hidden backdrop-blur-md">
+        <div className="flex items-center gap-8 text-xs font-mono font-bold tracking-wider text-slate-300 uppercase whitespace-nowrap animate-marquee">
+          <span className="flex items-center gap-2">⚡ Proctored Placement Exams</span>
+          <span className="text-blue-500">•</span>
+          <span className="flex items-center gap-2">🛡️ Strict Clipboard & Anti-Cheat Shield</span>
+          <span className="text-blue-500">•</span>
+          <span className="flex items-center gap-2">🎓 Faculty-Curated Academic Courses</span>
+          <span className="text-blue-500">•</span>
+          <span className="flex items-center gap-2">💻 6+ Compilers & SQL Live Sandboxes</span>
+          <span className="text-blue-500">•</span>
+          <span className="flex items-center gap-2">📅 Semester-Wise 12-Week Unlocked Labs</span>
+          <span className="text-blue-500">•</span>
+          <span className="flex items-center gap-2">🎯 Instant Big-O & Diagnostic Parsing</span>
+          <span className="text-blue-500">•</span>
+          <span className="flex items-center gap-2">📊 Real-Time College Admin Stream</span>
+          <span className="text-blue-500">•</span>
+          <span className="flex items-center gap-2">🏆 Campus Rankings & Streak Flame</span>
         </div>
       </div>
 
