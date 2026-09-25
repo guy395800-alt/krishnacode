@@ -17,7 +17,8 @@ import {
   Sparkles,
   Layers,
   Award,
-  PlayCircle
+  PlayCircle,
+  Code2
 } from 'lucide-react';
 
 export default function StudentCoursesPage() {
