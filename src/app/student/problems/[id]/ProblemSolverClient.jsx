@@ -27,54 +27,148 @@ import { handleDisableCopyPaste, MONACO_NO_COPY_OPTIONS } from '../../../../lib/
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
 
-const STARTER_TEMPLATES = {
-  python: `# Python 3.11 Solution
-# Implement your solution and RETURN the answer (No input() needed)
-def solve(*args):
-    # Write your algorithmic solution here and return the computed answer
+export function generateNamedFunctionTemplate(language, problem) {
+  const title = (problem?.title || '').toLowerCase();
+  const desc = (problem?.description || '').toLowerCase();
+  const inputFmt = (problem?.input_format || '').toLowerCase();
+
+  let fnName = 'solution';
+  let paramsPy = 'nums: list[int], target: int';
+  let paramsCpp = 'vector<int>& nums, int target';
+  let paramsJava = 'int[] nums, int target';
+  let paramsJs = 'nums, target';
+  let returnTypePy = 'list[int]';
+  let returnTypeCpp = 'vector<int>';
+  let returnTypeJava = 'int[]';
+
+  if (title.includes('two sum') || (desc.includes('two') && desc.includes('sum'))) {
+    fnName = 'twoSum';
+    paramsPy = 'nums: list[int], target: int';
+    paramsCpp = 'vector<int>& nums, int target';
+    paramsJava = 'int[] nums, int target';
+    paramsJs = 'nums, target';
+    returnTypePy = 'list[int]';
+    returnTypeCpp = 'vector<int>';
+    returnTypeJava = 'int[]';
+  } else if (title.includes('palindrome') || desc.includes('palindrome')) {
+    fnName = 'isPalindrome';
+    paramsPy = 's: str';
+    paramsCpp = 'string s';
+    paramsJava = 'String s';
+    paramsJs = 's';
+    returnTypePy = 'bool';
+    returnTypeCpp = 'bool';
+    returnTypeJava = 'boolean';
+  } else if (title.includes('max') && title.includes('array')) {
+    fnName = 'maxSubArray';
+    paramsPy = 'nums: list[int]';
+    paramsCpp = 'vector<int>& nums';
+    paramsJava = 'int[] nums';
+    paramsJs = 'nums';
+    returnTypePy = 'int';
+    returnTypeCpp = 'int';
+    returnTypeJava = 'int';
+  } else if (title.includes('stair') || title.includes('climb') || title.includes('fibonacci')) {
+    fnName = 'climbStairs';
+    paramsPy = 'n: int';
+    paramsCpp = 'int n';
+    paramsJava = 'int n';
+    paramsJs = 'n';
+    returnTypePy = 'int';
+    returnTypeCpp = 'int';
+    returnTypeJava = 'int';
+  } else if (title.includes('reverse') || title.includes('string')) {
+    fnName = 'reverseString';
+    paramsPy = 's: str';
+    paramsCpp = 'string s';
+    paramsJava = 'String s';
+    paramsJs = 's';
+    returnTypePy = 'str';
+    returnTypeCpp = 'string';
+    returnTypeJava = 'String';
+  } else if (title.includes('matrix') || title.includes('grid')) {
+    fnName = 'solveGrid';
+    paramsPy = 'grid: list[list[int]]';
+    paramsCpp = 'vector<vector<int>>& grid';
+    paramsJava = 'int[][] grid';
+    paramsJs = 'grid';
+    returnTypePy = 'int';
+    returnTypeCpp = 'int';
+    returnTypeJava = 'int';
+  } else if (desc.includes('string') || inputFmt.includes('string')) {
+    fnName = 'solve';
+    paramsPy = 's: str';
+    paramsCpp = 'string s';
+    paramsJava = 'String s';
+    paramsJs = 's';
+    returnTypePy = 'str';
+    returnTypeCpp = 'string';
+    returnTypeJava = 'String';
+  } else {
+    fnName = 'solve';
+    paramsPy = 'nums: list[int]';
+    paramsCpp = 'vector<int>& nums';
+    paramsJava = 'int[] nums';
+    paramsJs = 'nums';
+    returnTypePy = 'int';
+    returnTypeCpp = 'int';
+    returnTypeJava = 'int';
+  }
+
+  const templates = {
+    python: `# Python 3.11 Solution
+# Implement function logic and RETURN the answer (Do NOT use input())
+def ${fnName}(${paramsPy}) -> ${returnTypePy}:
+    # Write your algorithmic solution here
     pass
 `,
-  cpp: `// C++17 Solution
-// Implement your solution and return the answer
+    cpp: `// C++17 Solution
+// Implement function logic and RETURN the answer (Do NOT use cin)
 #include <iostream>
 #include <vector>
 #include <string>
+#include <unordered_map>
 #include <algorithm>
 
 using namespace std;
 
-auto solve(auto... args) {
+${returnTypeCpp} ${fnName}(${paramsCpp}) {
+    // Write your algorithmic solution here
+    return {};
+}
+`,
+    c: `// C (GCC 11) Solution
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int ${fnName}(int nums[], int size) {
     // Write your algorithmic solution here and return the answer
     return 0;
 }
 `,
-  c: `// C (GCC 11) Solution
-#include <stdio.h>
-#include <stdlib.h>
-
-int solve() {
-    // Return computed answer
-    return 0;
-}
-`,
-  java: `// Java 17 OpenJDK Solution
+    java: `// Java 17 OpenJDK Solution
+// Implement function logic and RETURN the answer (Do NOT use Scanner)
 import java.util.*;
 
 public class Solution {
-    public Object solve(Object... args) {
-        // Implement your logic and return the answer
-        return null;
+    public ${returnTypeJava} ${fnName}(${paramsJava}) {
+        // Write your algorithmic solution here
+        return ${returnTypeJava.includes('[]') ? 'new int[]{}' : (returnTypeJava === 'boolean' ? 'false' : '0')};
     }
 }
 `,
-  javascript: `// Node.js 18 JavaScript Solution
-// Implement your solution and RETURN the answer
-function solve(...args) {
-    // Write your algorithmic solution here and return result
+    javascript: `// Node.js 18 JavaScript Solution
+// Implement function logic and RETURN the answer
+function ${fnName}(${paramsJs}) {
+    // Write your algorithmic solution here
     return null;
 }
 `
-};
+  };
+
+  return templates[language] || templates.python;
+}
 
 export default function ProblemSolverClient({ initialId }) {
   const params = useParams();
@@ -84,7 +178,7 @@ export default function ProblemSolverClient({ initialId }) {
   const [problem, setProblem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState('python');
-  const [code, setCode] = useState(STARTER_TEMPLATES.python);
+  const [code, setCode] = useState('');
   const [customInput, setCustomInput] = useState('');
   const [activeTab, setActiveTab] = useState('testcases');
   
@@ -107,6 +201,7 @@ export default function ProblemSolverClient({ initialId }) {
     try {
       const resp = await api.get(`/problems/${problemId}`);
       setProblem(resp.data);
+      setCode(generateNamedFunctionTemplate(language, resp.data));
     } catch (err) {
       console.error('Failed to load problem details', err);
     } finally {
@@ -126,12 +221,12 @@ export default function ProblemSolverClient({ initialId }) {
 
   const handleLanguageChange = (newLang) => {
     setLanguage(newLang);
-    setCode(STARTER_TEMPLATES[newLang] || '');
+    setCode(generateNamedFunctionTemplate(newLang, problem));
   };
 
   const handleResetCode = () => {
     if (confirm('Reset code editor to starter template? Your current edits will be lost.')) {
-      setCode(STARTER_TEMPLATES[language] || '');
+      setCode(generateNamedFunctionTemplate(language, problem));
     }
   };
 
