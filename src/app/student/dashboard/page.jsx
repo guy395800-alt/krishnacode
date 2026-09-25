@@ -18,7 +18,9 @@ import {
   Flame,
   Sparkles,
   ArrowRight,
-  Activity
+  Activity,
+  Award,
+  BookOpen
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -53,7 +55,7 @@ export default function StudentDashboard() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">
           <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
-          <span className="text-xs font-mono text-slate-400">Loading Student Dashboard...</span>
+          <span className="text-xs font-mono text-slate-400">Loading Developer Cockpit...</span>
         </div>
       </div>
     );
@@ -92,18 +94,18 @@ export default function StudentDashboard() {
             <Code2 className="h-5 w-5" /> Start Practice
           </Link>
           <Link
-            href="/student/exams"
+            href="/student/courses"
             className="flex items-center gap-2 px-5 py-3.5 rounded-2xl font-bold bg-blue-900/60 hover:bg-blue-900/80 text-white border border-white/20 backdrop-blur-md transition-all"
           >
-            <GraduationCap className="h-5 w-5 text-amber-300" /> Take Exam
+            <BookOpen className="h-5 w-5 text-cyan-300" /> Explore Courses
           </Link>
         </div>
       </div>
 
-      {/* 2. KPI Stat Tiles (Glassmorphic Cards) */}
+      {/* 2. KPI Stat Tiles (Apple Glass Cards with Specular Depth) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Problems Solved */}
-        <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl hover:border-emerald-500/40 hover:-translate-y-1 transition-all duration-300 flex items-center justify-between">
+        <div className="p-6 rounded-3xl apple-card-interactive flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               Problems Solved
@@ -119,7 +121,7 @@ export default function StudentDashboard() {
         </div>
 
         {/* Problem Accuracy */}
-        <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl hover:border-blue-500/40 hover:-translate-y-1 transition-all duration-300 flex items-center justify-between">
+        <div className="p-6 rounded-3xl apple-card-interactive flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               Accuracy
@@ -135,7 +137,7 @@ export default function StudentDashboard() {
         </div>
 
         {/* Coding Score & Rank */}
-        <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl hover:border-amber-500/40 hover:-translate-y-1 transition-all duration-300 flex items-center justify-between">
+        <div className="p-6 rounded-3xl apple-card-interactive flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               XP Score
@@ -151,7 +153,7 @@ export default function StudentDashboard() {
         </div>
 
         {/* Streak & Exams */}
-        <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl hover:border-purple-500/40 hover:-translate-y-1 transition-all duration-300 flex items-center justify-between">
+        <div className="p-6 rounded-3xl apple-card-interactive flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               Streak
@@ -170,7 +172,7 @@ export default function StudentDashboard() {
       {/* 3. Analytics & Activity Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Submission Accuracy Chart */}
-        <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl space-y-4">
+        <div className="p-6 rounded-3xl apple-card space-y-4">
           <h3 className="text-base font-bold text-white flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-blue-400" /> Submission Ratio
           </h3>
@@ -201,7 +203,7 @@ export default function StudentDashboard() {
         </div>
 
         {/* Recent Submissions Table */}
-        <div className="lg:col-span-2 p-6 rounded-3xl bg-slate-900/60 border border-white/10 shadow-xl space-y-4">
+        <div className="lg:col-span-2 p-6 rounded-3xl apple-card space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
               <Clock className="h-5 w-5 text-indigo-400" /> Recent Submissions

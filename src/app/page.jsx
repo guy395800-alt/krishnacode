@@ -44,7 +44,12 @@ import {
   CheckCircle,
   Eye,
   PlayCircle,
-  Mail
+  Mail,
+  AlertTriangle,
+  Radar,
+  Radio,
+  FileSpreadsheet,
+  X
 } from 'lucide-react';
 
 const ROTATING_PHRASES = [
@@ -190,6 +195,14 @@ const CAREER_TRACKS = [
   }
 ];
 
+const LIVE_EVENTS = [
+  { icon: '🔥', text: 'Rahul S. (CSE - Sem 4) passed all 6 test cases for "Two Sum" in 4ms', tag: 'Accepted' },
+  { icon: '🛡️', text: 'Anti-cheat shield blocked unauthorized clipboard copy in Exam #204', tag: 'Security' },
+  { icon: '🎓', text: 'RV College of Engineering onboarded 620 students to Semester 4 Lab', tag: 'Campus' },
+  { icon: '⚡', text: 'Compiler diagnostic engine parsed a C++ IndentationError in 11ms', tag: 'Engine' },
+  { icon: '🏆', text: 'Sneha M. reached #3 on the University Placement Leaderboard (+340 XP)', tag: 'Rank 3' }
+];
+
 export default function LandingPage() {
   const { user } = useAuth();
   const [activeLang, setActiveLang] = useState('python');
@@ -198,6 +211,11 @@ export default function LandingPage() {
   const [activeFaq, setActiveFaq] = useState(null);
   const [selectedTrack, setSelectedTrack] = useState('dsa');
   const [featuredCourses, setFeaturedCourses] = useState([]);
+  const [activeFaqCategory, setActiveFaqCategory] = useState('all');
+
+  // Live Toast Notification State
+  const [eventIndex, setEventIndex] = useState(0);
+  const [toastVisible, setToastVisible] = useState(true);
 
   // Dynamic Rotating Hero Text State ("Text Going")
   const [phraseIndex, setPhraseIndex] = useState(0);
@@ -206,7 +224,7 @@ export default function LandingPage() {
   useEffect(() => {
     setFeaturedCourses(getCourses().slice(0, 3));
 
-    const interval = setInterval(() => {
+    const phraseInterval = setInterval(() => {
       setIsFading(true);
       setTimeout(() => {
         setPhraseIndex((prev) => (prev + 1) % ROTATING_PHRASES.length);
@@ -214,7 +232,14 @@ export default function LandingPage() {
       }, 400);
     }, 3200);
 
-    return () => clearInterval(interval);
+    const eventInterval = setInterval(() => {
+      setEventIndex((prev) => (prev + 1) % LIVE_EVENTS.length);
+    }, 4500);
+
+    return () => {
+      clearInterval(phraseInterval);
+      clearInterval(eventInterval);
+    };
   }, []);
 
   const handleRunCode = () => {
@@ -222,41 +247,79 @@ export default function LandingPage() {
     setTimeout(() => {
       setIsRunning(false);
       setSimulatedOutput(true);
-      triggerConfetti(); // Celebratory fireworks!
-    }, 550);
+      triggerConfetti();
+    }, 600);
   };
+
+  const currentEvent = LIVE_EVENTS[eventIndex];
 
   const faqs = [
     {
+      category: 'proctoring',
       q: 'How does the Anti-Cheat Proctoring engine protect exam integrity?',
       a: 'NexgenCode uses an institutional-grade security shield: it intercepts and disables keyboard shortcuts for copy/paste/cut (Ctrl+C, Ctrl+V, Shift+Insert, Command+V), locks out right-click context menus, prevents text highlighting, monitors browser tab-switches and focus loss with automated audit logs, and enforces server-side synchronized countdown timers.'
     },
     {
+      category: 'labs',
       q: 'Can our college configure custom semester labs and syllabus tracks?',
       a: 'Yes! Admins can create semester-wise labs with week-wise unlocked tracks (W1 to W12), configure custom problem sets with public example test cases and hidden evaluation cases, and track student code submission streams in real-time.'
     },
     {
+      category: 'courses',
       q: 'How does the Courses upload feature work for faculty and students?',
       a: 'Faculty and administrators can upload comprehensive academic courses with syllabus modules, video lectures, and embedded problem sets. Once published, students immediately see and enroll in these courses within their student workspace.'
     },
     {
+      category: 'compilers',
       q: 'What programming languages and compilers are supported?',
       a: 'The platform provides isolated, high-speed execution sandboxes for Python 3.11, C++17 (GCC 11), C17, Java 17 (OpenJDK), Node.js 18 (JavaScript), and PostgreSQL/SQLite database engines.'
     },
     {
+      category: 'compilers',
       q: 'How does the automated compiler diagnostic parser work?',
       a: 'When student code fails or triggers an error, our intelligent diagnostic parser analyzes compiler stderr and tracebacks to pinpoint the exact line & column, explains the error type (SyntaxError, IndentationError, TLE, Wrong Answer), and provides actionable fix hints.'
     },
     {
+      category: 'analytics',
       q: 'Can assessment results and student marks be exported for college records?',
       a: 'Yes. Admins can export complete CSV/Excel score reports, submission code snapshots, pass percentages, execution times, and anti-cheat audit logs with a single click.'
     }
   ];
 
+  const filteredFaqs = activeFaqCategory === 'all' 
+    ? faqs 
+    : faqs.filter(f => f.category === activeFaqCategory);
+
   const currentPhrase = ROTATING_PHRASES[phraseIndex];
 
   return (
-    <div className="flex flex-col space-y-28 py-6 max-w-7xl mx-auto px-4 sm:px-6">
+    <div className="flex flex-col space-y-28 py-6 max-w-7xl mx-auto px-4 sm:px-6 relative">
+      {/* =========================================================================
+          0. FLOATING REAL-TIME ACTIVITY PULSE TOAST
+         ========================================================================= */}
+      {toastVisible && (
+        <div className="fixed bottom-6 right-6 z-50 max-w-sm w-full animate-in slide-in-from-bottom-5 duration-300">
+          <div className="p-3.5 rounded-2xl bg-slate-900/95 border border-white/15 shadow-2xl backdrop-blur-2xl flex items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <span className="text-base shrink-0">{currentEvent.icon}</span>
+              <div className="truncate">
+                <span className="text-slate-200 font-medium block truncate">{currentEvent.text}</span>
+                <span className="text-[10px] text-emerald-400 font-mono font-bold uppercase tracking-wider flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping" /> Live Activity
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={() => setToastVisible(false)}
+              className="p-1 rounded-lg text-slate-500 hover:text-white transition-colors shrink-0"
+              title="Close activity feed"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* =========================================================================
           1. HERO SECTION (Apple SF Pro Typography + Dynamic Cycling Text)
          ========================================================================= */}
@@ -264,13 +327,13 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Hero Left Content */}
           <div className="lg:col-span-7 space-y-6 text-left">
-            {/* Top Product Tag Pill */}
+            {/* Top Product Tag Pill with Shimmering Glow */}
             <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-purple-500/15 border border-blue-500/30 text-blue-400 text-xs font-bold tracking-wide uppercase backdrop-blur-md shadow-lg shadow-blue-500/10 animate-pulse-glow">
               <Sparkles className="h-4 w-4 text-amber-400" />
               <span>⚡ Next-Gen College Coding & Proctoring Ecosystem</span>
             </div>
 
-            {/* Subtitle Triad: Learn • Practice • Master • Get Placed */}
+            {/* Subtitle Triad: Learn • Practice • Master • Placement */}
             <div className="flex items-center gap-4 text-xs font-mono font-bold tracking-[0.14em] uppercase text-slate-400">
               <span className="flex items-center gap-1.5">
                 <i className="w-2.5 h-2.5 rounded-full bg-cyan-400 block shadow-sm shadow-cyan-400" /> Learn
@@ -467,30 +530,212 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          2. ANIMATED MARQUEE TICKER (Continuous High-Tech Ribbon)
+          2. DUAL CONTINUOUS MARQUEE RIBBONS
          ========================================================================= */}
-      <div className="w-full bg-gradient-to-r from-blue-900/30 via-indigo-900/40 to-purple-900/30 border-y border-white/10 py-3.5 overflow-hidden backdrop-blur-md">
-        <div className="flex items-center gap-8 text-xs font-mono font-bold tracking-wider text-slate-300 uppercase whitespace-nowrap animate-marquee">
-          <span className="flex items-center gap-2">⚡ Proctored Placement Exams</span>
-          <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">🛡️ Strict Clipboard & Anti-Cheat Shield</span>
-          <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">🎓 Faculty-Curated Academic Courses</span>
-          <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">💻 6+ Compilers & SQL Live Sandboxes</span>
-          <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">📅 Semester-Wise 12-Week Unlocked Labs</span>
-          <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">🎯 Instant Big-O & Diagnostic Parsing</span>
-          <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">📊 Real-Time College Admin Stream</span>
-          <span className="text-blue-500">•</span>
-          <span className="flex items-center gap-2">🏆 Campus Rankings & Streak Flame</span>
+      <div className="space-y-3">
+        {/* Ribbon 1: Core Platform Capabilities */}
+        <div className="w-full bg-gradient-to-r from-blue-950/40 via-indigo-950/50 to-purple-950/40 border-y border-white/10 py-3 overflow-hidden backdrop-blur-md">
+          <div className="flex items-center gap-8 text-xs font-mono font-bold tracking-wider text-slate-300 uppercase whitespace-nowrap animate-marquee">
+            <span className="flex items-center gap-2">⚡ Proctored Placement Exams</span>
+            <span className="text-blue-500">•</span>
+            <span className="flex items-center gap-2">🛡️ Strict Clipboard & Anti-Cheat Shield</span>
+            <span className="text-blue-500">•</span>
+            <span className="flex items-center gap-2">🎓 Faculty-Curated Academic Courses</span>
+            <span className="text-blue-500">•</span>
+            <span className="flex items-center gap-2">💻 6+ Compilers & SQL Live Sandboxes</span>
+            <span className="text-blue-500">•</span>
+            <span className="flex items-center gap-2">📅 Semester-Wise 12-Week Unlocked Labs</span>
+            <span className="text-blue-500">•</span>
+            <span className="flex items-center gap-2">🎯 Instant Big-O & Diagnostic Parsing</span>
+            <span className="text-blue-500">•</span>
+            <span className="flex items-center gap-2">📊 Real-Time College Admin Stream</span>
+            <span className="text-blue-500">•</span>
+            <span className="flex items-center gap-2">🏆 Campus Rankings & Streak Flame</span>
+          </div>
+        </div>
+
+        {/* Ribbon 2: Tier-1 Tech Recruitment Target Alignment (Reverse Direction) */}
+        <div className="w-full bg-gradient-to-r from-slate-950/40 via-blue-950/30 to-slate-950/40 border-b border-white/5 py-2.5 overflow-hidden backdrop-blur-sm">
+          <div className="flex items-center gap-8 text-[11px] font-mono font-semibold tracking-widest text-slate-400 uppercase whitespace-nowrap animate-marquee-reverse">
+            <span className="flex items-center gap-1.5 text-blue-300">🏢 Google Placement SDE-1</span>
+            <span className="text-slate-700">/</span>
+            <span className="flex items-center gap-1.5 text-indigo-300">🏢 Microsoft Azure Core</span>
+            <span className="text-slate-700">/</span>
+            <span className="flex items-center gap-1.5 text-amber-300">🏢 Amazon AWS Systems</span>
+            <span className="text-slate-700">/</span>
+            <span className="flex items-center gap-1.5 text-emerald-300">🏢 Atlassian Full-Stack</span>
+            <span className="text-slate-700">/</span>
+            <span className="flex items-center gap-1.5 text-purple-300">🏢 Adobe Creative Cloud</span>
+            <span className="text-slate-700">/</span>
+            <span className="flex items-center gap-1.5 text-cyan-300">🏢 Uber Distributed Systems</span>
+            <span className="text-slate-700">/</span>
+            <span className="flex items-center gap-1.5 text-rose-300">🏢 Flipkart High-Scale Commerce</span>
+          </div>
         </div>
       </div>
 
       {/* =========================================================================
-          3. FEATURED COURSES & CURRICULUM SECTION
+          3. ASYMMETRIC NEXT-GEN BENTO GRID SHOWCASE ("The Attention Magnet")
+         ========================================================================= */}
+      <section className="space-y-12" id="features">
+        <div className="max-w-2xl mx-auto text-center space-y-3">
+          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-400">
+            <Cpu className="h-4 w-4" /> Next-Gen Architecture
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+            Built for High-Stakes <span className="animate-text-flow">Engineering.</span>
+          </h2>
+          <p className="text-slate-400 text-sm sm:text-base">
+            Every layer—from browser sandboxes to faculty streaming telemetry—is engineered for absolute security, low latency, and pedagogical depth.
+          </p>
+        </div>
+
+        {/* Asymmetric Bento Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          {/* Bento 1 (Span 8): Military-Grade Anti-Cheat Radar & Proctoring Guard */}
+          <div className="md:col-span-8 p-8 rounded-3xl bento-card space-y-6 flex flex-col justify-between group">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono font-bold uppercase">
+                  <ShieldAlert className="h-3.5 w-3.5" /> Armed & Active Proctor Shield
+                </div>
+                <h3 className="text-2xl font-black text-white">
+                  Zero-Tolerance Anti-Cheat Engine
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+                  Biometric tab-focus tracking, DOM-level copy/paste prevention, synchronized timers, and tamper-proof submission audit logs.
+                </p>
+              </div>
+
+              {/* Radar Animation Badge */}
+              <div className="relative h-20 w-20 shrink-0 rounded-full border border-red-500/40 bg-slate-950 flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-tr from-red-500/30 via-transparent to-transparent animate-radar rounded-full origin-center" />
+                <Radar className="h-8 w-8 text-red-400" />
+              </div>
+            </div>
+
+            {/* Live Visual Anti-Cheat Monitor Matrix */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+              <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-1">
+                <div className="text-[10px] font-mono text-slate-400 uppercase">Clipboard Interception</div>
+                <div className="text-sm font-bold text-emerald-400 flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4" /> 100% Blocked
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-1">
+                <div className="text-[10px] font-mono text-slate-400 uppercase">Focus Loss Detector</div>
+                <div className="text-sm font-bold text-blue-400 flex items-center gap-1.5">
+                  <Radio className="h-4 w-4 animate-pulse" /> Active Telemetry
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-1">
+                <div className="text-[10px] font-mono text-slate-400 uppercase">Timer Synchronization</div>
+                <div className="text-sm font-bold text-amber-400 flex items-center gap-1.5">
+                  <Clock className="h-4 w-4" /> Server-Enforced
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bento 2 (Span 4): Intelligent Compiler Diagnostic Parser */}
+          <div className="md:col-span-4 p-8 rounded-3xl bento-card space-y-5 flex flex-col justify-between group">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono font-bold uppercase">
+                <Zap className="h-3.5 w-3.5" /> Smart Diagnostic
+              </div>
+              <h3 className="text-xl font-black text-white">
+                Traceback Parser & Fix Hints
+              </h3>
+              <p className="text-xs text-slate-300">
+                Transforms intimidating compiler tracebacks into pinpoint line highlights and actionable fix suggestions.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 font-mono text-xs space-y-2">
+              <div className="text-red-400 font-bold flex items-center gap-1.5 text-[11px]">
+                <AlertTriangle className="h-3.5 w-3.5" /> Line 14: IndentationError
+              </div>
+              <p className="text-[11px] text-slate-400 leading-tight">
+                Expected 4-space indent block inside conditional statement.
+              </p>
+              <div className="text-[10px] text-emerald-400 font-bold bg-emerald-950/40 p-1.5 rounded-lg border border-emerald-500/20">
+                💡 Fix Hint: Indent statement on line 14 by 4 spaces.
+              </div>
+            </div>
+          </div>
+
+          {/* Bento 3 (Span 4): High-Performance Sandbox Compilers */}
+          <div className="md:col-span-4 p-8 rounded-3xl bento-card space-y-5 flex flex-col justify-between group">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-xs font-mono font-bold uppercase">
+                <Terminal className="h-3.5 w-3.5" /> 6+ Engines
+              </div>
+              <h3 className="text-xl font-black text-white">
+                Isolated Sandbox Core
+              </h3>
+              <p className="text-xs text-slate-300">
+                Execute Python, C++17, C17, Java 17, Node.js 18, and PostgreSQL with sub-second execution guarantees.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2 pt-2">
+              {['Python 3.11', 'C++17 GCC', 'Java 17', 'Node.js 18', 'PostgreSQL', 'C17'].map((lang) => (
+                <span key={lang} className="px-2.5 py-1 rounded-xl bg-slate-900 text-slate-300 font-mono text-[10px] font-bold border border-slate-800">
+                  {lang}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Bento 4 (Span 8): Real-Time College Admin Stream & Export Stream */}
+          <div className="md:col-span-8 p-8 rounded-3xl bento-card space-y-6 flex flex-col justify-between group">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold uppercase">
+                  <Activity className="h-3.5 w-3.5" /> Live Telemetry
+                </div>
+                <h3 className="text-2xl font-black text-white">
+                  Institutional Stream & One-Click CSV Export
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+                  Watch live exam submissions across all departments, track pass rates, and export structured Excel/CSV grading rosters instantly.
+                </p>
+              </div>
+
+              <div className="px-4 py-2.5 rounded-2xl bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold flex items-center gap-2 shrink-0">
+                <FileSpreadsheet className="h-4 w-4" /> CSV Ready
+              </div>
+            </div>
+
+            {/* Visual Stream Ticker */}
+            <div className="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 font-mono text-xs space-y-2">
+              <div className="flex items-center justify-between text-slate-400 border-b border-slate-800/80 pb-1.5 text-[11px]">
+                <span>Student</span>
+                <span>Assessment</span>
+                <span>Runtime</span>
+                <span>Status</span>
+              </div>
+              <div className="flex items-center justify-between text-slate-200 text-[11px]">
+                <span className="font-bold">21CS042 (Ananya R.)</span>
+                <span>DSA Lab - Week 7</span>
+                <span className="text-blue-400">4 ms</span>
+                <span className="text-emerald-400 font-bold">100% Passed</span>
+              </div>
+              <div className="flex items-center justify-between text-slate-200 text-[11px]">
+                <span className="font-bold">21CS109 (Vikas M.)</span>
+                <span>Midterm Exam #2</span>
+                <span className="text-blue-400">12 ms</span>
+                <span className="text-emerald-400 font-bold">100% Passed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          4. FEATURED COURSES & CURRICULUM SECTION
          ========================================================================= */}
       <section className="space-y-8" id="courses">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
@@ -567,7 +812,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          4. THE LEARNING LOOP (4-Step Learning Journey Loop)
+          5. THE 4-STEP LEARNING LOOP ("How Every Student Sparks")
          ========================================================================= */}
       <section className="space-y-12" id="loop">
         <div className="max-w-2xl mx-auto text-center space-y-3">
@@ -642,7 +887,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          5. CAREER TRACKS & SYLLABUS ROADMAPS
+          6. CAREER TRACKS & SYLLABUS ROADMAPS
          ========================================================================= */}
       <section className="space-y-8" id="tracks">
         <div className="max-w-2xl mx-auto text-center space-y-3">
@@ -742,7 +987,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          6. SEMESTER-WISE LABS (12-Week Structured Curriculum Timeline)
+          7. SEMESTER-WISE LABS (12-Week Structured Curriculum Timeline)
          ========================================================================= */}
       <section className="p-8 sm:p-12 rounded-3xl apple-card border border-white/10 shadow-2xl space-y-8 backdrop-blur-xl" id="labs">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -808,7 +1053,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          7. PROCTORED EXAMINATIONS & ANTI-CHEAT SUITE
+          8. PROCTORED EXAMINATIONS & ANTI-CHEAT SUITE
          ========================================================================= */}
       <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/50 to-slate-900 border border-white/10 shadow-2xl space-y-8 backdrop-blur-xl apple-card" id="exams">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
@@ -872,7 +1117,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          8. INTERACTIVE FAQ ACCORDION SECTION
+          9. INTERACTIVE FAQ ACCORDION SECTION WITH CATEGORY TABS
          ========================================================================= */}
       <section className="max-w-4xl mx-auto space-y-8 w-full" id="faq">
         <div className="text-center space-y-2">
@@ -884,8 +1129,31 @@ export default function LandingPage() {
           </h2>
         </div>
 
+        {/* Category Filter Tabs */}
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          {[
+            { id: 'all', label: 'All Questions' },
+            { id: 'proctoring', label: 'Proctoring & Anti-Cheat' },
+            { id: 'labs', label: 'Semester Labs' },
+            { id: 'courses', label: 'Courses' },
+            { id: 'compilers', label: 'Compilers & Diagnostics' }
+          ].map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveFaqCategory(cat.id)}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                activeFaqCategory === cat.id
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
         <div className="space-y-3">
-          {faqs.map((faq, idx) => (
+          {filteredFaqs.map((faq, idx) => (
             <div
               key={idx}
               className="p-5 rounded-2xl apple-card cursor-pointer transition-all hover:border-blue-500/40"
@@ -910,7 +1178,7 @@ export default function LandingPage() {
       </section>
 
       {/* =========================================================================
-          9. HIGH-CONVERSION CALL TO ACTION BANNER
+          10. HIGH-CONVERSION CALL TO ACTION BANNER
          ========================================================================= */}
       <section className="p-10 sm:p-14 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white shadow-2xl relative overflow-hidden text-center space-y-6">
         <div className="max-w-2xl mx-auto space-y-4">
