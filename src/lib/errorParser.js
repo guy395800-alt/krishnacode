@@ -1,5 +1,5 @@
 /**
- * Compiler & Execution Error Parser for KrishnaCode
+ * Compiler & Execution Error Parser for NexgenCode
  * Analyzes compiler stderr, tracebacks, test results, and runtime logs across Python, C++, Java, C, and JavaScript.
  */
 

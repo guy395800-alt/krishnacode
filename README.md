@@ -1,6 +1,6 @@
-# NexGenCode — Student Coding Practice & Examination Platform
+# NexgenCode — Student Coding Practice & Examination Platform
 
-NexGenCode is an online programming practice, algorithmic problem-solving, and examination platform designed for students and educational institutions.
+NexgenCode is an online programming practice, algorithmic problem-solving, and examination platform designed for students and educational institutions.
 
 ---
 

@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
       <head>
-        <title>NexGenCode — Student Coding Practice Platform</title>
+        <title>NexgenCode — Student Coding Practice Platform</title>
         <meta name="description" content="Online programming practice and coding examination platform for students" />
       </head>
       <body>

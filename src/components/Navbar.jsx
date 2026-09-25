@@ -20,8 +20,8 @@ export const Navbar = () => {
               <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-emerald-400" />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-black tracking-wider text-white font-mono flex items-center gap-1">
-                KRISHNA<span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-sky-400 bg-clip-text text-transparent">CODE</span>
+              <span className="text-lg font-black tracking-tight text-white font-sans flex items-center">
+                Nexgen<span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-sky-400 bg-clip-text text-transparent">Code</span>
               </span>
               <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest -mt-1 flex items-center gap-1">
                 Assessment Platform <Sparkles className="h-2.5 w-2.5 text-amber-400" />

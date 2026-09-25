@@ -220,7 +220,7 @@ export default function LandingPage() {
   const faqs = [
     {
       q: 'How does the Anti-Cheat Proctoring engine protect exam integrity?',
-      a: 'KrishnaCode uses an institutional-grade security shield: it intercepts and disables keyboard shortcuts for copy/paste/cut (Ctrl+C, Ctrl+V, Shift+Insert, Command+V), locks out right-click context menus, prevents text highlighting, monitors browser tab-switches and focus loss with automated audit logs, and enforces server-side synchronized countdown timers.'
+      a: 'NexgenCode uses an institutional-grade security shield: it intercepts and disables keyboard shortcuts for copy/paste/cut (Ctrl+C, Ctrl+V, Shift+Insert, Command+V), locks out right-click context menus, prevents text highlighting, monitors browser tab-switches and focus loss with automated audit logs, and enforces server-side synchronized countdown timers.'
     },
     {
       q: 'Can our college configure custom semester labs and syllabus tracks?',

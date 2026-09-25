@@ -65,8 +65,8 @@ function LoginForm() {
         <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-xl shadow-blue-500/25 mb-1">
           <Code2 className="h-8 w-8" />
         </div>
-        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white font-mono">
-          KRISHNA<span className="text-blue-400">CODE</span>
+        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+          Nexgen<span className="text-blue-400">Code</span>
         </h2>
         <p className="text-xs text-slate-400">
           Sign in to access your secure coding workspace & assessments
@@ -120,7 +120,7 @@ function LoginForm() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={role === 'admin' ? 'admin@krishnacode.com' : 'student@krishnacode.com'}
+              placeholder={role === 'admin' ? 'admin@nexgencode.com' : 'student@nexgencode.com'}
               className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950/90 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs font-medium transition-all"
             />
           </div>
