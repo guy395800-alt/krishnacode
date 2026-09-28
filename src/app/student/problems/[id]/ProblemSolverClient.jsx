@@ -30,102 +30,22 @@ import { handleDisableCopyPaste, MONACO_NO_COPY_OPTIONS } from '../../../../lib/
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
 
 export function generateNamedFunctionTemplate(language, problem) {
-  const title = (problem?.title || '').toLowerCase();
-  const desc = (problem?.description || '').toLowerCase();
-  const inputFmt = (problem?.input_format || '').toLowerCase();
-
-  let fnName = 'solution';
-  let paramsPy = 'nums: list[int], target: int';
-  let paramsCpp = 'vector<int>& nums, int target';
-  let paramsJava = 'int[] nums, int target';
-  let paramsJs = 'nums, target';
-  let returnTypePy = 'list[int]';
-  let returnTypeCpp = 'vector<int>';
-  let returnTypeJava = 'int[]';
-
-  if (title.includes('two sum') || (desc.includes('two') && desc.includes('sum'))) {
-    fnName = 'twoSum';
-    paramsPy = 'nums: list[int], target: int';
-    paramsCpp = 'vector<int>& nums, int target';
-    paramsJava = 'int[] nums, int target';
-    paramsJs = 'nums, target';
-    returnTypePy = 'list[int]';
-    returnTypeCpp = 'vector<int>';
-    returnTypeJava = 'int[]';
-  } else if (title.includes('palindrome') || desc.includes('palindrome')) {
-    fnName = 'isPalindrome';
-    paramsPy = 's: str';
-    paramsCpp = 'string s';
-    paramsJava = 'String s';
-    paramsJs = 's';
-    returnTypePy = 'bool';
-    returnTypeCpp = 'bool';
-    returnTypeJava = 'boolean';
-  } else if (title.includes('max') && title.includes('array')) {
-    fnName = 'maxSubArray';
-    paramsPy = 'nums: list[int]';
-    paramsCpp = 'vector<int>& nums';
-    paramsJava = 'int[] nums';
-    paramsJs = 'nums';
-    returnTypePy = 'int';
-    returnTypeCpp = 'int';
-    returnTypeJava = 'int';
-  } else if (title.includes('stair') || title.includes('climb') || title.includes('fibonacci')) {
-    fnName = 'climbStairs';
-    paramsPy = 'n: int';
-    paramsCpp = 'int n';
-    paramsJava = 'int n';
-    paramsJs = 'n';
-    returnTypePy = 'int';
-    returnTypeCpp = 'int';
-    returnTypeJava = 'int';
-  } else if (title.includes('reverse') || title.includes('string')) {
-    fnName = 'reverseString';
-    paramsPy = 's: str';
-    paramsCpp = 'string s';
-    paramsJava = 'String s';
-    paramsJs = 's';
-    returnTypePy = 'str';
-    returnTypeCpp = 'string';
-    returnTypeJava = 'String';
-  } else if (title.includes('matrix') || title.includes('grid')) {
-    fnName = 'solveGrid';
-    paramsPy = 'grid: list[list[int]]';
-    paramsCpp = 'vector<vector<int>>& grid';
-    paramsJava = 'int[][] grid';
-    paramsJs = 'grid';
-    returnTypePy = 'int';
-    returnTypeCpp = 'int';
-    returnTypeJava = 'int';
-  } else if (desc.includes('string') || inputFmt.includes('string')) {
-    fnName = 'solve';
-    paramsPy = 's: str';
-    paramsCpp = 'string s';
-    paramsJava = 'String s';
-    paramsJs = 's';
-    returnTypePy = 'str';
-    returnTypeCpp = 'string';
-    returnTypeJava = 'String';
-  } else {
-    fnName = 'solve';
-    paramsPy = 'nums: list[int]';
-    paramsCpp = 'vector<int>& nums';
-    paramsJava = 'int[] nums';
-    paramsJs = 'nums';
-    returnTypePy = 'int';
-    returnTypeCpp = 'int';
-    returnTypeJava = 'int';
-  }
-
   const templates = {
     python: `# Python 3.11 Solution
-# Implement function logic and RETURN the answer (Do NOT use input())
-def ${fnName}(${paramsPy}) -> ${returnTypePy}:
+# Read input from standard input (stdin) and print output (stdout)
+import sys
+
+def solve():
+    # Read input: e.g. input_data = sys.stdin.read().split() or line = input()
     # Write your algorithmic solution here
+    # Print the answer using print(...)
     pass
+
+if __name__ == '__main__':
+    solve()
 `,
     cpp: `// C++17 Solution
-// Implement function logic and RETURN the answer (Do NOT use cin)
+// Read input from standard input (cin) and print output (cout)
 #include <iostream>
 #include <vector>
 #include <string>
@@ -134,9 +54,14 @@ def ${fnName}(${paramsPy}) -> ${returnTypePy}:
 
 using namespace std;
 
-${returnTypeCpp} ${fnName}(${paramsCpp}) {
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
     // Write your algorithmic solution here
-    return {};
+    // Read input from cin and print output using cout
+
+    return 0;
 }
 `,
     c: `// C (GCC 11) Solution
@@ -144,28 +69,41 @@ ${returnTypeCpp} ${fnName}(${paramsCpp}) {
 #include <stdlib.h>
 #include <string.h>
 
-int ${fnName}(int nums[], int size) {
-    // Write your algorithmic solution here and return the answer
+int main() {
+    // Write your algorithmic solution here
+    // Read input from scanf and print output using printf
+
     return 0;
 }
 `,
     java: `// Java 17 OpenJDK Solution
-// Implement function logic and RETURN the answer (Do NOT use Scanner)
+// Read input from standard input (Scanner) and print output
 import java.util.*;
+import java.io.*;
 
-public class Solution {
-    public ${returnTypeJava} ${fnName}(${paramsJava}) {
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
         // Write your algorithmic solution here
-        return ${returnTypeJava.includes('[]') ? 'new int[]{}' : (returnTypeJava === 'boolean' ? 'false' : '0')};
+        // Read input using sc and print output using System.out.println(...)
+
     }
 }
 `,
     javascript: `// Node.js 18 JavaScript Solution
-// Implement function logic and RETURN the answer
-function ${fnName}(${paramsJs}) {
+const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim();
+    if (!input) return;
+
     // Write your algorithmic solution here
-    return null;
+    // Read input and print output using console.log(...)
+
 }
+
+solve();
 `
   };
 

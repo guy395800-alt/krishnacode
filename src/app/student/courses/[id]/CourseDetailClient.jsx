@@ -266,15 +266,15 @@ export default function CourseDetailClient({ initialId }) {
                ========================================================= */}
             {activeLesson?.problem && activeTab === 'problem' ? (
               <div className="space-y-6">
-                {/* Function Return Mode Info Banner */}
-                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-3 backdrop-blur-md">
-                  <Info className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
+                {/* Standard I/O Mode Info Banner */}
+                <div className="p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs flex items-start gap-3 backdrop-blur-md">
+                  <Info className="h-5 w-5 text-cyan-400 shrink-0 mt-0.5" />
                   <div className="space-y-1">
                     <span className="font-bold text-white block">
-                      ⚡ Function-Return Mode (LeetCode Style)
+                      ⚡ Standard I/O Mode (Competitive Programming)
                     </span>
-                    <p className="text-amber-200/90 leading-relaxed font-normal">
-                      <strong>Do NOT read from standard input</strong> (no <code>input()</code>, <code>cin</code>, or <code>Scanner</code>). Simply write the algorithmic logic inside the function and <strong>RETURN the computed answer</strong>.
+                    <p className="text-cyan-200/90 leading-relaxed font-normal">
+                      Read inputs from standard input (<code>input()</code>, <code>sys.stdin</code>, <code>cin</code>, <code>Scanner</code>, or <code>fs.readFileSync(0, &apos;utf-8&apos;)</code>) and <strong>print output directly to standard output</strong> (<code>print()</code>, <code>cout</code>, <code>System.out.println</code>, <code>console.log</code>).
                     </p>
                   </div>
                 </div>
@@ -299,7 +299,7 @@ export default function CourseDetailClient({ initialId }) {
                     {activeLesson.problem.testCases?.map((tc, idx) => (
                       <div key={idx} className="p-3 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px] space-y-1">
                         <div className="text-slate-400"><strong>Input:</strong> {tc.input}</div>
-                        <div className="text-emerald-400"><strong>Expected Return:</strong> {tc.expected}</div>
+                        <div className="text-emerald-400"><strong>Expected Output:</strong> {tc.expected}</div>
                         {tc.explanation && (
                           <div className="text-slate-500 text-[10px]"><strong>Explanation:</strong> {tc.explanation}</div>
                         )}
@@ -376,7 +376,7 @@ export default function CourseDetailClient({ initialId }) {
                     className="flex items-center gap-2 px-8 py-3 rounded-2xl font-bold font-sans text-xs bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white shadow-xl shadow-emerald-500/25 transition-all hover:scale-105 disabled:opacity-50"
                   >
                     <Play className={`h-4 w-4 ${isRunning ? 'animate-spin' : 'fill-white'}`} />
-                    {isRunning ? 'Evaluating Test Cases...' : 'Run Code & Return Answer'}
+                    {isRunning ? 'Evaluating Test Cases...' : 'Run Tests (stdin/stdout)'}
                   </button>
                 </div>
 

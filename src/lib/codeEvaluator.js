@@ -1,7 +1,7 @@
 /**
- * Intelligent Code Execution & Test Assertion Evaluator for NexgenCode
- * Supports client-side Python & JavaScript evaluation, syntax diagnostics,
- * output normalization, and robust test case assertion checking.
+ * Intelligent Code Execution & Standard I/O Test Assertion Evaluator for NexgenCode
+ * Supports competitive programming stdin/stdout model (reading from input() / sys.stdin
+ * and printing to stdout with print() / console.log) across Python, JavaScript, C++, Java, and C.
  */
 
 /**
@@ -134,10 +134,49 @@ export function compareOutputs(actual, expected) {
 }
 
 /**
+ * Converts test case input into standard input stream text and array of lines.
+ * Handles both key=value format (nums = [1, 2], target = 3) and raw stdin text.
+ */
+export function getTestStdin(inputStr) {
+  if (inputStr === undefined || inputStr === null) return { text: '', lines: [] };
+  if (typeof inputStr !== 'string') return { text: String(inputStr), lines: [String(inputStr)] };
+
+  const trimmed = inputStr.trim();
+  if (!trimmed) return { text: '', lines: [] };
+
+  // If input contains named variables like: nums = [2, 7, 11, 15], target = 9
+  const varRegex = /(?:^|,\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(\[[^\]]*\]|\{[^\}]*\}|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^,]+)/g;
+  const lines = [];
+  let match;
+  let hasNamedVars = false;
+
+  while ((match = varRegex.exec(trimmed)) !== null) {
+    hasNamedVars = true;
+    let valStr = match[2].trim();
+    // If wrapped in quotes, unquote for standard stdin
+    if ((valStr.startsWith('"') && valStr.endsWith('"')) || (valStr.startsWith("'") && valStr.endsWith("'"))) {
+      lines.push(valStr.slice(1, -1));
+    } else {
+      lines.push(valStr);
+    }
+  }
+
+  if (hasNamedVars && lines.length > 0) {
+    return {
+      text: lines.join('\n'),
+      lines: lines
+    };
+  }
+
+  // Otherwise, use the raw trimmed input string
+  return {
+    text: trimmed,
+    lines: trimmed.split('\n').map(l => l.trim()).filter(Boolean)
+  };
+}
+
+/**
  * Parses test case input into an array of JavaScript values or dictionary.
- * E.g. 'nums = [2, 7, 11, 15], target = 9' -> [[2, 7, 11, 15], 9]
- * 's = "racecar"' -> ["racecar"]
- * 'n = 3' -> [3]
  */
 export function parseTestInput(inputStr) {
   if (inputStr === undefined || inputStr === null) return [];
@@ -146,16 +185,13 @@ export function parseTestInput(inputStr) {
   const trimmed = inputStr.trim();
   if (!trimmed) return [];
 
-  // Match key=value pairs: e.g. nums = [1, 2], target = 3
   const varRegex = /(?:^|,\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(\[[^\]]*\]|\{[^\}]*\}|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^,]+)/g;
   const args = [];
-  const dict = {};
   let match;
   let hasNamedVars = false;
 
   while ((match = varRegex.exec(trimmed)) !== null) {
     hasNamedVars = true;
-    const name = match[1];
     let valStr = match[2].trim();
     let val;
 
@@ -173,7 +209,6 @@ export function parseTestInput(inputStr) {
       }
     }
 
-    dict[name] = val;
     args.push(val);
   }
 
@@ -181,12 +216,10 @@ export function parseTestInput(inputStr) {
     return args;
   }
 
-  // If no named variables, try parsing as JSON or lines
   try {
     const parsed = JSON.parse(trimmed);
     return Array.isArray(parsed) ? [parsed] : [parsed];
   } catch {
-    // Multi-line input
     if (trimmed.includes('\n')) {
       return trimmed.split('\n').map(line => {
         try { return JSON.parse(line); } catch { return line.trim(); }
@@ -281,19 +314,25 @@ export function validatePythonSyntax(code) {
 }
 
 /**
- * Transpiles standard Python function code to JavaScript for safe browser-side execution.
+ * Transpiles Python script / function code to JavaScript for safe browser-side execution.
  */
 export function transpilePythonToJS(pythonCode) {
   const lines = pythonCode.split('\n');
   const jsLines = [];
   const indentStack = [0];
-  let functionName = 'solution';
+  let functionName = 'solve';
 
   for (let i = 0; i < lines.length; i++) {
     const rawLine = lines[i];
     const trimmed = rawLine.trim();
 
     if (!trimmed || trimmed.startsWith('#')) {
+      continue;
+    }
+
+    // Ignore import statements (sys, math, os, etc. are pre-injected in scope)
+    if (trimmed.startsWith('import ') || trimmed.startsWith('from ')) {
+      jsLines.push(`// ${trimmed}`);
       continue;
     }
 
@@ -313,7 +352,14 @@ export function transpilePythonToJS(pythonCode) {
       line = line.substring(0, commentIdx).trim();
     }
 
-    // Function definition: def twoSum(self, nums: list[int], target: int) -> list[int]:
+    // Handle if __name__ == '__main__':
+    if (line.match(/^if\s+__name__\s*==\s*['"]__main__['"]\s*:/)) {
+      jsLines.push(`if (true) {`);
+      indentStack.push(indent + 4);
+      continue;
+    }
+
+    // Function definition: def solve() / def main():
     const defMatch = line.match(/^def\s+([a-zA-Z0-9_]+)\s*\((.*?)\)(?:\s*->\s*[^:]+)?\s*:/);
     if (defMatch) {
       functionName = defMatch[1];
@@ -522,17 +568,59 @@ function convertPythonExpression(expr) {
 }
 
 /**
- * Creates the safe runtime sandbox environment for executing transpiled code.
+ * Creates the safe runtime sandbox environment for executing transpiled code with standard I/O.
  */
-function createRuntimeScope() {
+function createRuntimeScope(stdinData = { text: '', lines: [] }) {
   const stdout = [];
+  let lineIdx = 0;
+  const stdinLines = Array.isArray(stdinData.lines) ? stdinData.lines : [];
+  const stdinText = stdinData.text || '';
 
   const scope = {
     console: {
-      log: (...args) => stdout.push(args.map(a => String(a)).join(' ')),
-      error: (...args) => stdout.push(args.map(a => String(a)).join(' '))
+      log: (...args) => stdout.push(args.map(a => formatDisplayOutput(a)).join(' ')),
+      error: (...args) => stdout.push(args.map(a => formatDisplayOutput(a)).join(' '))
     },
-    print: (...args) => stdout.push(args.map(a => String(a)).join(' ')),
+    print: (...args) => {
+      stdout.push(args.map(a => formatDisplayOutput(a, 'python')).join(' '));
+    },
+    input: (prompt = '') => {
+      if (lineIdx < stdinLines.length) {
+        return stdinLines[lineIdx++];
+      }
+      return '';
+    },
+    sys: {
+      stdin: {
+        read: () => stdinText,
+        readline: () => {
+          if (lineIdx < stdinLines.length) {
+            return stdinLines[lineIdx++];
+          }
+          return '';
+        },
+        readlines: () => stdinLines.slice()
+      },
+      stdout: {
+        write: (...args) => stdout.push(args.join(''))
+      }
+    },
+    fs: {
+      readFileSync: (fd, enc) => stdinText
+    },
+    require: (mod) => {
+      if (mod === 'fs') return scope.fs;
+      if (mod === 'sys') return scope.sys;
+      return {};
+    },
+    eval: (expr) => {
+      try {
+        const jsonFmt = String(expr).replace(/'/g, '"').replace(/\bTrue\b/g, 'true').replace(/\bFalse\b/g, 'false').replace(/\bNone\b/g, 'null');
+        return JSON.parse(jsonFmt);
+      } catch {
+        return expr;
+      }
+    },
     len: (obj) => {
       if (obj === null || obj === undefined) return 0;
       if (typeof obj === 'string' || Array.isArray(obj)) return obj.length;
@@ -562,6 +650,29 @@ function createRuntimeScope() {
     set: (x) => new Set(x || []),
     sorted: (arr) => [...arr].sort((a, b) => a - b),
     reversed: (arr) => [...arr].reverse(),
+    map: (fn, iterable) => Array.from(iterable || []).map(fn),
+    zip: (...arrays) => {
+      if (arrays.length === 0) return [];
+      const minLen = Math.min(...arrays.map(a => a?.length || 0));
+      const res = [];
+      for (let i = 0; i < minLen; i++) {
+        res.push(arrays.map(a => a[i]));
+      }
+      return res;
+    },
+    math: {
+      sqrt: Math.sqrt,
+      floor: Math.floor,
+      ceil: Math.ceil,
+      pi: Math.PI,
+      pow: Math.pow,
+      abs: Math.abs,
+      round: Math.round
+    },
+    round: (val, decimals = 0) => {
+      const factor = Math.pow(10, decimals);
+      return Math.round(val * factor) / factor;
+    },
     __range: (start, stop, step = 1) => {
       if (stop === undefined) {
         stop = start;
@@ -633,23 +744,7 @@ function createRuntimeScope() {
 }
 
 /**
- * Executes a function with timeout protection and returns computed result.
- */
-function executeWithTimeout(fn, args, timeoutMs = 2000) {
-  const startTime = performance.now();
-
-  try {
-    const result = fn(...args);
-    const duration = Math.round(performance.now() - startTime);
-    return { success: true, result, executionTimeMs: Math.max(1, duration) };
-  } catch (err) {
-    const duration = Math.round(performance.now() - startTime);
-    return { success: false, error: err, executionTimeMs: Math.max(1, duration) };
-  }
-}
-
-/**
- * Main function: Evaluates student's code across test cases locally.
+ * Main function: Evaluates student's code across test cases using standard competitive programming I/O.
  */
 export function executeCodeLocally(code, language = 'python', testCases = []) {
   if (!code || !code.trim()) {
@@ -699,82 +794,76 @@ export function executeCodeLocally(code, language = 'python', testCases = []) {
     }
   }
 
-  // Build executable function
-  let executableFn = null;
-  let fnName = 'solution';
-  const { scope, stdout } = createRuntimeScope();
-
-  try {
-    if (lang.includes('py')) {
-      const transpiled = transpilePythonToJS(code);
-      fnName = transpiled.functionName;
-
-      // Wrap transpiled function with scope variables
-      const scopeKeys = Object.keys(scope);
-      const scopeVals = Object.values(scope);
-      const runnerCode = `
-        ${transpiled.jsCode}
-        if (typeof ${fnName} === 'function') return ${fnName};
-        if (typeof solution === 'function') return solution;
-        return null;
-      `;
-
-      const factory = new Function(...scopeKeys, runnerCode);
-      executableFn = factory(...scopeVals);
-    } else if (lang.includes('js') || lang.includes('node')) {
-      const scopeKeys = Object.keys(scope);
-      const scopeVals = Object.values(scope);
-      const runnerCode = `
-        ${code}
-        const fn = typeof solution === 'function' ? solution : (typeof twoSum === 'function' ? twoSum : (typeof isPalindrome === 'function' ? isPalindrome : (typeof maxSubArray === 'function' ? maxSubArray : (typeof climbStairs === 'function' ? climbStairs : (typeof findMaxElement === 'function' ? findMaxElement : null)))));
-        return fn;
-      `;
-      const factory = new Function(...scopeKeys, runnerCode);
-      executableFn = factory(...scopeVals);
-    }
-  } catch (compErr) {
-    return {
-      overall_status: 'SyntaxError',
-      status: 'SyntaxError',
-      total_test_cases: testCases.length,
-      passed_test_cases: 0,
-      execution_time_ms: 0,
-      error_message: compErr.message,
-      stderr: `SyntaxError: ${compErr.message}`,
-      test_case_results: testCases.map((tc, idx) => ({
-        test_case_id: tc.id || idx + 1,
-        status: 'SyntaxError',
-        passed: false,
-        input_data: tc.input || tc.input_data,
-        expected_output: tc.expected || tc.expected_output,
-        actual_output: 'SyntaxError',
-        error_message: compErr.message
-      }))
-    };
-  }
-
-  if (!executableFn) {
-    // If we couldn't create a function wrapper, inspect if student has returned an expression or if it's C++/Java
+  // If language is C++, Java, or C and not in direct JS execution, use algorithmic standard I/O evaluator
+  if (lang.includes('cpp') || lang.includes('c++') || lang === 'c' || lang.includes('java')) {
     return executeAlgorithmicFallback(code, lang, testCases);
   }
 
-  // Run each test case through executable function
   const testResults = [];
   let totalTime = 0;
   let allPassed = true;
+  let overallStderr = '';
 
   for (let idx = 0; idx < testCases.length; idx++) {
     const tc = testCases[idx];
     const inputStr = tc.input || tc.input_data || '';
     const expectedStr = tc.expected ?? tc.expected_output ?? '';
+    const stdinData = getTestStdin(inputStr);
     const args = parseTestInput(inputStr);
 
-    const execResult = executeWithTimeout(executableFn, args);
-    totalTime += execResult.executionTimeMs;
+    const { scope, stdout } = createRuntimeScope(stdinData);
+    const scopeKeys = Object.keys(scope);
+    const scopeVals = Object.values(scope);
+
+    let execResult;
+    let fnName = 'solve';
+
+    try {
+      if (lang.includes('py')) {
+        const transpiled = transpilePythonToJS(code);
+        fnName = transpiled.functionName;
+
+        const runnerCode = `
+          ${transpiled.jsCode}
+          // Execute main() or solve() if defined, or named function
+          if (typeof main === 'function') { return main(); }
+          if (typeof solve === 'function') { return solve(); }
+          if (typeof ${fnName} === 'function' && '${fnName}' !== 'solution' && '${fnName}' !== 'solve') {
+            return ${fnName}(...args);
+          }
+          if (typeof solution === 'function') { return solution(...args); }
+          return null;
+        `;
+
+        const factory = new Function('args', ...scopeKeys, runnerCode);
+        const startTime = performance.now();
+        const retVal = factory(args, ...scopeVals);
+        const duration = Math.max(1, Math.round(performance.now() - startTime));
+        execResult = { success: true, result: retVal, executionTimeMs: duration };
+      } else if (lang.includes('js') || lang.includes('node')) {
+        const runnerCode = `
+          ${code}
+          if (typeof main === 'function') { return main(); }
+          if (typeof solve === 'function') { return solve(); }
+          if (typeof solution === 'function') { return solution(...args); }
+          return null;
+        `;
+        const factory = new Function('args', ...scopeKeys, runnerCode);
+        const startTime = performance.now();
+        const retVal = factory(args, ...scopeVals);
+        const duration = Math.max(1, Math.round(performance.now() - startTime));
+        execResult = { success: true, result: retVal, executionTimeMs: duration };
+      }
+    } catch (err) {
+      execResult = { success: false, error: err, executionTimeMs: 2 };
+    }
+
+    totalTime += execResult.executionTimeMs || 2;
 
     if (!execResult.success) {
       allPassed = false;
       const errMsg = execResult.error?.message || 'Runtime Error';
+      overallStderr = errMsg;
       testResults.push({
         test_case_id: tc.id || idx + 1,
         id: tc.id || idx + 1,
@@ -788,17 +877,27 @@ export function executeCodeLocally(code, language = 'python', testCases = []) {
         actual_output: 'Runtime Error',
         error_message: errMsg,
         stderr: errMsg,
-        execution_time_ms: execResult.executionTimeMs,
-        runtime_ms: execResult.executionTimeMs,
+        execution_time_ms: execResult.executionTimeMs || 2,
+        runtime_ms: execResult.executionTimeMs || 2,
         memory_kb: 1850 + idx * 20,
         memory_mb: '1.8'
       });
       continue;
     }
 
-    const actualVal = execResult.result;
-    const formattedActual = formatDisplayOutput(actualVal, lang);
-    const isMatch = compareOutputs(formattedActual, expectedStr);
+    // Determine actual output: first check stdout from print(), then check function return value
+    let actualOutput = '';
+    const printedOutput = stdout.join('\n').trim();
+
+    if (printedOutput) {
+      actualOutput = printedOutput;
+    } else if (execResult.result !== null && execResult.result !== undefined) {
+      actualOutput = formatDisplayOutput(execResult.result, lang);
+    } else {
+      actualOutput = 'None (No output printed. Make sure to print your answer using print())';
+    }
+
+    const isMatch = compareOutputs(actualOutput, expectedStr);
 
     if (!isMatch) {
       allPassed = false;
@@ -813,11 +912,11 @@ export function executeCodeLocally(code, language = 'python', testCases = []) {
       input_data: inputStr,
       expected: expectedStr,
       expected_output: expectedStr,
-      actual: formattedActual,
-      actual_output: formattedActual,
+      actual: actualOutput,
+      actual_output: actualOutput,
       error_message: isMatch ? null : 'Your output does not match the expected output.',
-      execution_time_ms: execResult.executionTimeMs,
-      runtime_ms: execResult.executionTimeMs,
+      execution_time_ms: execResult.executionTimeMs || 3,
+      runtime_ms: execResult.executionTimeMs || 3,
       memory_kb: 1840 + idx * 20,
       memory_mb: '1.8'
     });
@@ -835,26 +934,26 @@ export function executeCodeLocally(code, language = 'python', testCases = []) {
     passed: passedCount,
     execution_time_ms: totalTime,
     total_time_ms: totalTime,
-    stdout: stdout.join('\n'),
+    stderr: overallStderr,
     test_case_results: testResults,
     test_results: testResults
   };
 }
 
 /**
- * Fallback evaluator for C++, Java, C or complex expressions
+ * Fallback evaluator for C++, Java, C standard I/O programs
  */
 function executeAlgorithmicFallback(code, language, testCases) {
   const codeStr = (code || '').trim();
   const codeLower = codeStr.toLowerCase();
-  const hasReturn = codeLower.includes('return ') || codeLower.includes('return\n') || codeLower.includes('return;') || codeLower.includes('return(');
-  const isPassOnly = (codeLower.endsWith('pass') || codeLower.includes('\n    pass')) && !hasReturn;
+  const hasPrint = codeLower.includes('cout') || codeLower.includes('system.out.print') || codeLower.includes('printf(') || codeLower.includes('return ') || codeLower.includes('return\n');
+  const isStarterOnly = codeLower.includes('// write your') || codeLower.includes('// solution logic here');
 
   const testResults = testCases.map((tc, idx) => {
     const inputStr = tc.input || tc.input_data || '';
     const expectedStr = tc.expected ?? tc.expected_output ?? '';
 
-    if (!hasReturn || isPassOnly) {
+    if (!hasPrint || isStarterOnly) {
       return {
         test_case_id: tc.id || idx + 1,
         id: tc.id || idx + 1,
@@ -864,9 +963,9 @@ function executeAlgorithmicFallback(code, language, testCases) {
         input_data: inputStr,
         expected: expectedStr,
         expected_output: expectedStr,
-        actual: 'None (No return statement executed)',
-        actual_output: 'None (No return statement executed)',
-        error_message: 'Your function must return the computed answer matching the test case.',
+        actual: 'None (No output printed)',
+        actual_output: 'None (No output printed)',
+        error_message: 'Your program must read the input and print the answer to standard output.',
         execution_time_ms: 2,
         runtime_ms: 2,
         memory_kb: 1820,

@@ -47,50 +47,63 @@ const INITIAL_COURSES = [
               title: 'Find Maximum Element in Array',
               difficulty: 'Easy',
               points: 50,
-              description: 'Given a list of integers `nums`, return the largest integer in the array in O(n) time.\n\n### Function Signature Rule:\n**Do NOT read from standard input (no input() / cin / Scanner). Simply implement the function and RETURN the maximum value.**',
+              description: 'Given a list of integers `nums`, find and print the largest integer in the array in O(n) time.\n\n### Input & Output Format:\n- **Input:** Read integers from standard input (`input()` / `sys.stdin` / `cin` / `Scanner`).\n- **Output:** Print the maximum integer directly to standard output (`print()` / `cout` / `System.out.println`).',
               functionName: 'findMaxElement',
               templates: {
-                python: `# Return the maximum integer in the list
-def findMaxElement(nums: list[int]) -> int:
-    if not nums:
-        return 0
-    max_val = nums[0]
-    for n in nums:
-        if n > max_val:
-            max_val = n
-    return max_val
+                python: `# Read input from standard input and print the maximum integer
+import sys
+
+def main():
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    # Parse numbers and print the maximum value
+    # Example: print(max(numbers))
+    pass
+
+if __name__ == '__main__':
+    main()
 `,
-                cpp: `// Return the maximum integer in the vector
+                cpp: `// Read input from standard input and print the maximum integer
+#include <iostream>
 #include <vector>
 #include <algorithm>
+
 using namespace std;
 
-int findMaxElement(vector<int>& nums) {
-    if (nums.empty()) return 0;
-    int maxVal = nums[0];
-    for (int n : nums) {
-        if (n > maxVal) maxVal = n;
-    }
-    return maxVal;
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    // Read numbers from cin and print the maximum integer using cout
+
+    return 0;
 }
 `,
-                java: `// Return the maximum integer in the array
-public class Solution {
-    public int findMaxElement(int[] nums) {
-        if (nums == null || nums.length == 0) return 0;
-        int max = nums[0];
-        for (int n : nums) {
-            if (n > max) max = n;
-        }
-        return max;
+                java: `// Read input from standard input and print the maximum integer
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read input using sc and print output using System.out.println(...)
+
     }
 }
 `,
-                javascript: `// Return the maximum integer in the array
-function findMaxElement(nums) {
-    if (!nums || nums.length === 0) return 0;
-    return Math.max(...nums);
+                javascript: `// Read input from standard input and print the maximum integer
+const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim();
+    if (!input) return;
+
+    // Process input and print using console.log(...)
+
 }
+
+solve();
 `
               },
               testCases: [
@@ -123,65 +136,68 @@ function findMaxElement(nums) {
               title: 'Two Sum Target Pair Indices',
               difficulty: 'Easy',
               points: 50,
-              description: 'Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.\n\n### Function Signature Rule:\n**Do NOT read from standard input. Simply implement the function and RETURN the list of indices `[index1, index2]`.**',
+              description: 'Given an array of integers `nums` and an integer `target`, find indices of the two numbers such that they add up to `target`.\n\n### Input & Output Format:\n- **Input:** Read `nums` array and `target` integer from standard input.\n- **Output:** Print the list of two indices `[index1, index2]` to standard output.',
               functionName: 'twoSum',
               templates: {
-                python: `# Return list of two indices [i, j] adding up to target
-def twoSum(nums: list[int], target: int) -> list[int]:
-    seen = {}
-    for i, num in enumerate(nums):
-        complement = target - num
-        if complement in seen:
-            return [seen[complement], i]
-        seen[num] = i
-    return []
+                python: `# Read input from standard input and print the indices pair [i, j]
+import sys
+
+def main():
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    # Write your two-sum solution and print output: print([i, j])
+    pass
+
+if __name__ == '__main__':
+    main()
 `,
-                cpp: `// Return vector<int> containing two indices adding to target
+                cpp: `// Read input from standard input and print the indices pair [i, j]
+#include <iostream>
 #include <vector>
 #include <unordered_map>
+
 using namespace std;
 
-vector<int> twoSum(vector<int>& nums, int target) {
-    unordered_map<int, int> seen;
-    for (int i = 0; i < nums.size(); i++) {
-        int complement = target - nums[i];
-        if (seen.count(complement)) return {seen[complement], i};
-        seen[nums[i]] = i;
-    }
-    return {};
-}
-`,
-                java: `// Return int[] containing two indices adding to target
-import java.util.HashMap;
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-public class Solution {
-    public int[] twoSum(int[] nums, int target) {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            int diff = target - nums[i];
-            if (map.containsKey(diff)) return new int[]{map.get(diff), i};
-            map.put(nums[i], i);
-        }
-        return new int[]{};
+    // Read input from cin and print output using cout
+
+    return 0;
+}
+`,
+                java: `// Read input from standard input and print the indices pair [i, j]
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read input using sc and print output using System.out.println(...)
+
     }
 }
 `,
-                javascript: `// Return array of two indices [i, j] adding up to target
-function twoSum(nums, target) {
-    const map = new Map();
-    for (let i = 0; i < nums.length; i++) {
-        const diff = target - nums[i];
-        if (map.has(diff)) return [map.get(diff), i];
-        map.set(nums[i], i);
-    }
-    return [];
+                javascript: `// Read input from standard input and print the indices pair [i, j]
+const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim();
+    if (!input) return;
+
+    // Process input and print using console.log(...)
+
 }
+
+solve();
 `
               },
               testCases: [
-                { id: 1, input: 'nums = [2, 7, 11, 15], target = 9', expected: '[0, 1]', explanation: 'nums[0] + nums[1] == 9, return [0, 1]' },
-                { id: 2, input: 'nums = [3, 2, 4], target = 6', expected: '[1, 2]', explanation: 'nums[1] + nums[2] == 6, return [1, 2]' },
-                { id: 3, input: 'nums = [3, 3], target = 6', expected: '[0, 1]', explanation: 'nums[0] + nums[1] == 6, return [0, 1]' }
+                { id: 1, input: 'nums = [2, 7, 11, 15], target = 9', expected: '[0, 1]', explanation: 'nums[0] + nums[1] == 9, output [0, 1]' },
+                { id: 2, input: 'nums = [3, 2, 4], target = 6', expected: '[1, 2]', explanation: 'nums[1] + nums[2] == 6, output [1, 2]' },
+                { id: 3, input: 'nums = [3, 3], target = 6', expected: '[0, 1]', explanation: 'nums[0] + nums[1] == 6, output [0, 1]' }
               ]
             }
           },
@@ -195,56 +211,62 @@ function twoSum(nums, target) {
               title: 'Maximum Subarray Sum',
               difficulty: 'Medium',
               points: 75,
-              description: 'Given an integer array `nums`, find the subarray with the largest sum, and return its sum.\n\n### Function Signature Rule:\n**Do NOT read from standard input. Simply RETURN the computed maximum subarray sum.**',
+              description: 'Given an integer array `nums`, find the subarray with the largest sum, and print its sum.\n\n### Input & Output Format:\n- **Input:** Read integers from standard input.\n- **Output:** Print the maximum subarray sum to standard output.',
               functionName: 'maxSubArray',
               templates: {
-                python: `# Return the maximum subarray sum using Kadane's Algorithm
-def maxSubArray(nums: list[int]) -> int:
-    max_sum = nums[0]
-    current_sum = nums[0]
-    for num in nums[1:]:
-        current_sum = max(num, current_sum + num)
-        max_sum = max(max_sum, current_sum)
-    return max_sum
+                python: `# Read input from standard input and print the maximum subarray sum
+import sys
+
+def main():
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    # Write Kadane's algorithm logic and print the max sum
+    pass
+
+if __name__ == '__main__':
+    main()
 `,
-                cpp: `// Return the maximum subarray sum
+                cpp: `// Read input from standard input and print the maximum subarray sum
+#include <iostream>
 #include <vector>
 #include <algorithm>
+
 using namespace std;
 
-int maxSubArray(vector<int>& nums) {
-    int maxSum = nums[0];
-    int currSum = nums[0];
-    for (size_t i = 1; i < nums.size(); i++) {
-        currSum = max(nums[i], currSum + nums[i]);
-        maxSum = max(maxSum, currSum);
-    }
-    return maxSum;
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    // Read input from cin and print output using cout
+
+    return 0;
 }
 `,
-                java: `// Return the maximum subarray sum
-public class Solution {
-    public int maxSubArray(int[] nums) {
-        int max = nums[0];
-        int sum = nums[0];
-        for (int i = 1; i < nums.length; i++) {
-            sum = Math.max(nums[i], sum + nums[i]);
-            max = Math.max(max, sum);
-        }
-        return max;
+                java: `// Read input from standard input and print the maximum subarray sum
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read input using sc and print output using System.out.println(...)
+
     }
 }
 `,
-                javascript: `// Return the maximum subarray sum
-function maxSubArray(nums) {
-    let max = nums[0];
-    let sum = nums[0];
-    for (let i = 1; i < nums.length; i++) {
-        sum = Math.max(nums[i], sum + nums[i]);
-        max = Math.max(max, sum);
-    }
-    return max;
+                javascript: `// Read input from standard input and print the maximum subarray sum
+const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim();
+    if (!input) return;
+
+    // Process input and print using console.log(...)
+
 }
+
+solve();
 `
               },
               testCases: [
@@ -277,48 +299,61 @@ function maxSubArray(nums) {
               title: 'Valid Palindrome (Two Pointers)',
               difficulty: 'Easy',
               points: 50,
-              description: 'A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward.\n\n### Function Signature Rule:\n**Do NOT read from standard input. Simply RETURN `true` or `false` (`True`/`False` in Python).**',
+              description: 'A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward.\n\n### Input & Output Format:\n- **Input:** Read string `s` from standard input.\n- **Output:** Print `true` or `false` (`True`/`False` in Python) to standard output.',
               functionName: 'isPalindrome',
               templates: {
-                python: `# Return True if s is a palindrome, else False
-def isPalindrome(s: str) -> bool:
-    filtered = [c.lower() for c in s if c.isalnum()]
-    return filtered == filtered[::-1]
+                python: `# Read input from standard input and print True if s is a palindrome, else False
+import sys
+
+def main():
+    s = sys.stdin.readline().strip()
+    # Or s = input()
+    # Process string and print True or False
+    pass
+
+if __name__ == '__main__':
+    main()
 `,
-                cpp: `// Return true if s is a palindrome, else false
+                cpp: `// Read input from standard input and print true/false
+#include <iostream>
 #include <string>
 #include <cctype>
+
 using namespace std;
 
-bool isPalindrome(string s) {
-    int left = 0, right = s.size() - 1;
-    while (left < right) {
-        while (left < right && !isalnum(s[left])) left++;
-        while (left < right && !isalnum(s[right])) right--;
-        if (tolower(s[left]) != tolower(s[right])) return false;
-        left++;
-        right--;
-    }
-    return true;
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    // Read string from cin and print true or false using cout
+
+    return 0;
 }
 `,
-                java: `// Return true if s is a palindrome, else false
-public class Solution {
-    public boolean isPalindrome(String s) {
-        String clean = s.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-        int l = 0, r = clean.length() - 1;
-        while (l < r) {
-            if (clean.charAt(l++) != clean.charAt(r--)) return false;
-        }
-        return true;
+                java: `// Read input from standard input and print true/false
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read string and print true or false using System.out.println(...)
+
     }
 }
 `,
-                javascript: `// Return true if s is a palindrome, else false
-function isPalindrome(s) {
-    const clean = s.toLowerCase().replace(/[^a-z0-9]/g, '');
-    return clean === clean.split('').reverse().join('');
+                javascript: `// Read input from standard input and print true/false
+const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim();
+    if (!input) return;
+
+    // Process string and print using console.log(...)
+
 }
+
+solve();
 `
               },
               testCases: [
@@ -344,57 +379,61 @@ function isPalindrome(s) {
               title: 'Climbing Stairs DP',
               difficulty: 'Easy',
               points: 50,
-              description: 'You are climbing a staircase. It takes `n` steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?\n\n### Function Signature Rule:\n**Do NOT read from standard input. Simply RETURN the total number of distinct ways.**',
+              description: 'You are climbing a staircase. It takes `n` steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?\n\n### Input & Output Format:\n- **Input:** Read integer `n` from standard input.\n- **Output:** Print the total number of distinct ways to standard output.',
               functionName: 'climbStairs',
               templates: {
-                python: `# Return the number of distinct ways to climb n steps
-def climbStairs(n: int) -> int:
-    if n <= 2:
-        return n
-    a, b = 1, 2
-    for _ in range(3, n + 1):
-        a, b = b, a + b
-    return b
+                python: `# Read input from standard input and print the number of distinct ways to climb n steps
+import sys
+
+def main():
+    input_data = sys.stdin.read().strip()
+    if not input_data:
+        return
+    # n = int(input_data)
+    # Print the answer using print(...)
+    pass
+
+if __name__ == '__main__':
+    main()
 `,
-                cpp: `// Return the number of distinct ways to climb n steps
+                cpp: `// Read input from standard input and print distinct ways
+#include <iostream>
+
 using namespace std;
 
-int climbStairs(int n) {
-    if (n <= 2) return n;
-    int a = 1, b = 2;
-    for (int i = 3; i <= n; i++) {
-        int temp = a + b;
-        a = b;
-        b = temp;
-    }
-    return b;
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    // Read n from cin and print output using cout
+
+    return 0;
 }
 `,
-                java: `// Return the number of distinct ways to climb n steps
-public class Solution {
-    public int climbStairs(int n) {
-        if (n <= 2) return n;
-        int a = 1, b = 2;
-        for (int i = 3; i <= n; i++) {
-            int temp = a + b;
-            a = b;
-            b = temp;
-        }
-        return b;
+                java: `// Read input from standard input and print distinct ways
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read n and print output using System.out.println(...)
+
     }
 }
 `,
-                javascript: `// Return the number of distinct ways to climb n steps
-function climbStairs(n) {
-    if (n <= 2) return n;
-    let a = 1, b = 2;
-    for (let i = 3; i <= n; i++) {
-        const temp = a + b;
-        a = b;
-        b = temp;
-    }
-    return b;
+                javascript: `// Read input from standard input and print distinct ways
+const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim();
+    if (!input) return;
+
+    // Process n and print using console.log(...)
+
 }
+
+solve();
 `
               },
               testCases: [
@@ -446,22 +485,46 @@ function climbStairs(n) {
               title: 'Format URL Query Parameter Object',
               difficulty: 'Easy',
               points: 50,
-              description: 'Given a dictionary/object of query parameters, return the formatted URL query string prefixed with `?` or empty string if empty.\n\n### Function Signature Rule:\n**Do NOT read standard input. Simply RETURN the formatted query string.**',
+              description: 'Given a dictionary/object of query parameters on standard input (stdin), print the formatted URL query string prefixed with `?` or an empty string if empty.',
               functionName: 'buildQueryString',
               templates: {
-                python: `# Return formatted query string e.g. "?page=1&limit=10"
-def buildQueryString(params: dict) -> str:
+                python: `# Read input from standard input (stdin) and print output (stdout)
+import sys
+
+def solve():
+    raw = sys.stdin.read().strip()
+    if not raw:
+        print("")
+        return
+    params = eval(raw)
     if not params:
-        return ""
+        print("")
+        return
     parts = [f"{k}={v}" for k, v in sorted(params.items())]
-    return "?" + "&".join(parts)
+    print("?" + "&".join(parts))
+
+if __name__ == '__main__':
+    solve()
 `,
-                javascript: `// Return formatted query string e.g. "?page=1&limit=10"
-function buildQueryString(params) {
-    if (!params || Object.keys(params).length === 0) return "";
+                javascript: `// Read input from standard input (stdin) and print output (stdout)
+const fs = require('fs');
+
+function solve() {
+    const raw = fs.readFileSync(0, 'utf-8').trim();
+    if (!raw) {
+        console.log("");
+        return;
+    }
+    const params = JSON.parse(raw);
+    if (!params || Object.keys(params).length === 0) {
+        console.log("");
+        return;
+    }
     const parts = Object.keys(params).sort().map(k => \`\${k}=\${params[k]}\`);
-    return "?" + parts.join('&');
+    console.log("?" + parts.join('&'));
 }
+
+solve();
 `
               },
               testCases: [
@@ -512,31 +575,55 @@ function buildQueryString(params) {
               title: 'Compute Cosine Similarity of Vectors',
               difficulty: 'Medium',
               points: 75,
-              description: 'Given two numerical vectors `vecA` and `vecB` of equal dimension, return their cosine similarity rounded to 4 decimal places.\n\n### Function Signature Rule:\n**Do NOT read standard input. Simply RETURN the computed float value.**',
+              description: 'Given two numerical vectors `vecA` and `vecB` of equal dimension on standard input (stdin), print their cosine similarity rounded to 4 decimal places.',
               functionName: 'cosineSimilarity',
               templates: {
-                python: `# Return cosine similarity float rounded to 4 decimals
+                python: `# Read input from standard input (stdin) and print output (stdout)
+import sys
 import math
 
-def cosineSimilarity(vecA: list[float], vecB: list[float]) -> float:
+def solve():
+    lines = [line.strip() for line in sys.stdin.read().strip().split('\\n') if line.strip()]
+    if not lines:
+        return
+    vecA = eval(lines[0])
+    vecB = eval(lines[1])
+    
     dot = sum(a * b for a, b in zip(vecA, vecB))
     normA = math.sqrt(sum(a * a for a in vecA))
     normB = math.sqrt(sum(b * b for b in vecB))
     if normA == 0 or normB == 0:
-        return 0.0
-    return round(dot / (normA * normB), 4)
+        print(0.0)
+        return
+    ans = round(dot / (normA * normB), 4)
+    print(ans)
+
+if __name__ == '__main__':
+    solve()
 `,
-                javascript: `// Return cosine similarity float rounded to 4 decimals
-function cosineSimilarity(vecA, vecB) {
+                javascript: `// Read input from standard input (stdin) and print output (stdout)
+const fs = require('fs');
+
+function solve() {
+    const lines = fs.readFileSync(0, 'utf-8').trim().split('\\n').filter(Boolean);
+    if (lines.length < 2) return;
+    const vecA = JSON.parse(lines[0]);
+    const vecB = JSON.parse(lines[1]);
+    
     let dot = 0, normA = 0, normB = 0;
     for (let i = 0; i < vecA.length; i++) {
         dot += vecA[i] * vecB[i];
         normA += vecA[i] * vecA[i];
         normB += vecB[i] * vecB[i];
     }
-    if (normA === 0 || normB === 0) return 0.0;
-    return Number((dot / (Math.sqrt(normA) * Math.sqrt(normB))).toFixed(4));
+    if (normA === 0 || normB === 0) {
+        console.log(0.0);
+        return;
+    }
+    console.log(Number((dot / (Math.sqrt(normA) * Math.sqrt(normB))).toFixed(4)));
 }
+
+solve();
 `
               },
               testCases: [
@@ -587,48 +674,77 @@ function cosineSimilarity(vecA, vecB) {
               title: 'Count Set Bits (Brian Kernighan Algorithm)',
               difficulty: 'Easy',
               points: 50,
-              description: 'Given a positive 32-bit integer `n`, return the count of set bits (1s) in its binary representation.\n\n### Function Signature Rule:\n**Do NOT read standard input. Simply RETURN the integer count of set bits.**',
+              description: 'Given a positive 32-bit integer `n` on standard input (stdin), print the count of set bits (1s) in its binary representation.',
               functionName: 'countSetBits',
               templates: {
-                python: `# Return the count of set bits (1s) in n
-def countSetBits(n: int) -> int:
+                python: `# Read input from standard input (stdin) and print output (stdout)
+import sys
+
+def solve():
+    raw = sys.stdin.read().strip()
+    if not raw:
+        return
+    n = int(raw)
     count = 0
     while n > 0:
         n &= (n - 1)
         count += 1
-    return count
+    print(count)
+
+if __name__ == '__main__':
+    solve()
 `,
-                cpp: `// Return the count of set bits (1s) in n
-int countSetBits(int n) {
-    int count = 0;
-    while (n > 0) {
-        n &= (n - 1);
-        count++;
-    }
-    return count;
-}
-`,
-                java: `// Return the count of set bits (1s) in n
-public class Solution {
-    public int countSetBits(int n) {
+                cpp: `// Read input from standard input (stdin) and print output (stdout)
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n;
+    if (cin >> n) {
         int count = 0;
         while (n > 0) {
             n &= (n - 1);
             count++;
         }
-        return count;
+        cout << count << endl;
+    }
+    return 0;
+}
+`,
+                java: `// Read input from standard input (stdin) and print output (stdout)
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (sc.hasNextInt()) {
+            int n = sc.nextInt();
+            int count = 0;
+            while (n > 0) {
+                n &= (n - 1);
+                count++;
+            }
+            System.out.println(count);
+        }
     }
 }
 `,
-                javascript: `// Return the count of set bits (1s) in n
-function countSetBits(n) {
+                javascript: `// Read input from standard input (stdin) and print output (stdout)
+const fs = require('fs');
+
+function solve() {
+    const raw = fs.readFileSync(0, 'utf-8').trim();
+    if (!raw) return;
+    let n = parseInt(raw, 10);
     let count = 0;
     while (n > 0) {
         n &= (n - 1);
         count++;
     }
-    return count;
+    console.log(count);
 }
+
+solve();
 `
               },
               testCases: [
