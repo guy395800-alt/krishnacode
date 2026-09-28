@@ -8,6 +8,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"Amazon Ember"', 'Ember', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        mono: ['"SF Mono"', '"JetBrains Mono"', 'Menlo', 'Consolas', 'monospace'],
+      },
       colors: {
         brand: {
           50: '#f0f9ff',
@@ -27,4 +31,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};

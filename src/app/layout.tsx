@@ -1,14 +1,18 @@
 'use client';
 
 import './globals.css';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { Navbar } from '../components/Navbar';
 import { Sidebar } from '../components/Sidebar';
 import { BackgroundEffects } from '../components/BackgroundEffects';
 import { usePathname } from 'next/navigation';
 
-function MainLayout({ children }) {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+function MainLayout({ children }: LayoutProps) {
   const pathname = usePathname();
   const { user } = useAuth();
   const isLandingPage = pathname === '/';
@@ -22,7 +26,7 @@ function MainLayout({ children }) {
     (pathname?.includes('/exams/') && pathname?.includes('/workspace'));
 
   return (
-    <div className="flex flex-col min-h-screen relative bg-slate-950 text-slate-100 selection:bg-blue-500/30 overflow-x-hidden">
+    <div className="flex flex-col min-h-screen relative bg-slate-950 text-slate-100 selection:bg-blue-500/30 overflow-x-hidden font-sans">
       {/* Dynamic Animated Background & Tech Particles */}
       <BackgroundEffects />
 
@@ -37,14 +41,16 @@ function MainLayout({ children }) {
   );
 }
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: LayoutProps) {
   return (
     <html lang="en" className="dark">
       <head>
-        <title>NexgenCode — Student Coding Practice Platform</title>
-        <meta name="description" content="Online programming practice and coding examination platform for students" />
+        <title>NexgenCode — Student Coding Practice & Examination Platform</title>
+        <meta name="description" content="Online competitive programming practice, standardized exams, and automated AI evaluation platform" />
+        <link rel="preconnect" href="https://fonts.cdnfonts.com" />
+        <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/amazon-ember" />
       </head>
-      <body>
+      <body className="font-sans antialiased">
         <AuthProvider>
           <MainLayout>{children}</MainLayout>
         </AuthProvider>

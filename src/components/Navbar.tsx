@@ -22,12 +22,12 @@ import {
   LogIn
 } from 'lucide-react';
 
-export const Navbar = () => {
+export const Navbar: React.FC = () => {
   const { user, logout, theme, toggleTheme } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 backdrop-blur-2xl transition-all">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 backdrop-blur-2xl transition-all font-sans">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
         {/* Brand Logo & Interactive Glow Icon */}
         <div className="flex items-center gap-7">
@@ -125,10 +125,14 @@ export const Navbar = () => {
               {/* Avatar Pill */}
               <Link
                 href={user.role === 'admin' ? '/admin/dashboard' : '/student/dashboard'}
-                className="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 border border-blue-400/40 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-500/20 hover:scale-105 transition-transform shrink-0"
+                className="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 border border-blue-400/40 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-blue-500/20 hover:scale-105 transition-transform shrink-0 overflow-hidden"
                 title="Go to workspace"
               >
-                {user.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
+                {user.avatar_url ? (
+                  <img src={user.avatar_url} alt={user.full_name} className="h-full w-full object-cover" />
+                ) : (
+                  <span>{user.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}</span>
+                )}
               </Link>
 
               <button
@@ -143,7 +147,7 @@ export const Navbar = () => {
             <div className="flex items-center gap-2 sm:gap-2.5">
               <a
                 href="mailto:kp13226663@gmail.com?subject=Book%20a%20Demo%20-%20NexgenCode%20Platform&body=Hello%20NexgenCode%20Team%2C%0A%0AI%20would%20like%20to%20schedule%20a%20live%20institutional%20demo%20of%20NexgenCode%20for%20our%20college%2Funiversity.%0A%0AInstitution%20Name%3A%0AContact%20Person%3A%0APhone%20Number%3A%0AEstimated%20Students%3A%0APreferred%20Date%20%26%20Time%3A%0A%0AThank%20you!"
-                className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl text-xs font-bold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all hover:scale-[1.02] shadow-sm shrink-0"
+                className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl text-xs font-bold text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all hover:scale-[1.02] shadow-sm shrink-0 font-sans"
                 title="Schedule an Institutional Demo"
               >
                 <Mail className="h-3.5 w-3.5 text-amber-400" />
@@ -152,7 +156,7 @@ export const Navbar = () => {
 
               <Link
                 href="/login"
-                className="h-9 px-4 sm:px-5 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-md shadow-blue-500/30 transition-all hover:scale-[1.02] shrink-0 whitespace-nowrap"
+                className="h-9 px-4 sm:px-5 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-md shadow-blue-500/30 transition-all hover:scale-[1.02] shrink-0 whitespace-nowrap font-sans"
               >
                 <LogIn className="h-3.5 w-3.5" />
                 <span>Sign In</span>
@@ -173,7 +177,7 @@ export const Navbar = () => {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-white/10 bg-slate-950/95 backdrop-blur-2xl px-6 py-5 space-y-4 animate-in slide-in-from-top duration-200">
+        <div className="lg:hidden border-t border-white/10 bg-slate-950/95 backdrop-blur-2xl px-6 py-5 space-y-4 animate-in slide-in-from-top duration-200 font-sans">
           <nav className="flex flex-col space-y-2 text-sm font-semibold text-slate-300">
             <Link
               href="/student/courses"

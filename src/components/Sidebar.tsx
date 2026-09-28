@@ -20,18 +20,23 @@ import {
   ShieldCheck,
   CheckSquare,
   Flame,
-  Sparkles,
   ArrowRight,
   BookOpen
 } from 'lucide-react';
 
-export const Sidebar = () => {
+interface NavLinkItem {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+export const Sidebar: React.FC = () => {
   const pathname = usePathname();
   const { user } = useAuth();
 
   if (!user) return null;
 
-  const studentLinks = [
+  const studentLinks: NavLinkItem[] = [
     { label: 'Dashboard', href: '/student/dashboard', icon: LayoutDashboard },
     { label: 'Courses & Tracks', href: '/student/courses', icon: BookOpen },
     { label: 'Practice Problems', href: '/student/problems', icon: Code2 },
@@ -42,7 +47,7 @@ export const Sidebar = () => {
     { label: 'My Profile', href: '/student/profile', icon: User },
   ];
 
-  const adminLinks = [
+  const adminLinks: NavLinkItem[] = [
     { label: 'Overview Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
     { label: 'Course Management', href: '/admin/courses', icon: BookOpen },
     { label: 'Student Directory', href: '/admin/students', icon: Users },
@@ -60,7 +65,7 @@ export const Sidebar = () => {
   const links = user.role === 'admin' ? adminLinks : studentLinks;
 
   return (
-    <aside className="w-64 shrink-0 hidden md:flex flex-col justify-between border-r border-white/10 bg-slate-900/60 backdrop-blur-xl min-h-[calc(100vh-4rem)] p-4 select-none">
+    <aside className="w-64 shrink-0 hidden md:flex flex-col justify-between border-r border-white/10 bg-slate-900/60 backdrop-blur-xl min-h-[calc(100vh-4rem)] p-4 select-none font-sans">
       <div className="space-y-4">
         {/* Workspace Portal Header Badge */}
         <div className="p-3 bg-gradient-to-r from-slate-800/80 to-slate-800/40 rounded-2xl border border-white/10 shadow-sm flex items-center gap-3">
@@ -72,10 +77,10 @@ export const Sidebar = () => {
             {user.role === 'admin' ? <ShieldCheck className="h-5 w-5" /> : <GraduationCap className="h-5 w-5" />}
           </div>
           <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
               WORKSPACE
             </span>
-            <span className="text-xs font-black text-white capitalize flex items-center gap-1">
+            <span className="text-xs font-black text-white capitalize flex items-center gap-1 font-sans">
               {user.role} Portal
               {user.role === 'admin' && <span className="text-[10px] text-amber-400">👑</span>}
             </span>
@@ -91,7 +96,7 @@ export const Sidebar = () => {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`group relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+                className={`group relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 font-sans ${
                   isActive
                     ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800/60 hover:translate-x-1'
@@ -111,7 +116,7 @@ export const Sidebar = () => {
       </div>
 
       {/* Bottom Gamified Mini Widget (For Students) or System Pulse (For Admins) */}
-      <div className="pt-4 border-t border-white/10">
+      <div className="pt-4 border-t border-white/10 font-sans">
         {user.role === 'student' ? (
           <div className="p-3.5 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/60 space-y-2">
             <div className="flex items-center justify-between text-xs">

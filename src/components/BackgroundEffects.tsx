@@ -3,7 +3,7 @@
 import React from 'react';
 import { Code2, Terminal, Cpu, Sparkles, Database, ShieldCheck, Zap, Flame, Binary, Orbit } from 'lucide-react';
 
-export function BackgroundEffects() {
+export const BackgroundEffects: React.FC = () => {
   return (
     <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden select-none">
       {/* 1. Dynamic Radiant Nebulas & Volumetric Ambient Blooms */}
@@ -62,4 +62,4 @@ export function BackgroundEffects() {
       <div className="absolute inset-0 bg-particles-dust opacity-75" />
     </div>
   );
-}
+};
