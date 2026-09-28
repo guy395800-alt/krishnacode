@@ -61,7 +61,16 @@ const ROTATING_PHRASES = [
   { text: 'build future-ready software.', gradient: 'from-rose-400 via-pink-400 to-purple-400' }
 ];
 
-const CODE_EXAMPLES = {
+type CodeLanguageKey = 'python' | 'cpp' | 'sql' | 'java' | 'javascript';
+
+interface CodeSnippet {
+  filename: string;
+  lang: string;
+  code: string;
+  output: string;
+}
+
+const CODE_EXAMPLES: Record<CodeLanguageKey, CodeSnippet> = {
   python: {
     filename: 'two_sum.py',
     lang: 'PYTHON 3.11',
@@ -206,13 +215,13 @@ const LIVE_EVENTS = [
 
 export default function LandingPage() {
   const { user } = useAuth();
-  const [activeLang, setActiveLang] = useState('python');
-  const [isRunning, setIsRunning] = useState(false);
-  const [simulatedOutput, setSimulatedOutput] = useState(false);
-  const [activeFaq, setActiveFaq] = useState(null);
-  const [selectedTrack, setSelectedTrack] = useState('dsa');
-  const [featuredCourses, setFeaturedCourses] = useState([]);
-  const [activeFaqCategory, setActiveFaqCategory] = useState('all');
+  const [activeLang, setActiveLang] = useState<CodeLanguageKey>('python');
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [simulatedOutput, setSimulatedOutput] = useState<boolean>(false);
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [selectedTrack, setSelectedTrack] = useState<string>('dsa');
+  const [featuredCourses, setFeaturedCourses] = useState<any[]>([]);
+  const [activeFaqCategory, setActiveFaqCategory] = useState<string>('all');
 
   // Live Toast Notification State
   const [eventIndex, setEventIndex] = useState(0);
@@ -460,7 +469,7 @@ export default function LandingPage() {
 
                 {/* Language Switcher Tabs */}
                 <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
-                  {Object.keys(CODE_EXAMPLES).map((k) => (
+                  {(Object.keys(CODE_EXAMPLES) as CodeLanguageKey[]).map((k) => (
                     <button
                       key={k}
                       onClick={() => {
