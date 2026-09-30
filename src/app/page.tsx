@@ -162,45 +162,45 @@ const CAREER_TRACKS = [
     id: 'dsa',
     name: 'Data Structures & Algorithms',
     icon: GitBranch,
-    badge: 'Core Placement Track',
+    badge: 'Core Curriculum Track',
     color: 'from-blue-500 to-indigo-500',
-    description: 'Master arrays, binary trees, dynamic programming, graphs, and Big-O analysis demanded by FAANG & Tier-1 tech recruitment drives.',
+    description: 'Master arrays, binary trees, dynamic programming, graphs, and Big-O analysis through interactive coding challenges.',
     modules: ['Arrays & Sliding Window', 'Linked Lists & Two Pointers', 'Binary Trees & Graphs', 'Dynamic Programming & Memoization', 'Bit Manipulation & Greedy Algorithms'],
     problems: '280+ Problems',
-    avgPackage: '12-45 LPA Target'
+    trackLevel: 'Beginner to Advanced'
   },
   {
     id: 'fullstack',
     name: 'Full-Stack Web & Cloud',
     icon: Laptop,
-    badge: 'High Industry Demand',
+    badge: 'Applied Engineering',
     color: 'from-sky-500 to-cyan-500',
     description: 'Build enterprise-grade REST APIs, relational databases, Next.js client architectures, and automated Docker CI/CD deployment pipelines.',
     modules: ['Modern JavaScript & TypeScript', 'Next.js 14 Server Components', 'PostgreSQL & Relational Modelling', 'FastAPI & Python Microservices', 'Docker & Cloud Deployment'],
     problems: '150+ Full Projects',
-    avgPackage: '10-35 LPA Target'
+    trackLevel: 'Intermediate to Advanced'
   },
   {
     id: 'ai_data',
     name: 'AI & Data Engineering',
     icon: Cpu,
-    badge: 'Next-Gen Frontier',
+    badge: 'Modern Frontier',
     color: 'from-emerald-500 to-teal-500',
     description: 'Deep dive into Python data pipelines, vectorized operations, SQL window functions, and LLM application frameworks.',
     modules: ['Advanced Python & NumPy', 'SQL Analytics & Window Functions', 'Data Pipelines & ETL Design', 'Vector Databases & Embeddings', 'Autonomous AI Agents'],
     problems: '120+ Datasets & Tasks',
-    avgPackage: '14-40 LPA Target'
+    trackLevel: 'Intermediate to Advanced'
   },
   {
     id: 'systems',
     name: 'Systems & Core CS',
     icon: Terminal,
-    badge: 'Academic Excellence',
+    badge: 'Academic Core',
     color: 'from-amber-500 to-orange-500',
     description: 'Understand operating system fundamentals, memory allocation, multi-threading, concurrency, and low-level C/C++.',
     modules: ['C/C++ Memory Management', 'Pointers & System Calls', 'Processes & Concurrency', 'Networking & TCP/IP Sockets', 'Compiler Design Fundamentals'],
     problems: '90+ System Challenges',
-    avgPackage: '12-38 LPA Target'
+    trackLevel: 'Intermediate to Advanced'
   }
 ];
 
@@ -242,8 +242,6 @@ export default function LandingPage() {
       triggerConfetti();
     }, 600);
   };
-
-  const currentEvent = LIVE_EVENTS[eventIndex];
 
   const faqs = [
     {
@@ -897,11 +895,11 @@ export default function LandingPage() {
                 </div>
 
                 <div className="flex flex-wrap lg:flex-col gap-3 shrink-0">
-                  <div className="px-4 py-2.5 rounded-2xl bg-slate-900/90 border border-white/10 text-xs font-mono font-bold text-slate-200">
-                    🔥 {currentTrack.problems}
+                  <div className="px-4 py-2.5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs font-mono font-bold text-slate-200">
+                    ⚡ {currentTrack.problems}
                   </div>
-                  <div className="px-4 py-2.5 rounded-2xl bg-emerald-950/60 border border-emerald-500/30 text-xs font-mono font-bold text-emerald-400">
-                    💼 {currentTrack.avgPackage}
+                  <div className="px-4 py-2.5 rounded-2xl bg-blue-950/60 border border-blue-500/30 text-xs font-mono font-bold text-blue-400">
+                    🎯 {currentTrack.trackLevel}
                   </div>
                 </div>
               </div>
