@@ -9,7 +9,7 @@ export const BackgroundEffects: React.FC = () => {
       {/* 1. Dynamic Radiant Nebulas & Volumetric Ambient Blooms */}
       <div className="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[1100px] h-[680px] bg-gradient-to-b from-blue-600/35 via-indigo-600/22 to-transparent blur-[160px] rounded-full animate-orb-1" />
       <div className="absolute top-[22%] right-[-12%] w-[850px] h-[850px] bg-gradient-to-br from-cyan-500/25 via-blue-600/18 to-transparent blur-[170px] rounded-full animate-orb-2" />
-      <div className="absolute top-[55%] left-[-15%] w-[850px] h-[750px] bg-gradient-to-tr from-purple-600/25 via-indigo-500/18 to-transparent blur-[180px] rounded-full animate-pulse-glow" />
+      <div className="absolute top-[55%] left-[-15%] w-[850px] h-[750px] bg-gradient-to-tr from-sky-600/25 via-blue-500/18 to-transparent blur-[180px] rounded-full animate-pulse-glow" />
       <div className="absolute bottom-[-15%] right-[5%] w-[950px] h-[600px] bg-gradient-to-t from-emerald-500/20 via-blue-600/15 to-transparent blur-[170px] rounded-full animate-orb-1" />
 
       {/* 2. Precision Cyber Grid Overlay */}
@@ -34,8 +34,8 @@ export const BackgroundEffects: React.FC = () => {
         </div>
       </div>
 
-      <div className="absolute top-[48%] left-[3%] opacity-15 hover:opacity-30 transition-opacity text-purple-400 animate-float-slow">
-        <div className="p-4 rounded-2xl bg-purple-950/40 border border-purple-500/30 shadow-xl shadow-purple-500/10 backdrop-blur-md">
+      <div className="absolute top-[48%] left-[3%] opacity-15 hover:opacity-30 transition-opacity text-sky-400 animate-float-slow">
+        <div className="p-4 rounded-2xl bg-sky-950/40 border border-sky-500/30 shadow-xl shadow-sky-500/10 backdrop-blur-md">
           <Cpu className="h-10 w-10" />
         </div>
       </div>

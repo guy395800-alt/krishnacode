@@ -7,7 +7,6 @@ import {
   Sun,
   Moon,
   LogOut,
-  Code2,
   Sparkles,
   Trophy,
   GraduationCap,
@@ -22,6 +21,8 @@ import {
   LogIn
 } from 'lucide-react';
 
+import { Logo } from './Logo';
+
 export const Navbar: React.FC = () => {
   const { user, logout, theme, toggleTheme } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
@@ -31,21 +32,7 @@ export const Navbar: React.FC = () => {
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
         {/* Brand Logo & Interactive Glow Icon */}
         <div className="flex items-center gap-7">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-400 text-white shadow-lg shadow-blue-500/30 group-hover:scale-105 group-hover:shadow-blue-500/50 transition-all duration-300">
-              <Code2 className="h-5 w-5" />
-              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-emerald-400 animate-ping" />
-              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-black tracking-tight text-white font-sans flex items-center">
-                Nexgen<span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-sky-400 bg-clip-text text-transparent">Code</span>
-              </span>
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest -mt-1 flex items-center gap-1">
-                Assessment Platform <Sparkles className="h-2.5 w-2.5 text-amber-400" />
-              </span>
-            </div>
-          </Link>
+          <Logo href="/" size="md" />
 
           {/* Quick Nav Links (Desktop) */}
           <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-300">

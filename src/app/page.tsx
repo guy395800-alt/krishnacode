@@ -55,9 +55,9 @@ import {
 const ROTATING_PHRASES = [
   { text: 'spark real careers.', gradient: 'from-blue-400 via-indigo-300 to-sky-400' },
   { text: 'crack dream placements.', gradient: 'from-emerald-400 via-teal-300 to-cyan-400' },
-  { text: 'master complex algorithms.', gradient: 'from-purple-400 via-pink-300 to-indigo-400' },
+  { text: 'master complex algorithms.', gradient: 'from-blue-400 via-sky-300 to-cyan-400' },
   { text: 'ace proctored college exams.', gradient: 'from-amber-400 via-orange-300 to-yellow-400' },
-  { text: 'build future-ready software.', gradient: 'from-rose-400 via-pink-400 to-purple-400' }
+  { text: 'build future-ready software.', gradient: 'from-sky-400 via-blue-400 to-indigo-400' }
 ];
 
 type CodeLanguageKey = 'python' | 'cpp' | 'sql' | 'java' | 'javascript';
@@ -174,7 +174,7 @@ const CAREER_TRACKS = [
     name: 'Full-Stack Web & Cloud',
     icon: Laptop,
     badge: 'High Industry Demand',
-    color: 'from-purple-500 to-pink-500',
+    color: 'from-sky-500 to-cyan-500',
     description: 'Build enterprise-grade REST APIs, relational databases, Next.js client architectures, and automated Docker CI/CD deployment pipelines.',
     modules: ['Modern JavaScript & TypeScript', 'Next.js 14 Server Components', 'PostgreSQL & Relational Modelling', 'FastAPI & Python Microservices', 'Docker & Cloud Deployment'],
     problems: '150+ Full Projects',
@@ -337,9 +337,9 @@ export default function LandingPage() {
           {/* Hero Left Content */}
           <div className="lg:col-span-7 space-y-6 text-left">
             {/* Top Product Tag Pill with Shimmering Glow */}
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-purple-500/15 border border-blue-500/30 text-blue-400 text-xs font-bold tracking-wide uppercase backdrop-blur-md shadow-lg shadow-blue-500/10 animate-pulse-glow">
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500/15 via-sky-500/10 to-cyan-500/15 border border-blue-500/30 text-blue-400 text-xs font-bold tracking-wide uppercase backdrop-blur-md shadow-lg shadow-blue-500/10 animate-pulse-glow">
               <Sparkles className="h-4 w-4 text-amber-400" />
-              <span>⚡ Next-Gen College Coding & Proctoring Ecosystem</span>
+              <span>⚡ Next-Gen College Coding &amp; Proctoring Ecosystem</span>
             </div>
 
             {/* Subtitle Triad: Learn • Practice • Master • Placement */}
@@ -351,7 +351,7 @@ export default function LandingPage() {
                 <i className="w-2.5 h-2.5 rounded-full bg-indigo-400 block shadow-sm shadow-indigo-400" /> Practice
               </span>
               <span className="flex items-center gap-1.5">
-                <i className="w-2.5 h-2.5 rounded-full bg-purple-400 block shadow-sm shadow-purple-400" /> Master
+                <i className="w-2.5 h-2.5 rounded-full bg-sky-400 block shadow-sm shadow-sky-400" /> Master
               </span>
               <span className="flex items-center gap-1.5">
                 <i className="w-2.5 h-2.5 rounded-full bg-amber-400 block shadow-sm shadow-amber-400" /> Placement
@@ -434,9 +434,9 @@ export default function LandingPage() {
               </div>
               <div>
                 <div className="font-mono font-black text-2xl sm:text-3xl text-white flex items-center gap-1">
-                  6+ <span className="text-sm text-purple-400 font-sans font-normal">Engines</span>
+                  6+ <span className="text-sm text-sky-400 font-sans font-normal">Engines</span>
                 </div>
-                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Compilers & SQL</div>
+                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Compilers &amp; SQL</div>
               </div>
             </div>
           </div>
@@ -526,7 +526,7 @@ export default function LandingPage() {
               <div className="flex -space-x-2">
                 <span className="w-7 h-7 rounded-full border border-white/20 bg-blue-600 flex items-center justify-center text-[10px] font-bold">A</span>
                 <span className="w-7 h-7 rounded-full border border-white/20 bg-indigo-600 flex items-center justify-center text-[10px] font-bold">R</span>
-                <span className="w-7 h-7 rounded-full border border-white/20 bg-purple-600 flex items-center justify-center text-[10px] font-bold">S</span>
+                <span className="w-7 h-7 rounded-full border border-white/20 bg-sky-600 flex items-center justify-center text-[10px] font-bold">S</span>
                 <span className="w-7 h-7 rounded-full border border-white/20 bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-bold">K</span>
               </div>
               <div className="flex items-center gap-1.5 text-xs text-slate-200">
@@ -541,7 +541,7 @@ export default function LandingPage() {
       {/* =========================================================================
           2. CONTINUOUS MARQUEE RIBBON (Full Viewport Width)
          ========================================================================= */}
-      <div className="w-full bg-gradient-to-r from-blue-950/40 via-indigo-950/50 to-purple-950/40 border-y border-white/10 py-3.5 overflow-hidden backdrop-blur-md">
+      <div className="w-full bg-gradient-to-r from-blue-950/40 via-slate-900/60 to-cyan-950/40 border-y border-white/10 py-3.5 overflow-hidden backdrop-blur-md">
         <div className="flex items-center gap-8 text-xs font-mono font-bold tracking-wider text-slate-300 uppercase whitespace-nowrap animate-marquee">
           <span className="flex items-center gap-2">⚡ Proctored Placement Exams</span>
           <span className="text-blue-500">•</span>
@@ -656,7 +656,7 @@ export default function LandingPage() {
           {/* Bento 3 (Span 4): High-Performance Sandbox Compilers */}
           <div className="md:col-span-4 p-8 rounded-3xl bento-card space-y-5 flex flex-col justify-between group">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-xs font-mono font-bold uppercase">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-mono font-bold uppercase">
                 <Terminal className="h-3.5 w-3.5" /> 6+ Engines
               </div>
               <h3 className="text-xl font-black text-white">
@@ -845,10 +845,10 @@ export default function LandingPage() {
 
           {/* Step 03 */}
           <div className="p-7 rounded-3xl apple-card-interactive space-y-4 relative overflow-hidden group">
-            <div className="text-4xl font-black font-mono text-purple-500/30 group-hover:text-purple-400 transition-colors">
+            <div className="text-4xl font-black font-mono text-cyan-500/30 group-hover:text-cyan-400 transition-colors">
               03
             </div>
-            <div className="h-12 w-12 rounded-2xl bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center font-bold">
+            <div className="h-12 w-12 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold">
               <Zap className="h-6 w-6" />
             </div>
             <h3 className="text-xl font-bold text-white">Instant Diagnostics</h3>
@@ -865,7 +865,7 @@ export default function LandingPage() {
             <div className="h-12 w-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold">
               <Trophy className="h-6 w-6" />
             </div>
-            <h3 className="text-xl font-bold text-white">Level Up & Rank</h3>
+            <h3 className="text-xl font-bold text-white">Level Up &amp; Rank</h3>
             <p className="text-xs text-slate-400 leading-relaxed">
               Earn XP points, unlock next week's lab milestone, maintain streak momentum, and climb campus leaderboards.
             </p>
@@ -878,7 +878,7 @@ export default function LandingPage() {
          ========================================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-8" id="tracks">
         <div className="max-w-2xl mx-auto text-center space-y-3">
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-400">
+          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-400">
             <Target className="h-4 w-4" /> Career Specializations
           </div>
           <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">

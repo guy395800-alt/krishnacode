@@ -4,7 +4,8 @@ import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../context/AuthContext';
-import { Code2, Lock, Mail, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Lock, Mail, ShieldAlert, ArrowRight } from 'lucide-react';
+import { LogoIcon } from '../../../components/Logo';
 
 function LoginForm() {
   const router = useRouter();
@@ -51,18 +52,16 @@ function LoginForm() {
   return (
     <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900/70 border border-white/10 shadow-2xl space-y-6 backdrop-blur-2xl relative overflow-hidden font-sans">
       {/* Decorative Glow Top Accent */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-sky-400 rounded-b-full shadow-lg shadow-blue-500/50" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-2 bg-gradient-to-r from-blue-500 via-sky-500 to-cyan-400 rounded-b-full shadow-lg shadow-blue-500/50" />
 
       {/* Header */}
-      <div className="text-center space-y-2">
-        <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-xl shadow-blue-500/25 mb-1">
-          <Code2 className="h-8 w-8" />
-        </div>
+      <div className="text-center space-y-3 flex flex-col items-center">
+        <LogoIcon size="lg" isLive={true} />
         <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white font-sans">
-          Nexgen<span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-sky-400 bg-clip-text text-transparent">Code</span>
+          Nexgen<span className="bg-gradient-to-r from-blue-400 via-sky-300 to-cyan-400 bg-clip-text text-transparent">Code</span>
         </h2>
         <p className="text-xs text-slate-400 font-sans">
-          Sign in to access your unified coding workspace & assessments
+          Sign in to access your unified coding workspace &amp; assessments
         </p>
       </div>
 
