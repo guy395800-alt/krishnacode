@@ -254,7 +254,9 @@ export default function AdminSubmissionsPage() {
                 value={selectedSub.code || '// No source code recorded'}
                 options={{
                   readOnly: true,
-                  fontSize: 13,
+                  fontFamily: 'Menlo, Monaco, Consolas, "Courier New", "Ubuntu Mono", "JetBrains Mono", monospace',
+                  fontSize: 13.5,
+                  lineHeight: 22,
                   minimap: { enabled: false },
                   automaticLayout: true
                 }}

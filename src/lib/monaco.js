@@ -150,8 +150,10 @@ export const handleDisableCopyPaste = (editor, monaco, onViolation = null) => {
 };
 
 export const MONACO_NO_COPY_OPTIONS = {
-  fontSize: 14,
-  fontFamily: 'Fira Code, monospace',
+  fontSize: 13.5,
+  lineHeight: 22,
+  fontFamily: 'Menlo, Monaco, Consolas, "Courier New", "Ubuntu Mono", "JetBrains Mono", monospace',
+  fontLigatures: false,
   minimap: { enabled: false },
   scrollBeyondLastLine: false,
   automaticLayout: true,
@@ -160,4 +162,8 @@ export const MONACO_NO_COPY_OPTIONS = {
   quickSuggestions: false,
   dragAndDrop: false,
   links: false,
+  renderLineHighlight: 'line',
+  cursorBlinking: 'smooth',
+  smoothScrolling: true,
+  padding: { top: 12, bottom: 12 }
 };

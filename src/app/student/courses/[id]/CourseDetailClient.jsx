@@ -350,14 +350,7 @@ export default function CourseDetailClient({ initialId }) {
                       value={userCode}
                       onChange={(val) => setUserCode(val || '')}
                       onMount={(editor, monaco) => handleDisableCopyPaste(editor, monaco)}
-                      options={{
-                        ...MONACO_NO_COPY_OPTIONS,
-                        fontSize: 13,
-                        fontFamily: '"SF Mono", "JetBrains Mono", Menlo, Consolas, monospace',
-                        minimap: { enabled: false },
-                        scrollBeyondLastLine: false,
-                        automaticLayout: true
-                      }}
+                      options={MONACO_NO_COPY_OPTIONS}
                     />
                   </div>
                 </div>
