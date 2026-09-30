@@ -138,14 +138,14 @@ export default function CourseDetailClient({ initialId }) {
   const progressPercent = Math.round((completedLessons.length / totalLessons) * 100);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 font-sans animate-reveal-fade">
       {/* Back Button & Breadcrumbs */}
       <div className="flex items-center justify-between">
         <Link
           href="/student/courses"
           className="inline-flex items-center gap-2 text-xs font-mono font-bold text-slate-400 hover:text-white transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" /> Back to All Courses
+          <ArrowLeft className="h-4 w-4" /> Back to Courses
         </Link>
         <span className="text-xs font-mono text-cyan-400 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/30">
           {course.category} • {course.difficulty}
@@ -153,39 +153,38 @@ export default function CourseDetailClient({ initialId }) {
       </div>
 
       {/* Main Course Header Card */}
-      <div className="p-8 sm:p-10 rounded-3xl apple-card border border-white/10 shadow-2xl relative overflow-hidden backdrop-blur-xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/80 border border-slate-800 shadow-xl relative overflow-hidden backdrop-blur-xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div className="lg:col-span-8 space-y-4">
-            <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
               {course.title}
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-normal leading-relaxed">
               {course.description}
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 pt-2 text-xs font-mono text-slate-300">
+            <div className="flex flex-wrap items-center gap-4 pt-1 text-xs font-mono text-slate-300">
               <div className="flex items-center gap-1.5">
-                <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
-                <span className="font-bold text-white">{course.rating}</span>
-                <span className="text-slate-400">({course.reviewsCount} reviews)</span>
+                <BookOpen className="h-4 w-4 text-blue-400" />
+                <span className="font-bold text-white">{course.modules?.length || 0} Modules</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Users className="h-4 w-4 text-blue-400" />
-                <span>{course.totalStudents.toLocaleString()} Enrolled</span>
+                <Code2 className="h-4 w-4 text-emerald-400" />
+                <span>{totalLessons} Lessons &amp; Problems</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Clock className="h-4 w-4 text-indigo-400" />
+                <Clock className="h-4 w-4 text-amber-400" />
                 <span>{course.duration}</span>
               </div>
             </div>
 
             {/* Progress Bar */}
-            <div className="pt-3 space-y-1.5 max-w-lg">
+            <div className="pt-2 space-y-1.5 max-w-lg">
               <div className="flex justify-between text-xs font-mono">
-                <span className="text-slate-400">Course Completion:</span>
+                <span className="text-slate-400">Curriculum Progress:</span>
                 <span className="font-bold text-emerald-400">{progressPercent}%</span>
               </div>
-              <div className="w-full h-2.5 rounded-full bg-slate-900 border border-slate-800 overflow-hidden">
+              <div className="w-full h-2 rounded-full bg-slate-950 border border-slate-800 overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-blue-500 to-emerald-400 rounded-full transition-all duration-500"
                   style={{ width: `${progressPercent}%` }}
@@ -194,13 +193,13 @@ export default function CourseDetailClient({ initialId }) {
             </div>
           </div>
 
-          <div className="lg:col-span-4 p-5 rounded-3xl bg-slate-950/80 border border-white/10 space-y-4">
+          <div className="lg:col-span-4 p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
+              <div className="h-10 w-10 rounded-xl bg-blue-600/20 border border-blue-500/30 text-blue-400 flex items-center justify-center font-bold text-sm">
                 {course.instructor.charAt(0)}
               </div>
               <div>
-                <div className="text-sm font-bold text-white">{course.instructor}</div>
+                <div className="text-xs font-bold text-white">{course.instructor}</div>
                 <div className="text-[11px] text-slate-400">{course.instructorRole}</div>
               </div>
             </div>
@@ -212,7 +211,7 @@ export default function CourseDetailClient({ initialId }) {
       </div>
 
       {/* Curriculum & Coding Arena Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Active Lesson or Coding Challenge */}
         <div className="lg:col-span-8 space-y-6">
           <div className="p-6 sm:p-8 rounded-3xl apple-card border border-white/10 shadow-2xl space-y-6">
