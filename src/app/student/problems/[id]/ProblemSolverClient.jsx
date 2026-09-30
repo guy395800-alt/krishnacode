@@ -110,6 +110,94 @@ solve();
   return templates[language] || templates.python;
 }
 
+export const DEFAULT_PROBLEMS_CATALOG = {
+  '1': {
+    id: 1,
+    title: 'Find Maximum Element in Array',
+    topic: 'Arrays',
+    difficulty: 'Easy',
+    points: 50,
+    time_limit: 2,
+    description: 'Given an array of integers on standard input, determine and print the maximum value found in the array.',
+    input_format: 'A line containing space-separated integers, or an array formatted as nums = [3, 7, 2, 9, 5].',
+    output_format: 'Print a single integer representing the maximum element in the array.',
+    constraints: '1 <= nums.length <= 10^5\n-10^9 <= nums[i] <= 10^9',
+    test_cases: [
+      { id: 1, input_data: 'nums = [3, 7, 2, 9, 5]', expected_output: '9', is_public: true },
+      { id: 2, input_data: 'nums = [-10, -3, -50, -1]', expected_output: '-1', is_public: true },
+      { id: 3, input_data: 'nums = [42]', expected_output: '42', is_public: true }
+    ]
+  },
+  '2': {
+    id: 2,
+    title: 'Two Sum Target Pair Indices',
+    topic: 'Arrays',
+    difficulty: 'Easy',
+    points: 50,
+    time_limit: 2,
+    description: 'Given an array of integers `nums` and an integer `target`, find indices of the two numbers such that they add up to `target` and print the resulting pair.',
+    input_format: 'The array nums and the target integer on standard input (or formatted as nums = [...], target = k).',
+    output_format: 'Print the array of two zero-based indices [index1, index2] to standard output.',
+    constraints: '2 <= nums.length <= 10^4\n-10^9 <= nums[i] <= 10^9\nExactly one valid answer exists.',
+    test_cases: [
+      { id: 1, input_data: 'nums = [2, 7, 11, 15], target = 9', expected_output: '[0, 1]', is_public: true },
+      { id: 2, input_data: 'nums = [3, 2, 4], target = 6', expected_output: '[1, 2]', is_public: true },
+      { id: 3, input_data: 'nums = [3, 3], target = 6', expected_output: '[0, 1]', is_public: true }
+    ]
+  },
+  '3': {
+    id: 3,
+    title: 'Maximum Subarray (Kadane\'s Algorithm)',
+    topic: 'Dynamic Programming',
+    difficulty: 'Medium',
+    points: 75,
+    time_limit: 2,
+    description: 'Given an integer array `nums`, find the contiguous subarray (containing at least one number) which has the largest sum and print its sum.',
+    input_format: 'An array of integers nums on standard input.',
+    output_format: 'Print a single integer representing the maximum subarray sum.',
+    constraints: '1 <= nums.length <= 10^5\n-10^4 <= nums[i] <= 10^4',
+    test_cases: [
+      { id: 1, input_data: 'nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]', expected_output: '6', is_public: true },
+      { id: 2, input_data: 'nums = [1]', expected_output: '1', is_public: true },
+      { id: 3, input_data: 'nums = [5, 4, -1, 7, 8]', expected_output: '23', is_public: true }
+    ]
+  },
+  '4': {
+    id: 4,
+    title: 'Valid Palindrome String',
+    topic: 'Strings',
+    difficulty: 'Easy',
+    points: 50,
+    time_limit: 2,
+    description: 'A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Determine if the string is a palindrome and print true or false.',
+    input_format: 'A string s on standard input.',
+    output_format: 'Print true if s is a palindrome, or false otherwise.',
+    constraints: '1 <= s.length <= 2 * 10^5\ns consists only of printable ASCII characters.',
+    test_cases: [
+      { id: 1, input_data: 's = "A man, a plan, a canal: Panama"', expected_output: 'true', is_public: true },
+      { id: 2, input_data: 's = "race a car"', expected_output: 'false', is_public: true },
+      { id: 3, input_data: 's = " "', expected_output: 'true', is_public: true }
+    ]
+  },
+  '5': {
+    id: 5,
+    title: 'Climbing Stairs Combinations',
+    topic: 'Dynamic Programming',
+    difficulty: 'Easy',
+    points: 50,
+    time_limit: 2,
+    description: 'You are climbing a staircase. It takes `n` steps to reach the top. Each time you can either climb 1 or 2 steps. Calculate in how many distinct ways you can climb to the top and print the total.',
+    input_format: 'An integer n representing the total number of stairs.',
+    output_format: 'Print the integer number of distinct ways to climb to the top.',
+    constraints: '1 <= n <= 45',
+    test_cases: [
+      { id: 1, input_data: 'n = 2', expected_output: '2', is_public: true },
+      { id: 2, input_data: 'n = 3', expected_output: '3', is_public: true },
+      { id: 3, input_data: 'n = 5', expected_output: '8', is_public: true }
+    ]
+  }
+};
+
 export function getProblemTestCases(prob) {
   if (prob?.test_cases && prob.test_cases.length > 0) {
     return prob.test_cases;
@@ -119,42 +207,22 @@ export function getProblemTestCases(prob) {
   const desc = (prob?.description || '').toLowerCase();
 
   if (title.includes('two sum') || (desc.includes('two') && desc.includes('sum'))) {
-    return [
-      { id: 1, input_data: 'nums = [2, 7, 11, 15], target = 9', expected_output: '[0, 1]', is_public: true },
-      { id: 2, input_data: 'nums = [3, 2, 4], target = 6', expected_output: '[1, 2]', is_public: true },
-      { id: 3, input_data: 'nums = [3, 3], target = 6', expected_output: '[0, 1]', is_public: true }
-    ];
+    return DEFAULT_PROBLEMS_CATALOG['2'].test_cases;
   }
 
   if (title.includes('palindrome') || desc.includes('palindrome')) {
-    return [
-      { id: 1, input_data: 's = "A man, a plan, a canal: Panama"', expected_output: 'true', is_public: true },
-      { id: 2, input_data: 's = "race a car"', expected_output: 'false', is_public: true },
-      { id: 3, input_data: 's = " "', expected_output: 'true', is_public: true }
-    ];
+    return DEFAULT_PROBLEMS_CATALOG['4'].test_cases;
   }
 
   if (title.includes('max') && (title.includes('subarray') || title.includes('array'))) {
-    return [
-      { id: 1, input_data: 'nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]', expected_output: '6', is_public: true },
-      { id: 2, input_data: 'nums = [1]', expected_output: '1', is_public: true },
-      { id: 3, input_data: 'nums = [5, 4, -1, 7, 8]', expected_output: '23', is_public: true }
-    ];
+    return DEFAULT_PROBLEMS_CATALOG['3'].test_cases;
   }
 
   if (title.includes('stair') || title.includes('climb')) {
-    return [
-      { id: 1, input_data: 'n = 2', expected_output: '2', is_public: true },
-      { id: 2, input_data: 'n = 3', expected_output: '3', is_public: true },
-      { id: 3, input_data: 'n = 4', expected_output: '5', is_public: true }
-    ];
+    return DEFAULT_PROBLEMS_CATALOG['5'].test_cases;
   }
 
-  return [
-    { id: 1, input_data: 'nums = [3, 7, 2, 9, 5]', expected_output: '9', is_public: true },
-    { id: 2, input_data: 'nums = [-10, -3, -50, -1]', expected_output: '-1', is_public: true },
-    { id: 3, input_data: 'nums = [42]', expected_output: '42', is_public: true }
-  ];
+  return DEFAULT_PROBLEMS_CATALOG['1'].test_cases;
 }
 
 export default function ProblemSolverClient({ initialId }) {
@@ -187,13 +255,21 @@ export default function ProblemSolverClient({ initialId }) {
     setLoading(true);
     try {
       const resp = await api.get(`/problems/${problemId}`);
-      setProblem(resp.data);
-      setCode(generateNamedFunctionTemplate(language, resp.data));
+      if (resp.data && resp.data.title) {
+        setProblem(resp.data);
+        setCode(generateNamedFunctionTemplate(language, resp.data));
+        setLoading(false);
+        return;
+      }
     } catch (err) {
-      console.error('Failed to load problem details', err);
-    } finally {
-      setLoading(false);
+      console.warn('Backend problem fetch error, loading from catalog', err);
     }
+    
+    // Fallback to local catalog
+    const fallback = DEFAULT_PROBLEMS_CATALOG[String(problemId)] || DEFAULT_PROBLEMS_CATALOG['1'];
+    setProblem(fallback);
+    setCode(generateNamedFunctionTemplate(language, fallback));
+    setLoading(false);
   };
 
   const fetchProblemSubmissions = async () => {
@@ -470,11 +546,11 @@ export default function ProblemSolverClient({ initialId }) {
             </button>
           </div>
 
-          {/* Function Return Mode Info Banner */}
-          <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs flex items-center gap-2.5">
+          {/* Standard I/O Mode Info Banner */}
+          <div className="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs flex items-center gap-2.5 font-sans">
             <Sparkles className="h-4 w-4 text-amber-400 shrink-0" />
             <span>
-              <strong>Function-Return Mode:</strong> Implement your logic and <strong>RETURN</strong> the computed answer directly. No need to read standard input (<code>input()</code> / <code>cin</code>).
+              <strong>Standard I/O Mode:</strong> Read input from standard input (<code>input()</code> / <code>sys.stdin</code> / <code>cin</code> / <code>Scanner</code>) and <strong>print the output</strong> directly (using <code>print(...)</code> / <code>cout</code> / <code>System.out.println</code>) according to the problem description.
             </span>
           </div>
 

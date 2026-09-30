@@ -461,6 +461,14 @@ export default function ExamWorkspaceClient({ initialId }) {
             </div>
           </div>
 
+          {/* Standard I/O Mode Info Banner */}
+          <div className="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs flex items-center gap-2.5 font-sans">
+            <ShieldAlert className="h-4 w-4 text-cyan-400 shrink-0" />
+            <span>
+              <strong>Standard I/O Mode:</strong> Read input from standard input (<code>input()</code> / <code>cin</code> / <code>Scanner</code>) and <strong>print the output</strong> directly using <code>print(...)</code> / <code>cout</code> / <code>System.out.println</code> as requested in the problem description.
+            </span>
+          </div>
+
           {/* Monaco Anti-Cheat Protected Editor */}
           <div className="relative flex-1 min-h-[380px] rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden shadow-inner no-copy-editor">
             {copyPasteAlert && (

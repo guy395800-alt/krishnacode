@@ -1,5 +1,5 @@
 // Centralized Course Management Data Store for NexgenCode
-// Supports dynamic Admin Course Creation, Editing, Deletion, Student Enrollment, and Integrated Function-Return Coding Challenges
+// Supports dynamic Admin Course Creation, Editing, Deletion, Student Enrollment, and Integrated Standard I/O Coding Challenges
 
 const INITIAL_COURSES = [
   {

@@ -5,6 +5,14 @@ import Link from 'next/link';
 import { api } from '../../../lib/api';
 import { Search, Filter, Code2, ArrowRight, Star, Sparkles } from 'lucide-react';
 
+const FALLBACK_PROBLEMS_LIST = [
+  { id: 1, title: 'Find Maximum Element in Array', difficulty: 'Easy', topic: 'Arrays', points: 50 },
+  { id: 2, title: 'Two Sum Target Pair Indices', difficulty: 'Easy', topic: 'Arrays', points: 50 },
+  { id: 3, title: 'Maximum Subarray (Kadane\'s Algorithm)', difficulty: 'Medium', topic: 'Dynamic Programming', points: 75 },
+  { id: 4, title: 'Valid Palindrome String', difficulty: 'Easy', topic: 'Strings', points: 50 },
+  { id: 5, title: 'Climbing Stairs Combinations', difficulty: 'Easy', topic: 'Dynamic Programming', points: 50 },
+];
+
 export default function StudentProblemsPage() {
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,9 +33,14 @@ export default function StudentProblemsPage() {
       if (topic) params.topic = topic;
 
       const resp = await api.get('/problems', { params });
-      setProblems(resp.data);
+      if (resp.data && Array.isArray(resp.data) && resp.data.length > 0) {
+        setProblems(resp.data);
+      } else {
+        setProblems(FALLBACK_PROBLEMS_LIST);
+      }
     } catch (err) {
-      console.error('Failed to load problems', err);
+      console.warn('Backend problem fetch error, loading from local catalog', err);
+      setProblems(FALLBACK_PROBLEMS_LIST);
     } finally {
       setLoading(false);
     }
