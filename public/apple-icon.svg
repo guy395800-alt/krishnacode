@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180" fill="none">
+  <defs>
+    <linearGradient id="apple-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="apple-border" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#2563eb" stop-opacity="0.3" />
+    </linearGradient>
+    <linearGradient id="apple-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1e40af" />
+    </linearGradient>
+    <linearGradient id="apple-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0f9ff" />
+      <stop offset="40%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+  </defs>
+
+  <rect width="180" height="180" rx="40" fill="url(#apple-bg)" stroke="url(#apple-border)" stroke-width="4" />
+
+  <!-- Monogram N -->
+  <path d="M 52 130 L 52 56 C 52 51.5 55.5 48 60 48 L 68 48 C 72.5 48 76 51.5 76 56 L 76 100 L 52 130 Z" fill="url(#apple-blue)" />
+  <path d="M 104 80 L 104 124 C 104 128.5 107.5 132 112 132 L 120 132 C 124.5 132 128 128.5 128 124 L 128 56 C 128 51.5 124.5 48 120 48 L 112 48 C 107.5 48 104 51.5 104 56 Z" fill="url(#apple-blue)" />
+  <path d="M 62 48 L 118 132 L 128 132 L 72 48 Z" fill="url(#apple-cyan)" />
+
+  <!-- Side Chevrons -->
+  <path d="M 32 78 L 22 90 L 32 102" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 148 78 L 158 90 L 148 102" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+
+  <circle cx="144" cy="36" r="10" fill="#10b981" />
+</svg>

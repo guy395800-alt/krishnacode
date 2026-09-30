@@ -204,14 +204,6 @@ const CAREER_TRACKS = [
   }
 ];
 
-const LIVE_EVENTS = [
-  { icon: '🔥', text: 'Rahul S. (CSE - Sem 4) passed all 6 test cases for "Two Sum" in 4ms', tag: 'Accepted' },
-  { icon: '🛡️', text: 'Anti-cheat shield blocked unauthorized clipboard copy in Exam #204', tag: 'Security' },
-  { icon: '🎓', text: 'RV College of Engineering onboarded 620 students to Semester 4 Lab', tag: 'Campus' },
-  { icon: '⚡', text: 'Compiler diagnostic engine parsed a C++ IndentationError in 11ms', tag: 'Engine' },
-  { icon: '🏆', text: 'Sneha M. reached #3 on the University Placement Leaderboard (+340 XP)', tag: 'Rank 3' }
-];
-
 export default function LandingPage() {
   const { user } = useAuth();
   const [activeLang, setActiveLang] = useState<CodeLanguageKey>('python');
@@ -221,10 +213,6 @@ export default function LandingPage() {
   const [selectedTrack, setSelectedTrack] = useState<string>('dsa');
   const [featuredCourses, setFeaturedCourses] = useState<any[]>([]);
   const [activeFaqCategory, setActiveFaqCategory] = useState<string>('all');
-
-  // Live Toast Notification State
-  const [eventIndex, setEventIndex] = useState(0);
-  const [toastVisible, setToastVisible] = useState(true);
 
   // Dynamic Rotating Hero Text State ("Text Going")
   const [phraseIndex, setPhraseIndex] = useState(0);
@@ -241,13 +229,8 @@ export default function LandingPage() {
       }, 400);
     }, 3200);
 
-    const eventInterval = setInterval(() => {
-      setEventIndex((prev) => (prev + 1) % LIVE_EVENTS.length);
-    }, 4500);
-
     return () => {
       clearInterval(phraseInterval);
-      clearInterval(eventInterval);
     };
   }, []);
 
@@ -304,31 +287,8 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col space-y-20 sm:space-y-28 py-6 sm:py-10 w-full relative">
       {/* =========================================================================
-          0. FLOATING REAL-TIME ACTIVITY PULSE TOAST
-         ========================================================================= */}
-      {toastVisible && (
-        <div className="fixed bottom-6 right-6 z-50 max-w-sm w-full animate-in slide-in-from-bottom-5 duration-300">
-          <div className="p-3.5 rounded-2xl bg-slate-900/95 border border-white/15 shadow-2xl backdrop-blur-2xl flex items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2.5 overflow-hidden">
-              <span className="text-base shrink-0">{currentEvent.icon}</span>
-              <div className="truncate">
-                <span className="text-slate-200 font-medium block truncate">{currentEvent.text}</span>
-                <span className="text-[10px] text-emerald-400 font-mono font-bold uppercase tracking-wider flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping" /> Live Activity
-                </span>
-              </div>
-            </div>
-            <button
-              onClick={() => setToastVisible(false)}
-              className="p-1 rounded-lg text-slate-500 hover:text-white transition-colors shrink-0"
-              title="Close activity feed"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        </div>
-      )}
-
+  return (
+    <div className="flex flex-col space-y-20 sm:space-y-28 py-6 sm:py-10 w-full relative">
       {/* =========================================================================
           1. HERO SECTION (Aligned pixel-for-pixel with Navbar)
          ========================================================================= */}
@@ -418,35 +378,35 @@ export default function LandingPage() {
               )}
             </div>
 
-            {/* Trust Badges Grid Animated Counters */}
-            <div className="grid grid-cols-3 gap-6 pt-6 border-t border-white/10 text-left">
+            {/* Architectural Highlights Grid */}
+            <div className="grid grid-cols-3 gap-4 sm:gap-6 pt-6 border-t border-white/10 text-left">
               <div>
                 <div className="font-mono font-black text-2xl sm:text-3xl text-white flex items-center gap-1">
-                  50+ <span className="text-sm text-blue-400 font-sans font-normal">Colleges</span>
+                  6+ <span className="text-sm text-blue-400 font-sans font-normal">Engines</span>
                 </div>
-                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Colleges Onboard</div>
+                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Isolated Compilers</div>
               </div>
               <div>
                 <div className="font-mono font-black text-2xl sm:text-3xl text-white flex items-center gap-1">
-                  25,000+ <span className="text-sm text-emerald-400 font-sans font-normal">Coders</span>
+                  &lt;50ms <span className="text-sm text-emerald-400 font-sans font-normal">Runtime</span>
                 </div>
-                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Active Students</div>
+                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Sandbox Speed</div>
               </div>
               <div>
                 <div className="font-mono font-black text-2xl sm:text-3xl text-white flex items-center gap-1">
-                  6+ <span className="text-sm text-sky-400 font-sans font-normal">Engines</span>
+                  100% <span className="text-sm text-sky-400 font-sans font-normal">Proctored</span>
                 </div>
-                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Compilers &amp; SQL</div>
+                <div className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Integrity Guard</div>
               </div>
             </div>
           </div>
 
           {/* Hero Right: Live Interactive Multi-Language Code Arena */}
           <div className="lg:col-span-5 relative">
-            {/* Top Floating Badge: XP & Rank Climb */}
-            <div className="absolute -top-5 right-2 z-20 px-4 py-2 rounded-2xl bg-slate-900/90 border border-amber-500/40 text-white font-bold text-xs shadow-2xl flex items-center gap-2 backdrop-blur-xl animate-float-slow">
+            {/* Top Floating Badge: XP & Sandbox Speed */}
+            <div className="absolute -top-5 right-2 z-20 px-4 py-2 rounded-2xl bg-slate-900/90 border border-blue-500/30 text-white font-bold text-xs shadow-2xl flex items-center gap-2 backdrop-blur-xl animate-float-slow">
               <Sparkles className="h-4 w-4 text-amber-400 fill-amber-400" />
-              <span>+120 XP · Rank #14 ➔ #9 🏆</span>
+              <span>Diagnostic Core · Sub-second I/O ⚡</span>
             </div>
 
             {/* Interactive Code Container */}
@@ -521,17 +481,14 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Bottom Floating Badge: Active Student Presence Stack */}
+            {/* Bottom Floating Badge: Active Sandbox State */}
             <div className="absolute -bottom-5 -left-3 sm:-left-6 z-20 px-4 py-2.5 rounded-2xl bg-slate-900/90 border border-white/10 text-white font-bold text-xs shadow-2xl flex items-center gap-3 backdrop-blur-xl animate-float-reverse">
-              <div className="flex -space-x-2">
-                <span className="w-7 h-7 rounded-full border border-white/20 bg-blue-600 flex items-center justify-center text-[10px] font-bold">A</span>
-                <span className="w-7 h-7 rounded-full border border-white/20 bg-indigo-600 flex items-center justify-center text-[10px] font-bold">R</span>
-                <span className="w-7 h-7 rounded-full border border-white/20 bg-sky-600 flex items-center justify-center text-[10px] font-bold">S</span>
-                <span className="w-7 h-7 rounded-full border border-white/20 bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-bold">K</span>
+              <div className="p-2 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                <Code2 className="h-4 w-4" />
               </div>
               <div className="flex items-center gap-1.5 text-xs text-slate-200">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                <span><strong>1,420+</strong> students coding live</span>
+                <span>Sandbox <strong>Online &amp; Armed</strong></span>
               </div>
             </div>
           </div>

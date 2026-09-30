@@ -45,8 +45,10 @@ export default function RootLayout({ children }: LayoutProps) {
   return (
     <html lang="en" className="dark">
       <head>
-        <title>NexgenCode — Student Coding Practice & Examination Platform</title>
-        <meta name="description" content="Online competitive programming practice, standardized exams, and automated AI evaluation platform" />
+        <title>NexgenCode — Enterprise Coding Practice &amp; Examination Platform</title>
+        <meta name="description" content="Institutional competitive programming sandbox, proctored examinations, and automated compiler evaluation platform" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-icon.svg" />
         <link rel="preconnect" href="https://fonts.cdnfonts.com" />
         <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/amazon-ember" />
       </head>
