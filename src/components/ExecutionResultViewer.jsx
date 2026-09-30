@@ -15,7 +15,8 @@ import {
   ChevronUp,
   Terminal,
   Cpu,
-  Layers
+  Layers,
+  Flame
 } from 'lucide-react';
 
 export default function ExecutionResultViewer({ result, language = 'python', isLoading = false }) {
@@ -49,7 +50,6 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
     ? result.test_case_results
     : [];
 
-  // Helper to verify if a test case is passed
   const checkTestCasePassed = (tc) => {
     if (tc.passed !== undefined) return Boolean(tc.passed);
     if (tc.status === 'Passed' || tc.status === 'Accepted') return true;
@@ -85,7 +85,6 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Determine Primary Status Badge
   const getStatusBadge = () => {
     if (isAccepted) {
       return (
@@ -130,13 +129,18 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
 
   return (
     <div className="space-y-4 font-sans text-xs">
-      {/* Top Header Summary */}
       <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center gap-3">
           {getStatusBadge()}
           {totalTests > 0 && (
             <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-[11px]">
               Passed: <strong className={passedTests === totalTests ? 'text-emerald-500' : 'text-amber-500'}>{passedTests}</strong> / {totalTests}
+            </span>
+          )}
+          {result?.streak && (
+            <span className="px-2.5 py-1 rounded-lg bg-orange-500/10 border border-orange-500/30 text-orange-400 font-bold text-[11px] flex items-center gap-1 animate-pulse">
+              <Flame className="h-3.5 w-3.5 fill-orange-500 text-orange-500" />
+              {result.streak} Day Streak
             </span>
           )}
         </div>
@@ -158,7 +162,6 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
         </div>
       </div>
 
-      {/* Diagnostic Card for SyntaxError, IndentationError, Compilation Errors, or Runtime Crashes */}
       {isSyntaxOrIndentError && parsed && (
         <div className="rounded-xl border border-red-500/40 bg-red-950/20 dark:bg-red-950/30 overflow-hidden shadow-sm">
           <div className="p-3 bg-red-500/10 border-b border-red-500/20 flex flex-wrap items-center justify-between gap-2">
@@ -200,7 +203,6 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
         </div>
       )}
 
-      {/* Success Accepted Banner */}
       {isAccepted && (
         <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-3">
           <CheckCircle2 className="h-6 w-6 text-emerald-500 shrink-0" />
@@ -213,7 +215,6 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
         </div>
       )}
 
-      {/* Test Case Evaluation Section (Wrong Answer or All Cases Preview) */}
       {testList.length > 0 && (
         <div className="space-y-3 pt-1">
           <div className="flex items-center justify-between">
@@ -222,7 +223,6 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
             </span>
           </div>
 
-          {/* Test Case Switcher Tabs */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
             {testList.map((tc, idx) => {
               const isPassed = checkTestCasePassed(tc);
@@ -248,7 +248,6 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
             })}
           </div>
 
-          {/* Active Test Case Detail Card */}
           {activeTestCase && (
             <div className={`p-4 rounded-xl border text-xs font-mono space-y-3 transition-all ${
               checkTestCasePassed(activeTestCase)
@@ -273,7 +272,6 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
                 </div>
               </div>
 
-              {/* Input Data */}
               {(activeTestCase.input_data || activeTestCase.input) && (
                 <div className="space-y-1">
                   <span className="text-slate-400 block font-sans text-[11px] font-semibold uppercase">Input:</span>
@@ -283,7 +281,6 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
                 </div>
               )}
 
-              {/* Expected vs Actual Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <span className="text-slate-400 block font-sans text-[11px] font-semibold uppercase">Expected Output:</span>
@@ -304,7 +301,6 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
                 </div>
               </div>
 
-              {/* Error Message if present */}
               {(activeTestCase.error_message || activeTestCase.stderr || activeTestCase.error) && (
                 <div className="space-y-1 pt-1">
                   <span className="text-red-400 block font-sans text-[11px] font-semibold uppercase">Error Stream:</span>
@@ -318,7 +314,6 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
         </div>
       )}
 
-      {/* Standard Output Stream */}
       {result.stdout && (
         <div className="space-y-1">
           <span className="text-slate-500 dark:text-slate-400 text-[11px] font-bold uppercase tracking-wider block">
@@ -330,7 +325,6 @@ export default function ExecutionResultViewer({ result, language = 'python', isL
         </div>
       )}
 
-      {/* Collapsible Full Raw Logs */}
       <div className="pt-1">
         <button
           onClick={() => setShowFullTrace(!showFullTrace)}
