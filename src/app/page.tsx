@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
-import { GoogleSignInButton } from '../components/GoogleSignInButton';
 import { getCourses } from '../lib/coursesStore';
 import { triggerConfetti } from '../lib/confetti';
 import {
@@ -407,10 +406,6 @@ export default function LandingPage() {
                     <span>Sign In</span>
                     <ArrowRight className="h-4.5 w-4.5 transition-transform group-hover:translate-x-1" />
                   </Link>
-
-                  <div className="w-56 shrink-0">
-                    <GoogleSignInButton label="Sign in with Google" />
-                  </div>
 
                   <a
                     href="mailto:kp13226663@gmail.com?subject=Book%20a%20Demo%20-%20NexgenCode%20Platform&body=Hello%20NexgenCode%20Team%2C%0A%0AI%20would%20like%20to%20schedule%20a%20live%20institutional%20demo%20of%20NexgenCode%20for%20our%20college%2Funiversity.%0A%0AInstitution%20Name%3A%0AContact%20Person%3A%0APhone%20Number%3A%0AEstimated%20Students%3A%0APreferred%20Date%20%26%20Time%3A%0A%0AThank%20you!"

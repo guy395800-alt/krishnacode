@@ -4,9 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../context/AuthContext';
-import { GoogleSignInButton } from '../../../components/GoogleSignInButton';
-import { Code2, Lock, Mail, ShieldAlert, ArrowRight, Sparkles, UserCheck, Shield } from 'lucide-react';
-import { UserRole } from '../../../types/auth';
+import { Code2, Lock, Mail, ShieldAlert, ArrowRight } from 'lucide-react';
 
 function LoginForm() {
   const router = useRouter();
@@ -16,7 +14,6 @@ function LoginForm() {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedRole, setSelectedRole] = useState<UserRole>('student');
 
   useEffect(() => {
     if (user) {
@@ -51,19 +48,8 @@ function LoginForm() {
     }
   };
 
-  const fillQuickAccount = (accountRole: UserRole) => {
-    setSelectedRole(accountRole);
-    if (accountRole === 'admin') {
-      setEmail('admin@nexgencode.com');
-      setPassword('Admin@1234');
-    } else {
-      setEmail('student@nexgencode.edu');
-      setPassword('Student@1234');
-    }
-  };
-
   return (
-    <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900/70 border border-white/10 shadow-2xl space-y-6 backdrop-blur-2xl relative overflow-hidden">
+    <div className="w-full max-w-md p-8 rounded-3xl bg-slate-900/70 border border-white/10 shadow-2xl space-y-6 backdrop-blur-2xl relative overflow-hidden font-sans">
       {/* Decorative Glow Top Accent */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-sky-400 rounded-b-full shadow-lg shadow-blue-500/50" />
 
@@ -86,26 +72,6 @@ function LoginForm() {
           <span>{error}</span>
         </div>
       )}
-
-      {/* 1. Google One-Click Sign In Section */}
-      <div className="space-y-3">
-        <GoogleSignInButton
-          label="Sign in with Google"
-          role={selectedRole}
-          onSuccess={() => {
-            console.log('Google Sign in successful');
-          }}
-        />
-
-        {/* Divider with Text */}
-        <div className="relative flex items-center justify-center py-2">
-          <div className="border-t border-slate-800 w-full" />
-          <span className="bg-slate-900 px-3 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 shrink-0">
-            or continue with credentials
-          </span>
-          <div className="border-t border-slate-800 w-full" />
-        </div>
-      </div>
 
       {/* Unified Login Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -153,35 +119,10 @@ function LoginForm() {
           disabled={loading}
           className="w-full py-3.5 rounded-2xl font-bold text-xs text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 shadow-xl shadow-blue-500/25 transition-all flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 font-sans"
         >
-          {loading ? 'Signing In...' : 'Sign In with Email'}
+          {loading ? 'Signing In...' : 'Sign In'}
           {!loading && <ArrowRight className="h-4 w-4" />}
         </button>
       </form>
-
-      {/* Quick Demo Test Fill Options */}
-      <div className="pt-2 border-t border-slate-800/80 space-y-2">
-        <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block text-center">
-          ⚡ Quick Demo Credentials
-        </span>
-        <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={() => fillQuickAccount('student')}
-            className="py-1.5 px-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 text-blue-400 text-[11px] font-bold transition-all flex items-center justify-center gap-1.5"
-          >
-            <UserCheck className="h-3.5 w-3.5" />
-            <span>Student Demo</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => fillQuickAccount('admin')}
-            className="py-1.5 px-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-400 text-[11px] font-bold transition-all flex items-center justify-center gap-1.5"
-          >
-            <Shield className="h-3.5 w-3.5" />
-            <span>Admin Demo</span>
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
@@ -189,7 +130,7 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <div className="flex min-h-[80vh] items-center justify-center py-12 px-4">
-      <Suspense fallback={<div className="text-center text-slate-400">Loading sign in page...</div>}>
+      <Suspense fallback={<div className="text-center text-slate-400 font-sans">Loading sign in page...</div>}>
         <LoginForm />
       </Suspense>
     </div>

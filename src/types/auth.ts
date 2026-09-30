@@ -10,16 +10,8 @@ export interface User {
   college_name?: string;
   avatar_url?: string;
   requires_password_change?: boolean;
-  provider?: 'local' | 'google' | 'github';
+  provider?: 'local';
   created_at?: string;
-}
-
-export interface GoogleAuthPayload {
-  email: string;
-  name: string;
-  picture?: string;
-  sub?: string;
-  role?: UserRole;
 }
 
 export interface AuthContextType {
@@ -28,7 +20,6 @@ export interface AuthContextType {
   theme: 'dark' | 'light';
   loading: boolean;
   login: (email: string, password: string) => Promise<User>;
-  loginWithGoogle: (payload?: Partial<GoogleAuthPayload>) => Promise<User>;
   logout: () => void;
   toggleTheme: () => void;
   updateUser: (data: Partial<User>) => void;
