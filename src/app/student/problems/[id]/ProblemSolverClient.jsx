@@ -21,10 +21,12 @@ import {
   ChevronRight,
   AlertTriangle,
   Star,
-  Check
+  Check,
+  Flame
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import ExecutionResultViewer from '../../../../components/ExecutionResultViewer';
+import StreakModal from '../../../../components/StreakModal';
 import { handleDisableCopyPaste, MONACO_NO_COPY_OPTIONS } from '../../../../lib/monaco';
 
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
@@ -59,51 +61,41 @@ int main() {
     cin.tie(NULL);
 
     // Write your algorithmic solution here
-    // Read input from cin and print output using cout
+    // Print the answer using cout
 
     return 0;
 }
 `,
-    c: `// C (GCC 11) Solution
+    c: `// C Solution
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 int main() {
-    // Write your algorithmic solution here
-    // Read input from scanf and print output using printf
-
+    // Read input and write logic
     return 0;
 }
 `,
-    java: `// Java 17 OpenJDK Solution
-// Read input from standard input (Scanner) and print output
+    java: `// Java 17 Solution
 import java.util.*;
-import java.io.*;
 
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
-        // Write your algorithmic solution here
-        // Read input using sc and print output using System.out.println(...)
-
+        // Write your solution here
     }
 }
 `,
-    javascript: `// Node.js 18 JavaScript Solution
+    javascript: `// JavaScript (Node.js) Solution
 const fs = require('fs');
 
-function solve() {
-    const input = fs.readFileSync(0, 'utf-8').trim();
+function main() {
+    const input = fs.readFileSync('/dev/stdin', 'utf-8').trim();
     if (!input) return;
-
-    // Write your algorithmic solution here
-    // Read input and print output using console.log(...)
-
+    // Write your logic here
 }
 
-solve();
+main();
 `
   };
 
@@ -113,87 +105,46 @@ solve();
 export const DEFAULT_PROBLEMS_CATALOG = {
   '1': {
     id: 1,
-    title: 'Find Maximum Element in Array',
-    topic: 'Arrays',
+    title: 'Two Sum',
     difficulty: 'Easy',
-    points: 50,
-    time_limit: 2,
-    description: 'Given an array of integers on standard input, determine and print the maximum value found in the array.',
-    input_format: 'A line containing space-separated integers, or an array formatted as nums = [3, 7, 2, 9, 5].',
-    output_format: 'Print a single integer representing the maximum element in the array.',
-    constraints: '1 <= nums.length <= 10^5\n-10^9 <= nums[i] <= 10^9',
+    points: 10,
+    time_limit: 2.0,
+    memory_limit: 128,
+    topic: 'Arrays',
+    tags: ['array', 'hash-table'],
+    description: 'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. You may assume that each input would have exactly one solution, and you may not use the same element twice.',
+    input_format: 'First line contains N and Target space separated. Second line contains N integers.',
+    output_format: 'Print the two 0-indexed space-separated indices.',
+    constraints: '2 <= N <= 10^4\n-10^9 <= nums[i] <= 10^9\n-10^9 <= target <= 10^9',
+    examples: [
+      { input: '4 9\n2 7 11 15', output: '0 1', explanation: 'nums[0] + nums[1] = 2 + 7 = 9' }
+    ],
     test_cases: [
-      { id: 1, input_data: 'nums = [3, 7, 2, 9, 5]', expected_output: '9', is_public: true },
-      { id: 2, input_data: 'nums = [-10, -3, -50, -1]', expected_output: '-1', is_public: true },
-      { id: 3, input_data: 'nums = [42]', expected_output: '42', is_public: true }
+      { id: 1, input_data: '4 9\n2 7 11 15', expected_output: '0 1', is_public: true },
+      { id: 2, input_data: '3 6\n3 2 4', expected_output: '1 2', is_public: true },
+      { id: 3, input_data: '2 6\n3 3', expected_output: '0 1', is_public: false }
     ]
   },
   '2': {
     id: 2,
-    title: 'Two Sum Target Pair Indices',
-    topic: 'Arrays',
+    title: 'Reverse String',
     difficulty: 'Easy',
-    points: 50,
-    time_limit: 2,
-    description: 'Given an array of integers `nums` and an integer `target`, find indices of the two numbers such that they add up to `target` and print the resulting pair.',
-    input_format: 'The array nums and the target integer on standard input (or formatted as nums = [...], target = k).',
-    output_format: 'Print the array of two zero-based indices [index1, index2] to standard output.',
-    constraints: '2 <= nums.length <= 10^4\n-10^9 <= nums[i] <= 10^9\nExactly one valid answer exists.',
-    test_cases: [
-      { id: 1, input_data: 'nums = [2, 7, 11, 15], target = 9', expected_output: '[0, 1]', is_public: true },
-      { id: 2, input_data: 'nums = [3, 2, 4], target = 6', expected_output: '[1, 2]', is_public: true },
-      { id: 3, input_data: 'nums = [3, 3], target = 6', expected_output: '[0, 1]', is_public: true }
-    ]
-  },
-  '3': {
-    id: 3,
-    title: 'Maximum Subarray (Kadane\'s Algorithm)',
-    topic: 'Dynamic Programming',
-    difficulty: 'Medium',
-    points: 75,
-    time_limit: 2,
-    description: 'Given an integer array `nums`, find the contiguous subarray (containing at least one number) which has the largest sum and print its sum.',
-    input_format: 'An array of integers nums on standard input.',
-    output_format: 'Print a single integer representing the maximum subarray sum.',
-    constraints: '1 <= nums.length <= 10^5\n-10^4 <= nums[i] <= 10^4',
-    test_cases: [
-      { id: 1, input_data: 'nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]', expected_output: '6', is_public: true },
-      { id: 2, input_data: 'nums = [1]', expected_output: '1', is_public: true },
-      { id: 3, input_data: 'nums = [5, 4, -1, 7, 8]', expected_output: '23', is_public: true }
-    ]
-  },
-  '4': {
-    id: 4,
-    title: 'Valid Palindrome String',
+    points: 10,
+    time_limit: 1.0,
+    memory_limit: 128,
     topic: 'Strings',
-    difficulty: 'Easy',
-    points: 50,
-    time_limit: 2,
-    description: 'A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Determine if the string is a palindrome and print true or false.',
-    input_format: 'A string s on standard input.',
-    output_format: 'Print true if s is a palindrome, or false otherwise.',
-    constraints: '1 <= s.length <= 2 * 10^5\ns consists only of printable ASCII characters.',
+    tags: ['string', 'two-pointers'],
+    description: 'Write a program that takes a string input and prints the string reversed.',
+    input_format: 'A single line containing the string S.',
+    output_format: 'The reversed string.',
+    constraints: '1 <= |S| <= 10^5',
+    examples: [
+      { input: 'hello', output: 'olleh', explanation: 'Reversed string is olleh' }
+    ],
     test_cases: [
-      { id: 1, input_data: 's = "A man, a plan, a canal: Panama"', expected_output: 'true', is_public: true },
-      { id: 2, input_data: 's = "race a car"', expected_output: 'false', is_public: true },
-      { id: 3, input_data: 's = " "', expected_output: 'true', is_public: true }
-    ]
-  },
-  '5': {
-    id: 5,
-    title: 'Climbing Stairs Combinations',
-    topic: 'Dynamic Programming',
-    difficulty: 'Easy',
-    points: 50,
-    time_limit: 2,
-    description: 'You are climbing a staircase. It takes `n` steps to reach the top. Each time you can either climb 1 or 2 steps. Calculate in how many distinct ways you can climb to the top and print the total.',
-    input_format: 'An integer n representing the total number of stairs.',
-    output_format: 'Print the integer number of distinct ways to climb to the top.',
-    constraints: '1 <= n <= 45',
-    test_cases: [
-      { id: 1, input_data: 'n = 2', expected_output: '2', is_public: true },
-      { id: 2, input_data: 'n = 3', expected_output: '3', is_public: true },
-      { id: 3, input_data: 'n = 5', expected_output: '8', is_public: true }
+      { id: 4, input_data: 'hello', expected_output: 'olleh', is_public: true },
+      { id: 5, input_data: 'NexGenCode', expected_output: 'edoCneGxeN', is_public: true },
+      { id: 6, input_data: 'racecar', expected_output: 'racecar', is_public: false }
     ]
   }
 };
@@ -202,27 +153,8 @@ export function getProblemTestCases(prob) {
   if (prob?.test_cases && prob.test_cases.length > 0) {
     return prob.test_cases;
   }
-
-  const title = (prob?.title || '').toLowerCase();
-  const desc = (prob?.description || '').toLowerCase();
-
-  if (title.includes('two sum') || (desc.includes('two') && desc.includes('sum'))) {
-    return DEFAULT_PROBLEMS_CATALOG['2'].test_cases;
-  }
-
-  if (title.includes('palindrome') || desc.includes('palindrome')) {
-    return DEFAULT_PROBLEMS_CATALOG['4'].test_cases;
-  }
-
-  if (title.includes('max') && (title.includes('subarray') || title.includes('array'))) {
-    return DEFAULT_PROBLEMS_CATALOG['3'].test_cases;
-  }
-
-  if (title.includes('stair') || title.includes('climb')) {
-    return DEFAULT_PROBLEMS_CATALOG['5'].test_cases;
-  }
-
-  return DEFAULT_PROBLEMS_CATALOG['1'].test_cases;
+  const idStr = String(prob?.id || '1');
+  return DEFAULT_PROBLEMS_CATALOG[idStr]?.test_cases || DEFAULT_PROBLEMS_CATALOG['1'].test_cases;
 }
 
 export default function ProblemSolverClient({ initialId }) {
@@ -243,6 +175,8 @@ export default function ProblemSolverClient({ initialId }) {
   const [executionResult, setExecutionResult] = useState(null);
   const [submissionHistory, setSubmissionHistory] = useState([]);
   const [copyPasteAlert, setCopyPasteAlert] = useState(false);
+  const [showStreakModal, setShowStreakModal] = useState(false);
+  const [streakData, setStreakData] = useState({ streak: 1, streakIncreased: true });
 
   useEffect(() => {
     if (problemId) {
@@ -258,27 +192,28 @@ export default function ProblemSolverClient({ initialId }) {
       if (resp.data && resp.data.title) {
         setProblem(resp.data);
         setCode(generateNamedFunctionTemplate(language, resp.data));
-        setLoading(false);
-        return;
+      } else {
+        const fallback = DEFAULT_PROBLEMS_CATALOG[String(problemId)] || DEFAULT_PROBLEMS_CATALOG['1'];
+        setProblem(fallback);
+        setCode(generateNamedFunctionTemplate(language, fallback));
       }
-    } catch (err) {
-      console.warn('Backend problem fetch error, loading from catalog', err);
+    } catch {
+      const fallback = DEFAULT_PROBLEMS_CATALOG[String(problemId)] || DEFAULT_PROBLEMS_CATALOG['1'];
+      setProblem(fallback);
+      setCode(generateNamedFunctionTemplate(language, fallback));
+    } finally {
+      setLoading(false);
     }
-    
-    // Fallback to local catalog
-    const fallback = DEFAULT_PROBLEMS_CATALOG[String(problemId)] || DEFAULT_PROBLEMS_CATALOG['1'];
-    setProblem(fallback);
-    setCode(generateNamedFunctionTemplate(language, fallback));
-    setLoading(false);
   };
 
   const fetchProblemSubmissions = async () => {
     try {
-      const resp = await api.get('/submissions');
-      const filtered = resp.data.filter((s) => String(s.problem_id) === String(problemId));
-      setSubmissionHistory(filtered);
-    } catch (err) {
-      console.error('Failed to load past submissions', err);
+      const resp = await api.get(`/submissions?problem_id=${problemId}`);
+      if (Array.isArray(resp.data)) {
+        setSubmissionHistory(resp.data);
+      }
+    } catch {
+      // ignore
     }
   };
 
@@ -288,9 +223,7 @@ export default function ProblemSolverClient({ initialId }) {
   };
 
   const handleResetCode = () => {
-    if (confirm('Reset code editor to starter template? Your current edits will be lost.')) {
-      setCode(generateNamedFunctionTemplate(language, problem));
-    }
+    setCode(generateNamedFunctionTemplate(language, problem));
   };
 
   const handleRunCode = async () => {
@@ -315,7 +248,6 @@ export default function ProblemSolverClient({ initialId }) {
         setExecutionResult(localResult);
       }
     } catch {
-      // Offline / Sandbox Fallback: evaluate code accurately with test cases
       const localResult = executeCodeLocally(code, language, publicCases);
       setExecutionResult(localResult);
     } finally {
@@ -342,8 +274,16 @@ export default function ProblemSolverClient({ initialId }) {
       if (resp.data.overall_status === 'Accepted' || resp.data.status === 'Accepted') {
         triggerConfetti();
       }
+
+      // Trigger Streak Animation Modal
+      if (resp.data && resp.data.streak) {
+        setStreakData({
+          streak: resp.data.streak,
+          streakIncreased: resp.data.streak_increased ?? true,
+        });
+        setShowStreakModal(true);
+      }
     } catch {
-      // Evaluate all test cases locally
       const localResult = executeCodeLocally(code, language, rawCases);
       setExecutionResult(localResult);
 
@@ -351,7 +291,6 @@ export default function ProblemSolverClient({ initialId }) {
         triggerConfetti();
       }
 
-      // Append local submission history
       const newSub = {
         id: Date.now(),
         problem_id: Number(problemId),
@@ -401,238 +340,171 @@ export default function ProblemSolverClient({ initialId }) {
         <div className="flex items-center gap-3">
           <Link
             href="/student/problems"
-            className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-            title="Back to Catalog"
+            className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
-            <div className="flex items-center gap-2.5">
-              <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                {problem.title}
-              </h1>
-              <span
-                className={`px-2.5 py-0.5 rounded-full text-xs font-bold font-mono ${
-                  problem.difficulty === 'Easy'
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                    : problem.difficulty === 'Medium'
-                    ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                    : 'bg-red-500/10 text-red-400 border border-red-500/20'
-                }`}
-              >
+            <div className="flex items-center gap-2">
+              <h1 className="text-lg font-bold text-white tracking-tight">{problem.title}</h1>
+              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                problem.difficulty === 'Easy'
+                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                  : problem.difficulty === 'Medium'
+                  ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                  : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+              }`}>
                 {problem.difficulty}
               </span>
             </div>
-            <span className="text-xs text-slate-400 font-medium">
-              Topic: {problem.topic} • Points: {problem.points} XP • Time Limit: {problem.time_limit || 2}s
-            </span>
+            <span className="text-xs text-slate-400">Topic: {problem.topic || 'General Algorithms'}</span>
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Controls */}
         <div className="flex items-center gap-2.5">
+          <select
+            value={language}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+            className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-200 focus:outline-none focus:border-blue-500"
+          >
+            <option value="python">Python 3.11</option>
+            <option value="cpp">C++ 17</option>
+            <option value="c">C (GCC)</option>
+            <option value="java">Java 17</option>
+            <option value="javascript">JavaScript (Node.js)</option>
+          </select>
+
+          <button
+            onClick={handleResetCode}
+            className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            title="Reset to Starter Code"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </button>
+
           <button
             onClick={handleRunCode}
             disabled={running || submitting}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs bg-slate-900 text-slate-200 hover:bg-slate-800 border border-slate-700/80 transition-all interactive-btn disabled:opacity-50"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all disabled:opacity-50"
           >
-            <Play className={`h-3.5 w-3.5 text-emerald-400 ${running ? 'animate-spin' : ''}`} />
-            {running ? 'Running Tests...' : 'Run Test Cases'}
+            {running ? <Clock className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4 text-emerald-400 fill-emerald-400" />}
+            Run Tests
           </button>
 
           <button
             onClick={handleSubmitCode}
             disabled={running || submitting}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-500/25 transition-all interactive-btn disabled:opacity-50"
+            className="flex items-center gap-1.5 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-500/20 disabled:opacity-50"
           >
-            <Send className={`h-3.5 w-3.5 ${submitting ? 'animate-pulse' : ''}`} />
-            {submitting ? 'Submitting Solution...' : 'Submit Solution'}
+            {submitting ? <Clock className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            Submit Solution
           </button>
         </div>
       </div>
 
-      {/* Main Split Grid (Problem Statement Left | Monaco Editor & Output Right) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 min-h-[75vh]">
-        {/* Left Column: Problem Details & Constraints */}
-        <div className="lg:col-span-5 p-6 rounded-2xl bg-slate-900/70 border border-slate-800/90 shadow-sm overflow-y-auto max-h-[82vh] space-y-6">
+      {/* Main Split Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Left Side: Problem Statement */}
+        <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800/80 space-y-6 overflow-y-auto max-h-[calc(100vh-14rem)]">
           <div className="space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Problem Description</h3>
-            <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">
-              {problem.description}
-            </p>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Problem Description</h3>
+            <p className="text-slate-200 text-sm leading-relaxed whitespace-pre-line">{problem.description}</p>
           </div>
 
           {problem.input_format && (
-            <div className="space-y-2 pt-3 border-t border-slate-800/80">
+            <div className="space-y-2">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Input Format</h4>
-              <p className="text-xs font-mono bg-slate-950 p-3 rounded-xl text-slate-300 border border-slate-800/80">
-                {problem.input_format}
-              </p>
+              <p className="text-slate-300 text-xs leading-relaxed font-mono bg-slate-950 p-3 rounded-xl border border-slate-800/80">{problem.input_format}</p>
             </div>
           )}
 
           {problem.output_format && (
-            <div className="space-y-2 pt-3 border-t border-slate-800/80">
+            <div className="space-y-2">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Output Format</h4>
-              <p className="text-xs font-mono bg-slate-950 p-3 rounded-xl text-slate-300 border border-slate-800/80">
-                {problem.output_format}
-              </p>
+              <p className="text-slate-300 text-xs leading-relaxed font-mono bg-slate-950 p-3 rounded-xl border border-slate-800/80">{problem.output_format}</p>
             </div>
           )}
 
-          {problem.constraints && (
-            <div className="space-y-2 pt-3 border-t border-slate-800/80">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Constraints</h4>
-              <div className="text-xs font-mono bg-slate-950 p-3 rounded-xl text-slate-300 border border-slate-800/80 whitespace-pre-line">
-                {problem.constraints}
-              </div>
-            </div>
-          )}
-
-          {/* Public Example Test Cases */}
-          {problem.test_cases?.filter((tc) => tc.is_public)?.length > 0 && (
-            <div className="space-y-3 pt-3 border-t border-slate-800/80">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Example Test Cases</h4>
-              <div className="space-y-3">
-                {problem.test_cases
-                  .filter((tc) => tc.is_public)
-                  .map((tc, idx) => (
-                    <div key={tc.id || idx} className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
-                      <div className="font-bold text-white font-mono">Example #{idx + 1}</div>
-                      <div>
-                        <span className="text-slate-500 font-semibold block mb-0.5">Input:</span>
-                        <pre className="font-mono bg-slate-900 p-2 rounded-lg text-slate-200 border border-slate-800/80 overflow-x-auto">
-                          {tc.input_data}
-                        </pre>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 font-semibold block mb-0.5">Expected Output:</span>
-                        <pre className="font-mono bg-slate-900 p-2 rounded-lg text-emerald-400 font-bold border border-slate-800/80 overflow-x-auto">
-                          {tc.expected_output}
-                        </pre>
-                      </div>
+          {problem.examples && problem.examples.length > 0 && (
+            <div className="space-y-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">Examples</h4>
+              {problem.examples.map((ex, idx) => (
+                <div key={idx} className="p-4 rounded-xl bg-slate-950 border border-slate-800/80 space-y-2 text-xs font-mono">
+                  <div>
+                    <span className="text-slate-500 font-bold block uppercase text-[10px]">Input:</span>
+                    <pre className="text-slate-200 whitespace-pre-wrap">{ex.input}</pre>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 font-bold block uppercase text-[10px]">Output:</span>
+                    <pre className="text-emerald-400 whitespace-pre-wrap">{ex.output}</pre>
+                  </div>
+                  {ex.explanation && (
+                    <div className="pt-1 text-slate-400 font-sans text-xs">
+                      <strong>Explanation:</strong> {ex.explanation}
                     </div>
-                  ))}
-              </div>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </div>
 
-        {/* Right Column: Code Editor & Console Output */}
-        <div className="lg:col-span-7 flex flex-col space-y-4">
-          {/* Editor Header / Language Selector */}
-          <div className="p-3 rounded-2xl bg-slate-900/70 border border-slate-800/90 shadow-sm flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Code2 className="h-4 w-4 text-blue-400" />
-              <select
-                value={language}
-                onChange={(e) => handleLanguageChange(e.target.value)}
-                className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700/80 font-bold text-xs text-white focus:outline-none focus:border-blue-500 transition-colors"
-              >
-                <option value="python">Python 3.11</option>
-                <option value="cpp">C++ (GCC 11)</option>
-                <option value="c">C (GCC 11)</option>
-                <option value="java">Java (OpenJDK 17)</option>
-                <option value="javascript">JavaScript (Node.js 18)</option>
-              </select>
+        {/* Right Side: Monaco Code Editor & Tabs */}
+        <div className="flex flex-col space-y-3">
+          <div className="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden shadow-lg">
+            <div className="flex items-center justify-between px-4 py-2 bg-slate-950 border-b border-slate-800 text-xs text-slate-400 font-mono">
+              <span className="flex items-center gap-2 text-slate-200 font-bold">
+                <Code2 className="h-4 w-4 text-blue-400" /> solution.{language === 'python' ? 'py' : language === 'cpp' ? 'cpp' : language === 'c' ? 'c' : language === 'java' ? 'java' : 'js'}
+              </span>
+              <span className="text-[11px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                Anti-Cheat Active
+              </span>
             </div>
 
-            <button
-              onClick={handleResetCode}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-              title="Reset Code"
-            >
-              <RotateCcw className="h-3.5 w-3.5" /> Reset Template
-            </button>
+            <div className="h-[380px] w-full">
+              <MonacoEditor
+                height="100%"
+                language={language === 'python' ? 'python' : language === 'javascript' ? 'javascript' : language === 'java' ? 'java' : 'cpp'}
+                theme="vs-dark"
+                value={code}
+                onChange={(val) => setCode(val || '')}
+                onMount={handleDisableCopyPaste}
+                options={MONACO_NO_COPY_OPTIONS}
+              />
+            </div>
           </div>
 
-          {/* Standard I/O Mode Info Banner */}
-          <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs flex items-center gap-2.5 font-sans">
-            <Sparkles className="h-4 w-4 text-sky-400 shrink-0" />
-            <span>
-              <strong>Standard I/O Mode:</strong> Read input from standard input (<code>input()</code> / <code>sys.stdin</code> / <code>cin</code> / <code>Scanner</code>) and <strong>print the output</strong> directly (using <code>print(...)</code> / <code>cout</code> / <code>System.out.println</code>) according to the problem description.
-            </span>
-          </div>
-
-          {/* Monaco Editor Container */}
-          <div className="relative flex-1 min-h-[420px] rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden shadow-inner">
-            {copyPasteAlert && (
-              <div className="absolute top-3 right-3 z-30 px-3.5 py-1.5 rounded-xl bg-red-600/95 text-white font-bold text-xs shadow-xl flex items-center gap-1.5 backdrop-blur-sm animate-shake border border-red-400/30">
-                <AlertTriangle className="h-4 w-4" /> Copy & Paste is disabled
-              </div>
-            )}
-            <MonacoEditor
-              height="420px"
-              language={language === 'python' ? 'python' : language === 'javascript' ? 'javascript' : language === 'java' ? 'java' : 'cpp'}
-              theme="vs-dark"
-              value={code}
-              onChange={(newVal) => setCode(newVal || '')}
-              onMount={(editor, monaco) => {
-                handleDisableCopyPaste(editor, monaco, () => {
-                  setCopyPasteAlert(true);
-                  setTimeout(() => setCopyPasteAlert(false), 2500);
-                });
-              }}
-              options={{
-                ...MONACO_NO_COPY_OPTIONS,
-                fontSize: 14,
-              }}
-            />
-          </div>
-
-          {/* Bottom Tabs: Test Cases / Console Output / Submissions */}
-          <div className="rounded-2xl bg-slate-900/70 border border-slate-800/90 shadow-sm overflow-hidden flex flex-col">
-            {/* Tabs Header */}
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-slate-950/60 border-b border-slate-800 text-xs font-bold">
+          {/* Bottom Execution Console & Results */}
+          <div className="rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden">
+            <div className="flex items-center gap-2 border-b border-slate-800 bg-slate-950/70 px-4">
               <button
                 onClick={() => setActiveTab('testcases')}
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  activeTab === 'testcases'
-                    ? 'bg-slate-800 text-white shadow-sm border border-slate-700'
-                    : 'text-slate-400 hover:text-white'
+                className={`py-2.5 px-3 text-xs font-bold border-b-2 transition-colors ${
+                  activeTab === 'testcases' ? 'border-blue-500 text-blue-400' : 'border-transparent text-slate-400 hover:text-white'
                 }`}
               >
                 Test Cases
               </button>
               <button
                 onClick={() => setActiveTab('output')}
-                className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-                  activeTab === 'output'
-                    ? 'bg-slate-800 text-white shadow-sm border border-slate-700'
-                    : 'text-slate-400 hover:text-white'
+                className={`py-2.5 px-3 text-xs font-bold border-b-2 transition-colors flex items-center gap-1.5 ${
+                  activeTab === 'output' ? 'border-blue-500 text-blue-400' : 'border-transparent text-slate-400 hover:text-white'
                 }`}
               >
-                <Terminal className="h-3.5 w-3.5" /> Execution Output
+                <Terminal className="h-3.5 w-3.5" /> Compiler Console
               </button>
               <button
-                onClick={() => setActiveTab('submissions')}
-                className={`px-3 py-1.5 rounded-lg transition-colors ${
-                  activeTab === 'submissions'
-                    ? 'bg-slate-800 text-white shadow-sm border border-slate-700'
-                    : 'text-slate-400 hover:text-white'
+                onClick={() => setActiveTab('history')}
+                className={`py-2.5 px-3 text-xs font-bold border-b-2 transition-colors ${
+                  activeTab === 'history' ? 'border-blue-500 text-blue-400' : 'border-transparent text-slate-400 hover:text-white'
                 }`}
               >
-                Past Submissions ({submissionHistory.length})
+                Submissions
               </button>
             </div>
 
-            {/* Tab Body */}
-            <div className="p-4 text-xs">
-              {activeTab === 'testcases' && (
-                <div className="space-y-3">
-                  <span className="font-semibold text-slate-400">Public Test Cases Preview:</span>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {problem.test_cases?.filter((t) => t.is_public).map((tc, idx) => (
-                      <div key={tc.id || idx} className="p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-[11px] space-y-1">
-                        <div className="font-bold text-slate-400">Case #{idx + 1}</div>
-                        <div><span className="text-slate-500">In:</span> {tc.input_data}</div>
-                        <div><span className="text-slate-500">Out:</span> <span className="text-emerald-400">{tc.expected_output}</span></div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
+            <div className="p-4 max-h-64 overflow-y-auto">
               {activeTab === 'output' && (
                 <ExecutionResultViewer
                   result={executionResult}
@@ -641,7 +513,19 @@ export default function ProblemSolverClient({ initialId }) {
                 />
               )}
 
-              {activeTab === 'submissions' && (
+              {activeTab === 'testcases' && (
+                <div className="space-y-3">
+                  {getProblemTestCases(problem).filter(t => t.is_public !== false).map((tc, idx) => (
+                    <div key={idx} className="p-3 rounded-xl bg-slate-950 border border-slate-800/80 text-xs font-mono space-y-1">
+                      <span className="font-bold text-slate-400 uppercase text-[10px]">Test Case #{idx + 1}:</span>
+                      <div><strong className="text-slate-500">Input:</strong> <span className="text-slate-200">{tc.input_data || tc.input}</span></div>
+                      <div><strong className="text-slate-500">Expected:</strong> <span className="text-emerald-400">{tc.expected_output || tc.expected}</span></div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {activeTab === 'history' && (
                 <div className="space-y-2">
                   {submissionHistory.length > 0 ? (
                     submissionHistory.map((sub) => (
@@ -672,6 +556,15 @@ export default function ProblemSolverClient({ initialId }) {
           </div>
         </div>
       </div>
+
+      {/* Streak Celebration Modal Animation */}
+      <StreakModal
+        isOpen={showStreakModal}
+        onClose={() => setShowStreakModal(false)}
+        streak={streakData.streak}
+        streakIncreased={streakData.streakIncreased}
+        problemTitle={problem?.title}
+      />
     </div>
   );
 }
