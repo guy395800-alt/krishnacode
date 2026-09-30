@@ -14,8 +14,12 @@ import {
   XCircle,
   X,
   FileSpreadsheet,
-  Edit2
+  Edit2,
+  Users
 } from 'lucide-react';
+import { PageHeader } from '../../../components/PageHeader';
+import { EmptyState } from '../../../components/EmptyState';
+import { TableSkeleton } from '../../../components/LoadingSkeleton';
 
 export default function AdminStudentsPage() {
   const [students, setStudents] = useState([]);
@@ -268,7 +272,7 @@ export default function AdminStudentsPage() {
       <div className="rounded-2xl bg-slate-900/60 border border-slate-800/80 shadow-xl overflow-hidden">
         {loading ? (
           <div className="p-6">
-            <div className="p-8 text-center text-slate-400 font-mono text-xs animate-pulse">Loading student directory...</div>
+            <TableSkeleton rows={8} />
           </div>
         ) : students.length > 0 ? (
           <div className="overflow-x-auto">
@@ -349,9 +353,11 @@ export default function AdminStudentsPage() {
             </table>
           </div>
         ) : (
-          <div className="p-12 text-center text-slate-400 font-sans">
-            No students found matching your criteria.
-          </div>
+          <EmptyState
+            icon={Users}
+            title="No Students Found"
+            description="No registered students match your active search and cohort filter criteria."
+          />
         )}
       </div>
 
